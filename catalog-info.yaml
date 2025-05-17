@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: homelab
+  description: Multi-Platform 3rdParty Build System
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: website
+  owner: user:default/daversomethingsomething
+  lifecycle: experimental

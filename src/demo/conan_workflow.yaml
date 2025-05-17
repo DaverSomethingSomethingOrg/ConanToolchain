@@ -1,0 +1,31 @@
+# Configure daver profile with new setting
+# [settings]
+# prefix=/opt/daver
+
+# make - NO DEPENDENCIES to install in advance
+conan source --name make --version 4.4.1 .
+conan install --name make --version 4.4.1 --profile daver .
+conan build --name make --version 4.4.1 --profile daver .
+conan test 
+conan export-pkg --name make --version 4.4.1 --profile daver .
+
+# gcc - DEPENDS on binutils.. but not yet I guess.
+conan source --name gcc --version 15.1.0 .
+conan install --name gcc --version 15.1.0 --profile daver .
+conan build --name gcc --version 15.1.0 --profile daver .
+conan test 
+conan export-pkg --name gcc --version 15.1.0 --profile daver .
+
+# NFS toolchain
+conan install --deployer-folder=nfs_deploy \
+              --deployer-package="make/4.4.1" \
+              --deployer=nfs_deployer.py \
+              --profile=optPrefix \
+              .
+
+# RPM toolchain
+conan install --deployer-folder=rpm_deploy \
+              --deployer-package="gcc/15.1.0" \
+              --deployer=rpm_deployer.py \
+              --profile=optPrefix \
+              .
