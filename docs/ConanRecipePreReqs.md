@@ -30,7 +30,15 @@ recipes to work from in the
     
     - https://github.com/conan-io/conan-center-index/blob/master/recipes/binutils/all/conanfile.py
 
-### Custom profile for consistent prefix usage
+## Local Recipe Index
+
+Since we need to modify most recipes, you may wish to fork the public
+ConanCenter recipe database.
+
+- https://docs.conan.io/2/tutorial/conan_repositories/setup_local_recipes_index.html
+
+
+## Custom profile for consistent prefix usage
 
 ```none hl_lines="10-11" title="~/.conan2/profiles/optPrefix"
 [settings]
@@ -46,7 +54,7 @@ os=Linux
 *:prefix=/opt/toolchain
 ```
 
-### `toolchain` - Conan package
+## `toolchain` - Conan package
 
 A special Conan package is created for your toolchain, and it will have
 all of your desired tools listed as dependencies.

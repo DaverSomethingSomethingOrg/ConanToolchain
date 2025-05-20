@@ -94,6 +94,11 @@ def deploy(graph, output_folder, **kwargs):
              pattern=copy_pattern,
             )
 
+        # We'll name each of our toolchain packages after ourselves.
+        # We are "toolchain", "make" gets "toolchain-make" to avoid conflict with OS packages.
+#        prefixed_name = f'{ conanfile.ref.name }-{ dep.ref.name }'
+        prefixed_name = f'{ "toolchain" }-{ dep.ref.name }'
+
         # tar up the deployment copy to use as rpmbuild sources
         subprocess.run(['tar',
                         '--create',
@@ -104,12 +109,25 @@ def deploy(graph, output_folder, **kwargs):
                        ])
 
         # rpm spec template populated with information from conanfile
+        #TODO
         # - build # or bootstrap versioning needs to be provided or detected somehow
-        # - Source0, Summary, Description, arch, name, version, prefix
+        # - Summary, arch
+        # - author, dependencies
         # - %changelog ???
-        # - author, source, license, name, version, prefix, dependencies
 
-#TODO  rpmbuild -bb /workspaces/3ptyBuild/components/RpmBuilder/make-v4.4.1/make-v4.4.1.spec
+        # Turn off any RPATH checks and so forth - GCC be breaking all the rulez
+        os.environ['QA_RPATHS'] = "0x0020"
+
+        subprocess.run(['rpmbuild',
+                        '-bb',
+                        '--define', f"tool_name { prefixed_name }",
+                        '--define', f"tool_version { dep.ref.version }",
+                        '--define', f"tool_description { dep.description }",
+                        '--define', f"tool_license { dep.license }",
+                        '--define', f"toolchain_prefix { toolchain_prefix }",
+                        '--define', f"build_num 1",
+                        os.path.join('/workspaces/ConanToolchain/src/demo/toolchain', 'generic-v1.0.0.spec'),
+                       ])
 
     # restore original $HOME setting
     os.environ['HOME'] = orig_HOME

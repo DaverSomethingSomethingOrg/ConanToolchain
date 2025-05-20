@@ -82,7 +82,7 @@ class MakeConan(ConanFile):
 #TODO might not work for Windows lol
             autotools.install()
 
-        copy(self, "COPYING", src=self.source_folder, dst=os.path.join(self.package_folder, self.options.prefix, "licenses"))
+        copy(self, "COPYING", src=self.source_folder, dst=os.path.join(self.package_folder, str(self.options.prefix), "licenses"))
 #        for make_exe in ("make", "*gnumake.exe"):
 #            copy(self, make_exe, src=self.source_folder, dst=os.path.join(self.package_folder, "bin"), keep_path=True)
 

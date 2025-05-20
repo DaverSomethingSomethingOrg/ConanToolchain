@@ -23,7 +23,7 @@ class GccConan(ConanFile):
     homepage = "https://gcc.gnu.org"
     url = "https://github.com/conan-io/conan-center-index"
     license = "GPL-3.0-only"
-    settings = "os", "compiler", "arch", "build_type", "prefix"
+    settings = "os", "compiler", "arch", "build_type"
 
     options = {
         "prefix": [None, "ANY"],
@@ -48,7 +48,12 @@ class GccConan(ConanFile):
         self.tool_requires("flex/2.6.4")
 
     def requirements(self):
+#TODO - only applies without prefix
         self.requires("mpc/1.2.0")
+
+#        yum = package_manager.Yum(self)
+#        yum.install([f"{ prefix }-mpc-1.2.0"], update=True, check=True)
+
         self.requires("mpfr/4.2.0")
         self.requires("gmp/6.3.0")
         self.requires("zlib/[>=1.2.13 <2]")
@@ -98,14 +103,15 @@ class GccConan(ConanFile):
         tc.configure_args.append("--disable-nls")
         tc.configure_args.append("--disable-multilib")
         tc.configure_args.append("--disable-bootstrap")
+        tc.configure_args.append(f"--with-pkgversion=conan GCC {self.version}")
+        tc.configure_args.append(f"--program-suffix=-{self.version}")
+        tc.configure_args.append(f"--with-bugurl={self.url}/issues")
+
         tc.configure_args.append(f"--with-zlib={self.dependencies['zlib'].package_folder}")
         tc.configure_args.append(f"--with-isl={self.dependencies['isl'].package_folder}")
         tc.configure_args.append(f"--with-gmp={self.dependencies['gmp'].package_folder}")
         tc.configure_args.append(f"--with-mpc={self.dependencies['mpc'].package_folder}")
         tc.configure_args.append(f"--with-mpfr={self.dependencies['mpfr'].package_folder}")
-        tc.configure_args.append(f"--with-pkgversion=conan GCC {self.version}")
-        tc.configure_args.append(f"--program-suffix=-{self.version}")
-        tc.configure_args.append(f"--with-bugurl={self.url}/issues")
 
         if self.settings.os == "Macos":
             xcrun = XCRun(self)

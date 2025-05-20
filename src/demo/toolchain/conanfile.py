@@ -17,7 +17,11 @@ class Toolchain(ConanFile):
         self.requires("make/4.4.1")
         self.requires("gcc/15.1.0")
 
-    # https://docs.conan.io/1/reference/conanfile/tools/system/package_manager.html
+#        yum = package_manager.Yum(self)
+#        yum.install(["ncurses-devel"], update=True, check=True)
+
+
+    # https://docs.conan.io/2/reference/tools/system/package_manager.html
     #def system_requirements(self):
 
 #        dnf = package_manager.Dnf(self)

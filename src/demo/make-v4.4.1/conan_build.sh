@@ -1,5 +1,12 @@
-#rm -fR src/ build-release/
-#conan source --name make --version 4.4.1 .
-#conan install --name make --version 4.4.1 --profile daver .
-#conan build --name make --version 4.4.1 --profile daver .
-conan export-pkg --name make --version 4.4.1 --profile daver .
+#!/bin/sh
+
+set -xe
+
+# Clean up previous run
+rm -fR src/ build-release/
+
+conan source --name make --version 4.4.1 . 2>&1 | tee CONAN_01_SOURCE.log
+conan install --name make --version 4.4.1 --profile optPrefix . 2>&1 | tee CONAN_02_INSTALL.log
+conan build --name make --version 4.4.1 --profile optPrefix . 2>&1 | tee -a CONAN_03_BUILD.log
+conan export-pkg --name make --version 4.4.1 --profile optPrefix . 2>&1 | tee CONAN_04_EXPORT-PKG.log
+
