@@ -2,8 +2,44 @@
 
 ## Introduction
 
-This is both extremely straightforward and also complicated at the same
-time.
+### Difficulties in toolchain maintenance
+
+#### Supporting shared toolchains is easy
+
+...but complicated!
+
+- You had to turn off a feature on one platform because a
+  dependency was not supported or available for that platform.
+- Platform is new and compiler chain requires bootstrapping.
+- The time that developer needed a patch applied for their specific
+  use case.
+- Did you know developers were copying your toolchain libraries
+  into product releases?
+- The time a certain customer made a deal with your company to
+  better prioritize quality on their difficult-to-work-with
+  platform over other platforms.
+- Commercial tool is only available in binary form, and installer
+  only speaks "/usr/local".
+- OS packaging needs to avoid conflict with OS vendor-provided packages,
+  but wants the benefit of "just works" package installation picking up
+  all required OS dependencies.
+
+#### The system has to outlast the original maintainer
+
+- Existing configurations are not well documented, if at all.
+- Existing build system is highly customized to for your specific
+  prefix/repository.
+
+### What makes Conan a good choice
+
+- Profile
+- Integrity Validation for original tool source, and derived package builds
+- DESTDIR installation built-in
+- Built-in custom deployer hook exactly where we need it in the process
+- Integration with many 3rdParty build systems
+- Extensive database of build recipes for thousands of Open Source tools
+
+### Prior attempts or requests to leverage Conan for toolchain maintenance
 
 Every example I've seen to date requires dependening on some simplifying
 assumptions that rely on well-behaved software builds.  In my experience

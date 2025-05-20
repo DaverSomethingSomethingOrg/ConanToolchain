@@ -8,6 +8,10 @@
   - Use the new tarball as the source files
   - Fill in all of the RPM metadata using `conanfile.py` details.
 
+!!! question annotate "ToDo"
+
+    - `m4` `build_requires` dependency of `gmp` is not getting picked up and packaged.
+
 !!! note annotate "Reference"
 
     - https://github.com/conan-io/conan-extensions/blob/main/extensions/deployers/
@@ -26,15 +30,6 @@
 
     - leverage conancenter package definitions when available
     - build to our custom profiles
-    - `conan install --deployer-folder`
-      - `deploy_folder` as part of profile?
-      - look at `full_deploy`, `direct_deploy`, `runtime_deploy`
-      - `direct_deploy` - create a metapackage for the toolchain path with all package versions specified?
-        - what about missing transitive dependencies?  Are they allowed from outside our own source and SCA?
-    - `conandata.yml` file for install prefix?
-    - `conanfile.py` passing prefix to `AutotoolsToolchain.configure_args`
-      - Use `self.deploy_folder`?
-      - Runtime dependencies need to be built and installed similarly
 
 !!! note annotate "Reference"
 

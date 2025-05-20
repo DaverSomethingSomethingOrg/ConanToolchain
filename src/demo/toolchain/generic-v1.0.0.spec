@@ -12,7 +12,11 @@ Source0:        %{tool_name}-%{tool_version}.tar.gz
 
 # We do NOT want automatic dependency detection
 AutoReqProv:    no
+
 #Requires:       bash
+%if 0%{?tool_dependencies:1}
+%{tool_dependencies}
+%endif
 
 %description
 %{tool_description}
