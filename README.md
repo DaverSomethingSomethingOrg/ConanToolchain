@@ -1,5 +1,90 @@
 # Conan Toolchain Build System
 
+!!! question "ToDo"
+
+    **Productize this**
+
+    3rdParty software lifecycle management
+    
+    - Illustrate architecture
+      - Backstage UI
+        - Request new tool/version
+          - Input tool metadata (Conan, RPM, .deb superset)
+        - Copy from system RPM where possible?
+      - GitLab monorepo
+        - pull_request validation does what?
+        - merge triggers build and packaging workflow
+      - CI orchestration
+        - pull_request for recipe must not trigger build
+        - operator has to approve recipe/tool for build (3rd Party code execution)
+        - Need 3rd-party malware/vulnerability scanning/build sandbox environment
+      - Yum repo package delivery
+      - Custom Build container matching deployment environment
+        - provide any base image tag
+        - add QEMU suport
+
+
+
+
+
+    ### frontend
+
+    - Backtage provisioning workflow templates
+      - injest new tool
+      - add/upgrade tool in deployed toolchain
+      - retire toolchain version
+      - retire tool version
+    - Backstage toolchain/tool plugin
+      - toolchain/tool components
+        - show their current support status
+        - request build-on-demand with deployment to yum repo
+        - Black Duck plugin
+        - dependency_tracker plugin
+    - GitLab monorepo
+      - Pull-request workflow?
+      - Conan package index
+        - start with local fork https://docs.conan.io/2/devops/devops_local_recipes_index.html
+      - CI workflows
+
+    ### backend
+
+    - wrap/maintain package databases
+      - Conan cache
+      - yum repository - all generated packages
+
+    ### System features
+
+    - Platform bootstrap feature
+      - conanfile profile/option?
+        - avoids mixing the packages and lets recipe work transparently
+      - Replace Conan Docker Tools
+        - https://github.com/DaverSomethingSomethingOrg/conan-docker-tools
+        - consistency between Docker toolchain and other Conan use models
+
+    ### User Roles
+
+    - requesting engineer
+      - backstage new tool request
+        - download URL
+        - short description
+        - license (will be verified)
+        - author/maintainer information
+        - lifecycle stage (alpha/beta/new/mature/deprecated)
+    - devops operator
+      - validate request
+      - complete package metadata details (maybe copy RedHat, Ubuntu, whoever)
+      - commit tool `conanfile.py`
+      - commit toolchain `requires` change(s)
+
+    - toolchain CLI tool
+    - config file
+      - define bootstrap process for new platform
+        - which order to build/rebuild in
+        - substitute OS or ignore missing dependencies
+        - tools can be prioritized in order/parallel builds
+      - build world
+    - multiple version support
+
 ## Introduction
 
 ### Difficulties in toolchain maintenance
@@ -39,21 +124,6 @@
 - Integration with many 3rdParty build systems
 - Extensive database of build recipes for thousands of Open Source tools
 
-### Prior attempts or requests to leverage Conan for toolchain maintenance
-
-Every example I've seen to date requires dependening on some simplifying
-assumptions that rely on well-behaved software builds.  In my experience
-this does not lead to a reliable result.
-
-In my experience, the most straightforward and reliable mechanism is to
-directly leverage the existing mechanisms that will be used in production
-anyway.
-
-If we are generating a series of RPMs for each package in our toolchain,
-then those same RPMs should satisfy the role of our dependencies at
-build time also.  Many of these RPMs will be build dependencies for
-other RPMs, not necessarily just runtime.
-
 ### My approach
 
 1. Support `prefix` option in all `conanfile.py`
@@ -82,14 +152,49 @@ other RPMs, not necessarily just runtime.
 
 1. Conan custom deployer builds RPMs and installs them in dependency order.
 
+### Issues and Limitations
 
-### `system_requirements`
+#### `system_requirements`
+
+Some 3rdParty Conan recipes might try to use `system_requirements` to
+install OS-provided dependency packages.  
 
 The packages we are building are generally not interchangeable with other
 system provided packages, so we're not interested in taking "just any"
 system package.  We explicitely want the packages we generate ourselves.
 
-### `patchelf`
+If we're using non-OS-standard compiler configuration this might not
+work very well for our toolchain.  At a minimum those Conan packages
+using `system_requirements` should be modified to use
+`toolchain-<dependency_name>-<dependency_version>`
+
+### No support for multiple versions (distinct prefixes per tool)
+
+    It's easy enough to deploy, but gets more complicated at build time,
+    locating each dependency prefix for connecting RPATH, etc.
+
+### Prior attempts or requests to leverage Conan for toolchain maintenance
+
+!!! question "ToDo"
+
+    - Need to be way more objective here and go into Pros and Cons of
+      each approach.  Not trying to sell this approach as much as argue
+      that it's the simplest and most reliable and most complete.
+
+Every example I've seen to date requires dependening on some simplifying
+assumptions that rely on well-behaved software builds.  In my experience
+this does not lead to a reliable result.
+
+In my experience, the most straightforward and reliable mechanism is to
+directly leverage the existing mechanisms that will be used in production
+anyway.
+
+If we are generating a series of RPMs for each package in our toolchain,
+then those same RPMs should satisfy the role of our dependencies at
+build time also.  Many of these RPMs will be build dependencies for
+other RPMs, not necessarily just runtime.
+
+#### `patchelf`
 
 - https://github.com/conan-io/conan/issues/2660
 - https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/
@@ -140,10 +245,6 @@ No absolute paths available without `chroot`
 - https://github.com/conan-io/conan/issues/11686
 
 - https://github.com/conan-io/conan/issues/3541#issuecomment-420949405
-
-- No support for multiple versions (distinct prefixes per tool).
-  - It's easy enough to deploy, but gets more complicated at build time,
-    locating each dependency prefix for connecting RPATH, etc.
 
 
 - Consistently documented configuration for all tool versions across

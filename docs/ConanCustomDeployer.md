@@ -28,8 +28,8 @@
 
 !!! question "Questions and Ideas"
 
-    - leverage conancenter package definitions when available
-    - build to our custom profiles
+    - installing  RPM dependencies in advance of build
+      - https://docs.conan.io/2/reference/tools/system/package_manager.html
 
 !!! note annotate "Reference"
 

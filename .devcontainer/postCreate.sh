@@ -16,6 +16,7 @@ yum install -y \
     gcc-c++ \
     make \
     cmake \
+    wget \
     rpmdevtools \
     rpmlint
 

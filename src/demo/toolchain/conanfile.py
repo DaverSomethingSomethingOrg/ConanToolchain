@@ -7,43 +7,64 @@ class Toolchain(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     options = {
-        "prefix": [None, "ANY"],
+        "install_prefix": [None, "ANY"],
     }
     default_options = {
-        "prefix": None,
+        "install_prefix": None,
     }
 	
     def requirements(self):
-        self.requires("make/4.4.1")
+#        self.requires("make/4.4.1")
+#        self.requires("zlib/1.3.1")
+#        self.requires("binutils/2.44")
         self.requires("gcc/15.1.0")
 
-#        yum = package_manager.Yum(self)
-#        yum.install(["ncurses-devel"], update=True, check=True)
-
+#        self.requires("autoconf/")
+#        self.requires("llvm-core/")
+#        self.requires("gtest/")
+#        self.requires("cppunit/")
+#        self.requires("valgrind/")
+#
+#        self.requires("cmake/")
+#        self.requires("meson/")
+#        self.requires("ninja/")
+#        self.requires("bazel/")
+#        self.requires("flex/")
+#        self.requires("bison/")
+#
+#        self.requires("doxygen/")
+#        self.requires("patchelf/")
+#        self.requires("openssl/")
+#        self.requires("openjdk/")
+#
+#        self.requires("python/")
+#        self.requires("nodejs/")
+#        self.requires("go/")
+#        self.requires("rust/")
+#
+#        self.requires("curl/")
+#        self.requires("wget/")
+#        self.requires("git/")
+#
+#        self.requires("tar/")
+#        self.requires("unzip/")
+#        self.requires("7zip/")
+#        self.requires("gzip-hpp/")
+#        self.requires("xz/")
+#
+#        self.requires("gnupg/")
+#        self.requires("coreutils/")
+#        self.requires("diffutils/")
+#        self.requires("gawk/")
+#        self.requires("sed/")
+#        self.requires("m4/")
+#        self.requires("bzip2/")
+#        self.requires("mingw-w64/")
+#        self.requires("vim/")
+#        self.requires("neovim/")
+#        self.requires("openssh/")
 
     # https://docs.conan.io/2/reference/tools/system/package_manager.html
-    #def system_requirements(self):
-
-#        dnf = package_manager.Dnf(self)
-#        dnf.install(["ncurses-devel"], update=True, check=True)
-
-#        yum = package_manager.Yum(self)
-#        yum.install(["ncurses-devel"], update=True, check=True)
-
-#        apt = package_manager.Apt(self)
-#        apt.install(["libncurses-dev"], update=True, check=True)
-
-#        pacman = package_manager.PacMan(self)
-#        pacman.install(["ncurses"], update=True, check=True)
-
-#        zypper = package_manager.Zypper(self)
-#        zypper.install(["ncurses"], update=True, check=True)
-
-#        brew = package_manager.Brew(self)
-#        brew.install(["ncurses"], update=True, check=True)
-
-#        pkg = package_manager.Pkg(self)
-#        pkg.install(["ncurses"], update=True, check=True)
 
     def layout(self):
         cmake_layout(self)

@@ -61,7 +61,7 @@ def deploy(graph, output_folder, **kwargs):
     conanfile = graph.root.conanfile
     
     # If our dependency doesn't have a prefix option defined, we'll assume it's relocatable and use ours
-    toolchain_prefix = conanfile.options.prefix
+    toolchain_prefix = conanfile.options.install_prefix
 
     # Set up RPM dev tree in a temporary HOME directory
     orig_HOME = os.environ['HOME']
@@ -91,18 +91,18 @@ def deploy(graph, output_folder, **kwargs):
  
         dashed_rpm_toolnamever = f'toolchain-{ dep.ref.name }-{ dep.ref.version }'
  
-        if 'prefix' in dep.options:
-            # Dependency has a prefix, we'll copy the files out of that area
-            tool_prefix = dep.options.prefix
+        if 'install_prefix' in dep.options:
+            # Dependency has a install_prefix, we'll copy the files out of that area
+            tool_prefix = dep.options.install_prefix
 
-            # strip leading '/' off prefix
+            # strip leading '/' off install_prefix
             neutered_prefix = str(tool_prefix).lstrip("/")
             copy_pattern = f'{ neutered_prefix }/*'
             copy_dst = os.path.join(output_folder, dashed_rpm_toolnamever)
         else:
-            # Dependency doesn't have a prefix, we'll use ours as an install subdirectory and copy to that
+            # Dependency doesn't have a install_prefix, we'll use ours as an install subdirectory and copy to that
 
-            # strip leading '/' off prefix
+            # strip leading '/' off install_prefix
             neutered_prefix = str(toolchain_prefix).lstrip("/")
             copy_pattern = '*'
             copy_dst = os.path.join(output_folder, dashed_rpm_toolnamever, neutered_prefix)
@@ -142,7 +142,7 @@ def deploy(graph, output_folder, **kwargs):
         for dep_name, dep_dep in dep.dependencies.items():
 
             prefixed_dep_name = f'{ "toolchain" }-{ dep_dep.ref.name }'
-            tool_dependencies += f'Requires: { prefixed_dep_name }-{ dep_dep.ref.version }\n'
+            tool_dependencies += f'Requires: { prefixed_dep_name } = { dep_dep.ref.version }\n'
 
         conanfile.output.debug(f'Detected dependencies: { tool_dependencies }')
 
@@ -151,17 +151,26 @@ def deploy(graph, output_folder, **kwargs):
 
         # Call `rpmbuild` against our parameterized/generic RPM spec file,
         # passing any of the metadata from `conanfile.py` as necesary.
-        subprocess.run(['rpmbuild',
-                        '-bb',
-                        '--define', f"tool_name { prefixed_name }",
-                        '--define', f"tool_version { dep.ref.version }",
-                        '--define', f"tool_description { dep.description }",
-                        '--define', f"tool_license { dep.license }",
-                        '--define', f"tool_dependencies { tool_dependencies }",
-                        '--define', f"toolchain_prefix { toolchain_prefix }",
-                        '--define', f"build_num 1",
-                        os.path.join('/workspaces/ConanToolchain/src/demo/toolchain', 'generic-v1.0.0.spec'),
-                       ])
+        rpmbuild_cmd = [
+            'rpmbuild',
+            '-bb',
+            '--define', f"tool_name { prefixed_name }",
+            '--define', f"tool_version { dep.ref.version }",
+            '--define', f"tool_description { dep.description }",
+            '--define', f"tool_license { dep.license }",
+            '--define', f"toolchain_prefix { toolchain_prefix }",
+            '--define', f"build_num 1",
+        ]
+        if tool_dependencies != "":
+            rpmbuild_cmd.extend([
+               '--define', f"tool_dependencies { tool_dependencies }",
+            ])
+
+        rpmbuild_cmd.append(
+            os.path.join('/workspaces/ConanToolchain/src/demo/toolchain', 'generic-v1.0.0.spec'),
+        )
+
+        subprocess.run(rpmbuild_cmd)
 
     # restore original $HOME setting
     os.environ['HOME'] = orig_HOME

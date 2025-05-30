@@ -5,9 +5,9 @@ to use this system.  If you are starting from scratch, you can find good
 recipes to work from in the
 [Conan Center Index](https://github.com/conan-io/conan-center-index/tree/master/recipes)
 
-- Non-relocatable packages support `prefix` option
-- Leverage `prefix` to configure compiler and toolchain PATH
-- Install all dependencies in RPM form to `prefix`
+- Non-relocatable packages support `install_prefix` option
+- Leverage `install_prefix` to configure compiler and toolchain PATH
+- Install all dependencies in RPM form to `install_prefix`
 - Disable Conan dependencies during `build`/`install`, replacing them with RPMs.
 
 ## `prefix` option in conanfile.py for each non-relocatable tool in the chain
@@ -16,8 +16,8 @@ recipes to work from in the
   based tools needs to pass in this prefix when constructing `AutotoolsToolchain`
 
   ``` python
-  if self.options.prefix:
-      tc = AutotoolsToolchain(self, prefix=self.options.prefix)
+  if self.options.install_prefix:
+      tc = AutotoolsToolchain(self, prefix=self.options.install_prefix)
   else:
       tc = AutotoolsToolchain(self)
   ```
@@ -51,7 +51,14 @@ compiler.version=11
 os=Linux
 
 [options]
-*:prefix=/opt/toolchain
+*:install_prefix=/opt/toolchain
+```
+
+## Local Conan recipe index
+
+```bash
+$ conan remote add conancenter-local ./conan-center-index
+$ conan remote disable conancenter
 ```
 
 ## `toolchain` - Conan package
