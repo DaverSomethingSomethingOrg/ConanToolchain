@@ -7,13 +7,12 @@
   - Label/Name the package
   - Use the new tarball as the source files
   - Fill in all of the RPM metadata using `conanfile.py` details.
-
-!!! question annotate "ToDo"
-
-    - `m4` `build_requires` dependency of `gmp` is not getting picked up and packaged.
+  - Translating Conan dependencies into RPM dependencies is important for ease-of-use in Container builds
+    - `yum install -y toolchain-gcc` should produce an end-result that "just works" without missing dependencies.
 
 !!! note annotate "Reference"
 
+    - https://github.com/conan-io/conan/issues/3541
     - https://github.com/conan-io/conan-extensions/blob/main/extensions/deployers/
     - https://docs.conan.io/2/reference/extensions/deployers.html#reference-extensions-deployers
     - https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development
