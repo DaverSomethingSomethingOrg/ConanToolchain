@@ -20,4 +20,4 @@ I've tried to cover it here:
 
 - [But Why?](docs/ButWhy.md)
 - [Sample Usage](docs/SampleUsage.md)
-- [Conan Setup and Recipe Pre-requisites](ConanRecipePreReqs.md)
+- [Conan Setup and Recipe Pre-requisites](docs/ConanRecipePreReqs.md)
