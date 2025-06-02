@@ -12,22 +12,22 @@
 
 !!! note annotate "Reference"
 
+    - https://john-tucker.medium.com/debian-packaging-by-example-118c18f5dbfe
+    - [conan install -c tools.graph:skip_binaries=False --deployer=mylicense_deployer](https://github.com/conan-io/conan/issues/18207)
+    - https://docs.conan.io/1/reference/conanfile/tools/system/package_manager.html
+    - https://github.com/conan-io/examples2/blob/main/examples/tools/system/package_manager/conanfile.py
+    - https://docs.conan.io/2/reference/conanfile/methods/system_requirements.html
+    - https://github.com/conan-io/conan/issues/5664
+    - https://github.com/conan-io/conan/issues/14189
     - https://github.com/conan-io/conan/issues/3541
     - https://github.com/conan-io/conan-extensions/blob/main/extensions/deployers/
     - https://docs.conan.io/2/reference/extensions/deployers.html#reference-extensions-deployers
     - https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html#examples-extensions-builtin-deployers-development
     - https://github.com/bkircher/python-rpm-spec
 
-## Python Toolchain Builder Wrapper
-
-- Orchestrate Conan API directly to inspect `conanfile.py` dependencies
-- verify dependencies are installed/exist as RPMs
-- connect dependency RPMs to spec file
-- manage independent deploy folders for each toolversion?  conandata.yml?
-
 !!! question "Questions and Ideas"
 
-    - installing  RPM dependencies in advance of build
+    - Installing toolchain RPM dependencies in advance of build
       - https://docs.conan.io/2/reference/tools/system/package_manager.html
 
 !!! note annotate "Reference"

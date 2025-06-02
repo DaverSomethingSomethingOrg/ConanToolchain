@@ -14,17 +14,18 @@ class Toolchain(ConanFile):
         "install_prefix": None,
     }
 
-	
     def requirements(self):
 
         self.requires("make/4.4.1")
-#        self.requires("zlib/1.3.1")
+        return
+
         self.requires("binutils/2.44")
         self.requires("gcc/15.1.0")
 
 #        self.requires("autoconf/2.71")
 
-#        self.requires("llvm-core/")
+        self.requires("clang/19.1.7")
+#        self.requires("llvm-core/19.1.7")
         self.requires("gtest/1.16.0")
 #        self.requires("cppunit/1.15.1")
 #        self.requires("valgrind/")

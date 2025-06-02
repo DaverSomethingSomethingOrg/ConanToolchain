@@ -7,8 +7,9 @@
 #
 # Sample Usage:
 #
+#   $ conan install --build=missing .
+#
 #   $ conan install --deployer-folder=rpm_deploy \
-#                   --deployer-package="gcc/15.1.0" \
 #                   --deployer=rpm_deployer.py \
 #                   --profile=optToolchain \
 #                   .
@@ -16,7 +17,7 @@
 # Sample Directory Tree Output:
 #
 #   rpm_deploy
-#   ├── toolchain-gcc-15.1.0
+#   ├── opt_toolchain-gcc-15.1.0
 #   │   └── opt/toolchain
 #   │       ├── bin
 #   │       ├── include
@@ -24,7 +25,7 @@
 #   │       ├── lib64
 #   │       ├── libexec
 #   │       └── share
-#   └── toolchain-gmp-6.3.0
+#   └── opt_toolchain-gmp-6.3.0
 #       └── opt/toolchain
 #           ├── include
 #           ├── lib
@@ -35,21 +36,21 @@
 #   └── rpmbuild
 #       ├── RPMS
 #       │   └── aarch64
-#       │       ├── toolchain-gcc-15.1.0-1.el9.aarch64.rpm
-#       │       ├── toolchain-gmp-6.3.0-1.el9.aarch64.rpm
-#       │       ├── toolchain-isl-0.26-1.el9.aarch64.rpm
-#       │       ├── toolchain-make-4.4.1-1.el9.aarch64.rpm
-#       │       ├── toolchain-mpc-1.2.0-1.el9.aarch64.rpm
-#       │       ├── toolchain-mpfr-4.2.0-1.el9.aarch64.rpm
-#       │       └── toolchain-zlib-1.3.1-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-gcc-15.1.0-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-gmp-6.3.0-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-isl-0.26-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-make-4.4.1-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-mpc-1.2.0-1.el9.aarch64.rpm
+#       │       ├── opt_toolchain-mpfr-4.2.0-1.el9.aarch64.rpm
+#       │       └── opt_toolchain-zlib-1.3.1-1.el9.aarch64.rpm
 #       └── SOURCES
-#           ├── toolchain-gcc-15.1.0.tar.gz
-#           ├── toolchain-gmp-6.3.0.tar.gz
-#           ├── toolchain-isl-0.26.tar.gz
-#           ├── toolchain-make-4.4.1.tar.gz
-#           ├── toolchain-mpc-1.2.0.tar.gz
-#           ├── toolchain-mpfr-4.2.0.tar.gz
-#           └── toolchain-zlib-1.3.1.tar.gz
+#           ├── opt_toolchain-gcc-15.1.0.tar.gz
+#           ├── opt_toolchain-gmp-6.3.0.tar.gz
+#           ├── opt_toolchain-isl-0.26.tar.gz
+#           ├── opt_toolchain-make-4.4.1.tar.gz
+#           ├── opt_toolchain-mpc-1.2.0.tar.gz
+#           ├── opt_toolchain-mpfr-4.2.0.tar.gz
+#           └── opt_toolchain-zlib-1.3.1.tar.gz
 
 from conan.tools.files import copy, mkdir
 #from conan.errors import ConanException
@@ -91,16 +92,18 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
 
     conanfile.output.info(info_msg)
 
-    # If our dependency doesn't have a prefix option defined, we'll assume it's relocatable and use our toplevel install_prefix option
     toolchain_prefix = conanfile.options.install_prefix
+    package_prefix = str(toolchain_prefix).lstrip('/').replace('/', '_')
 
     copy_pattern = None
     copy_dst = None
 
-    dashed_rpm_toolnamever = f'toolchain-{ dependency_item.ref.name }-{ dependency_item.ref.version }'
+    dashed_rpm_toolnamever = f'{ package_prefix }-{ dependency_item.ref.name }-{ dependency_item.ref.version }'
 
+    # If dependency has a install_prefix, we'll copy the files out of that area
+    # Otherwise we'll assume it's relocatable and use our toplevel prefix as an
+    # install subdirectory and copy to that
     if 'install_prefix' in dependency_item.options:
-        # Dependency has a install_prefix, we'll copy the files out of that area
         tool_prefix = dependency_item.options.install_prefix
 
         # strip leading '/' off install_prefix
@@ -108,8 +111,6 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
         copy_pattern = f'{ neutered_prefix }/*'
         copy_dst = os.path.join(output_folder, dashed_rpm_toolnamever)
     else:
-        # Dependency does NOT have a install_prefix, we'll use ours as an install subdirectory and copy to that
-
         # strip leading '/' off install_prefix
         neutered_prefix = str(toolchain_prefix).lstrip("/")
         copy_pattern = '*'
@@ -122,11 +123,6 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
          pattern=copy_pattern,
         )
 
-    # We'll name each of our toolchain packages after ourselves.
-    # We are "toolchain", "make" gets "toolchain-make" to avoid conflict with OS packages.
-#        prefixed_name = f'{ conanfile.ref.name }-{ dependency_item.ref.name }'
-    prefixed_name = f'{ "toolchain" }-{ dependency_item.ref.name }'
-
     # tar up the deployment copy to use as rpmbuild sources
     subprocess.run(['tar',
                     '--create',
@@ -136,15 +132,26 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
                     os.path.join(dashed_rpm_toolnamever, neutered_prefix)
                    ])
 
+    # We'll name each of our toolchain packages after ourselves.
+    # We are "/opt/toolchain", "make" gets "opt_toolchain-make" to avoid conflict with OS packages.
+    prefixed_package_name = f'{ package_prefix }-{ dependency_item.ref.name }'
+
     # rpm spec template populated with information from conanfile
     #TODO
     # - build # or bootstrap versioning needs to be provided or detected somehow
-    # - Summary, arch
+    # - Summary, arch(x86_64, aarch64, noarch, etc)
     # - author, dependencies
     # - %changelog ???
 
-    # Gather dependency list from conanfile.py for use in RPM spec `Requires:`
-    # list with prefixed package names...
+    ###################################################################### 
+    # Gather dependency list from conanfile.py for use in RPM spec
+    # `Requires:` list with prefixed package names...
+    #
+    # This is ugly, we assemble a multi-line string so we can pass it
+    # in to rpmbuild on the cmdline.
+    # 
+    # For example:
+    #  `rpmbuild -bb --define tool_dependencies 'Requires: bash\nRequires: ssh' package.spec`
     #
     tool_dependencies = []
     for dep_name, dep_dep in dependency_item.dependencies.items():
@@ -153,11 +160,16 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
         if dep_dep.package_folder is None:
             continue
 
-        prefixed_dep_name = f'{ "toolchain" }-{ dep_dep.ref.name }'
+        prefixed_dep_name = f'{ package_prefix }-{ dep_dep.ref.name }'
         tool_dependencies.append(f'Requires: { prefixed_dep_name } = { dep_dep.ref.version }')
 
+    # If the conanfile specifies Yum dependencies, we should just pass them through directly
+    if 'yum' in dependency_item._conanfile.system_requires:
+        for yum_dependency in dependency_item._conanfile.system_requires['yum']['install']:
+            tool_dependencies.append(f'Requires: { yum_dependency }')
+
     if tool_dependencies:
-        conanfile.output.info('Detected RPM dependencies:')
+        conanfile.output.info('Final RPM dependencies list:')
         for require_line in tool_dependencies:
             conanfile.output.info(f'\t{ require_line }')
 
@@ -174,7 +186,7 @@ def process_dependency(conanfile, output_folder, rpm_HOME, dependency_item):
         'rpmbuild',
         '-bb',
         '--define', f"__brp_mangle_shebangs /bin/true",
-        '--define', f"tool_name { prefixed_name }",
+        '--define', f"tool_name { prefixed_package_name }",
         '--define', f"tool_version { dependency_item.ref.version }",
         '--define', f"tool_description { dependency_item.description }",
         '--define', f"tool_license { dependency_item.license }",

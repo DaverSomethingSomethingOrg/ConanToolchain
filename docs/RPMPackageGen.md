@@ -10,10 +10,6 @@
 
 ## Other
 
-- templated RPM spec
-- allow package to provide custom RPM spec template
-  - special dependencies
-  - custom file permissions?  setuid/setgid, etc.  lsof/top?
 - translate conan runtime dependencies into RPM dependencies, assuming
   RPMs exist for each dependency.
   - Runtime dependencies should be installed in advance
@@ -32,8 +28,16 @@
 
 !!! question "ToDo"
 
-    - Prefix-agnostic RPM spec template
-    - Dependencies?  Conan vs. RH Runtime?
-      - What about dependencies from a different prefix?
-    - Need to use RH OS to use rpmbuild?
-      - We want OS-native package dependencies and build anyway
+    - allow package to provide custom RPM spec template
+      - special dependencies
+      - custom file permissions?  setuid/setgid, etc.  lsof/top?
+
+!!! note annotate "Reference"
+
+    - https://backreference.org/2011/09/17/some-tips-on-rpm-conditional-macros/index.html
+    - https://rpm-software-management.github.io/rpm/manual/macros
+    - https://rpm-packaging-guide.github.io/#packaging-software
+    - https://rpm-packaging-guide.github.io/
+    - https://docs.redhat.com/fr/documentation/red_hat_enterprise_linux/9/html/packaging_and_distributing_software/assembly_what-a-spec-file-is_packaging-software#ref_spec-file-preamble-items_assembly_what-a-spec-file-is
+    - https://www.redhat.com/en/blog/create-rpm-package
+    - https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/packaging_and_distributing_software/advanced-topics

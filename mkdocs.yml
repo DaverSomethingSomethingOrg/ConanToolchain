@@ -1,7 +1,7 @@
-site_name: "Conan Toolchain Build System"
-copyright: Copyright © 2025, David L. Armstrong. All rights reserved.
+site_name: "Toolchain Build System using Conan"
+copyright: Copyright © 2025, David L. Armstrong.
 repo_url: https://github.com/DaverSomethingSomethingOrg/ConanToolchain
-site_url: https://github.com/DaverSomethingSomethingOrg/ConanToolchain
+#site_url: https://github.com/DaverSomethingSomethingOrg/ConanToolchain
 #edit_uri_template: 'edit/main/docs/{path}'
 docs_dir: docs/
 
@@ -10,7 +10,7 @@ extra:
     provider: mike
 
 plugins:
-  - techdocs-core
+#  - techdocs-core
 #   - mkdocstrings:
 #       default_handler: python
 #       handlers:
@@ -35,6 +35,8 @@ markdown_extensions:
   - attr_list
   - def_list
   - tables
+  - admonition
+  - pymdownx.magiclink
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -42,16 +44,23 @@ markdown_extensions:
       linenums: false
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
   - callouts
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 watch:
   - docs/
-  - src/
+#  - src/
 
 nav:
-  - 'index.md'
+  - Introduction:  'README.md'
+  - ButWhy.md
   - 'SampleUsage.md'
   - 'ConanRecipePreReqs.md'
-  - 'ConanCustomDeployer.md'
-  - 'RPMPackageGen.md'
+#  - 'ConanCustomDeployer.md'
+#  - 'RPMPackageGen.md'
+#  - 'CIWorkflows.md'
+  - Apache License v2.0: 'LICENSE.txt'
