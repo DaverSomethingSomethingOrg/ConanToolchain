@@ -5,12 +5,14 @@ to use this system.  If you are starting from scratch, you can find good
 recipes to work from in the
 [Conan Center Index](https://github.com/conan-io/conan-center-index/tree/master/recipes)
 
-## `prefix` option in conanfile.py for each non-relocatable tool in the chain
+## `install_prefix` option in conanfile.py for each non-relocatable tool in the chain
 
-Non-relocatable packages need to add support for our `install_prefix` option.
+Non-relocatable packages need to add support for an `install_prefix` option.
 
 For GNU tools, the Conan [`Autotools`](https://docs.conan.io/2/integrations/autotools.html)
-integration already supports the autoconf `--prefix` option.
+integration already supports the autoconf `--prefix` option, so it's a
+simple recipe modification.  Again, while it's ideal to use across all
+tools, most GNU tools are relocatable and do not require this modification.
 
 - generate() needs to pass in this prefix when constructing `AutotoolsToolchain`
 
