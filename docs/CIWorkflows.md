@@ -19,6 +19,11 @@
     - toolchain monorepo skeleton
       - conan recipes
 
+    - Two approaches
+      - build world - build/version the whole repo as a unit
+      - build a single tool version, integrate and redeploy repo
+      - individual tool build - add/replace a single tool
+
 ## Basic Operation
 
 ### Creating a new Toolchain definition

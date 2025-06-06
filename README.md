@@ -4,9 +4,10 @@ Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
 for all developers offers some significant challenges.  With the right
 technologies working together however, these challenges can be overcome.
 
-The goal is to provide a comprehensive, reliable toolchain that works
-by design, rather than trying to hack or manipulate tools to work in
-configurations they were not originally built for.
+The goal of this project is to provide a comprehensive, reliable system
+to build a toolchain that works by design, rather than trying to hack
+or manipulate tools to work in configurations they were not originally
+built for.
 
 This project consists primarily of a fairly simple (but critical) custom
 deployer for the [Conan C/C++ package manager](https://conan.io).  This
@@ -26,7 +27,7 @@ By delivering RPM packages, we are able to:
 
 If you are using your own compiler versions, or ABI configurations for
 your products, then you will likely want your toolchains to be built
-in a manner compatible with your products.
+using configurations consistent and compatible with your products.
 
 ## Why is installation prefix important?
 

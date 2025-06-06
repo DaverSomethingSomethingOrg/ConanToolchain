@@ -36,6 +36,15 @@ tool versions that are appropriate for running the application or task.
 Whichever tool your default `$PATH` locates for you should be the correct
 choice.
 
+On a VM or baremetal host, with tools installed in `/usr/local`, or
+perhaps in an automounted NFS repositories, `$PATH` has to be set
+carefully to find the right tool installations, and it's not set by
+default.  Additionally, a user may still run a tool that isn't in their
+`$PATH`, and what then?  If *that* tool relies on other tools (such as
+`gcc` needing `as` and `ld` from binutils), how does it find the right
+ones?  How can that user be confident it will work correctly and
+reliably?
+
 ## Why Conan?
 
 Conan is designed for building, installing, and packaging 3rdParty

@@ -1,8 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
-  "name": "Base AlmaLinux(9) with Python3 and Conan",
-//  "image": "almalinux:latest",
-  "build": { "dockerfile": "Dockerfile" },
+  "name": "Base OS with Python3 and Git",
+//  "build": { "dockerfile": "Dockerfile-python" },
+  "build": { "dockerfile": "Dockerfile-ubuntu" },
+//  "build": { "dockerfile": "Dockerfile-almalinux" },
 
 // feature support is for ubuntu/debian (uses apt-get, etc) apparently...
 /*
