@@ -26,7 +26,7 @@ the `install_prefix` option and lists all primary tools as toplevel
 dependencies.  This will help catch any diamond transitive depdendency
 version issues early in the process.
 
-```python title="Sample toolchain conanfile.py"
+```python hl_lines="7-12" title="Sample toolchain conanfile.py"
 from conan import ConanFile
 from conan.tools.layout import basic_layout
 
@@ -98,7 +98,7 @@ rpm_deploy
 
 !!! warning annotate "Unsupported"
 
-    This feature is still under development and probably doesn't work
+    This feature is still under development.
 
 Deploy packages into a singular *&lt;prefix&gt;* subdirectory within the given
 `deployer-folder` directory.

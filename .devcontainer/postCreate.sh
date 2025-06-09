@@ -10,6 +10,7 @@ case "${ID}" in
             sudo \
             build-essential \
             devscripts \
+            debhelper \
             fakeroot \
             binutils \
             gcc \
