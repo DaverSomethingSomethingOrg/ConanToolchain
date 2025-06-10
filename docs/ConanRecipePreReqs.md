@@ -7,7 +7,7 @@ recipes to work from in the
 
 ## `install_prefix` option in conanfile.py for each non-relocatable tool in the chain
 
-Non-relocatable packages need to add support for an `install_prefix` option.
+Non-relocatable packages require support for our `install_prefix` option.
 
 For GNU tools, the Conan [`Autotools`](https://docs.conan.io/2/integrations/autotools.html)
 integration already supports the autoconf `--prefix` option, so it's a
@@ -23,11 +23,21 @@ tools, most GNU tools are relocatable and do not require this modification.
       tc = AutotoolsToolchain(self)
   ```
 
+!!! warning annotate "Non-standard Conan Usage"
+
+    Conan specifically tries to avoid hardcoding installation prefix into
+    its builds.  For the standard Conan use-case supporting product
+    development and release, hardcoded paths work against portability.
+
+    When adding support for our `install_prefix` option, make sure to do
+    so in a way that does not break the standard use case!
+
 ## Local Conan recipe index
 
 Since we need to modify some recipes, you may wish to fork the public
-ConanCenter recipe database.  You will need custom recipes for any
-special build configurations not already supported by package options,
+ConanCenter recipe database if you're not writing your own recipes from
+scratch.  You will need custom recipes for any special build configurations
+not already supported by package options,
 
 - https://docs.conan.io/2/tutorial/conan_repositories/setup_local_recipes_index.html
 

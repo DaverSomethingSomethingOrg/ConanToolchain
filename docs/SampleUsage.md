@@ -1,8 +1,29 @@
 # Sample Usage
 
+## Install the System Package Deployers
+
+These are maintained in a separate repo so we can use
+[`conan config install`](https://docs.conan.io/2/reference/commands/config.html).
+
+```bash
+$ conan config install https://github.com/DaverSomethingSomethingOrg/conan-system-packaging.git
+Trying to clone repo: https://github.com/DaverSomethingSomethingOrg/conan-system-packaging.git
+Repo cloned!
+Copying file deb_deployer.py to /root/.conan2/extensions/deployers
+Copying file rpm_deployer.py to /root/.conan2/extensions/deployers
+Copying file Makefile to /root/.conan2/extensions/deployers/deb_deployer
+Copying file rules to /root/.conan2/extensions/deployers/deb_deployer/debian
+Copying file copyright to /root/.conan2/extensions/deployers/deb_deployer/debian
+Copying file format to /root/.conan2/extensions/deployers/deb_deployer/debian/source
+Copying file template-v1.0.0.spec to /root/.conan2/extensions/deployers/rpm_deployer
+$ 
+```
+
 ## Custom Conan Profile
 
-We add a `install_prefix` option to a custom Conan profile.
+We need to add a `install_prefix` option to a custom Conan profile.
+Specify the path you wish to build and install your toolchain to.
+(I use `/opt/toolchain` in this example)
 
 ```none hl_lines="10-11" title="~/.conan2/profiles/optPrefix"
 [settings]
@@ -74,9 +95,9 @@ class Toolchain(ConanFile):
 # (or all) that are missing
 $ conan install --build=missing .
 
-# Leveraging the seeded cache, run the RPM generator for each package
+# Once the cache is seeded, run the RPM generator for each package
 $ conan install --deployer-folder=rpm_deploy \
-                --deployer=rpm_deployer.py \
+                --deployer=rpm_deployer \
                 --profile=optToolchain \
                 .
 ```
@@ -92,54 +113,4 @@ rpm_deploy
         ├── include/gmp.h
         ├── lib/libgmp.a
         └── licenses/COPYING.LESSERv3
-```
-
-## NFS toolchain
-
-!!! warning annotate "Unsupported"
-
-    This feature is still under development.
-
-Deploy packages into a singular *&lt;prefix&gt;* subdirectory within the given
-`deployer-folder` directory.
-
-```bash title="Sample Usage"
-$ conan install --deployer-folder=nfs_deploy \
-                --deployer=nfs_deployer.py \
-                --profile=optToolchain \
-                .
-```
-
-```none title="Sample Directory Tree Output"
-nfs_deploy
-└── opt
-    └── toolchain
-        ├── bin
-        │   ├── g++-15.1.0
-        │   ├── gcc-15.1.0
-        │   └── make
-        ├── include
-        │   ├── c++
-        │   │   └── 15.1.0
-        │   ├── gmp.h
-        │   └── gmpxx.h
-        ├── lib
-        │   ├── libgmp.a
-        │   └── libgmpxx.a
-        ├── lib64
-        │   └── libgcc_s.so.1
-        ├── libexec
-        │   └── gcc
-        │       └── aarch64-unknown-linux-gnu
-        ├── licenses
-        │   ├── COPYING.LESSER
-        │   ├── COPYING.LESSERv3
-        │   ├── COPYINGv2
-        │   └── LICENSE
-        └── share
-            ├── info
-            │   └── cpp.info
-            └── man
-                ├── man1
-                └── man7
 ```
