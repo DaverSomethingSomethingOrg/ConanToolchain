@@ -1,5 +1,7 @@
 # Toolchain Build System using Conan
 
+[Click here to view the latest published version of this documentation](https://daversomethingsomethingorg.github.io/ConanToolchain/latest/)
+
 Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
 for all developers offers some significant challenges.
 
@@ -29,14 +31,6 @@ To put this all together, I've developed some integration pieces:
     Conan builds, and for complete toolchain builds.
 
     - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
-
-!!! gitlab-reference annotate "[conan-gitlab-components](https://gitlab.com/DaverSomethingSomethingGroup/conan-gitlab-components)"
-
-    Custom [GitLab CI-CD Components](https://docs.gitlab.com/development/cicd/components)
-    to provide multi-platform build/test/release pipelines for individual
-    Conan builds, and for complete toolchain builds.
-
-    - https://gitlab.com/DaverSomethingSomethingGroup/conan-gitlab-components
 
 !!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
 

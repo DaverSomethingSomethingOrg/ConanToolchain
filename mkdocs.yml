@@ -1,7 +1,7 @@
 site_name: "Toolchain Build System using Conan"
 copyright: Copyright © 2025, David L. Armstrong.
 repo_url: https://github.com/DaverSomethingSomethingOrg/ConanToolchain
-#site_url: https://github.com/DaverSomethingSomethingOrg/ConanToolchain
+site_url: https://daversomethingsomethingorg.github.io/ConanToolchain/
 #edit_uri_template: 'edit/main/docs/{path}'
 docs_dir: docs/
 
@@ -10,6 +10,15 @@ extra:
     provider: mike
 
 plugins:
+  - mike:
+      # These fields are all optional; the defaults are as below...
+      alias_type: symlink
+      redirect_template: null
+      deploy_prefix: ''
+      canonical_version: null
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
 #  - techdocs-core
 #   - mkdocstrings:
 #       default_handler: python
