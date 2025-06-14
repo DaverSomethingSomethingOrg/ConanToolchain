@@ -1,0 +1,793 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/0.9/ToDo/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+    
+    
+      
+        <title>ToDo - Toolchain Build System using Conan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#todo" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Toolchain Build System using Conan
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ToDo
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Toolchain Build System using Conan
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ButWhy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    But Why?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SampleUsage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanRecipePreReqs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conan Setup and Recipe Pre-requisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE.txt" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apache License v2.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      frontend
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      backend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      System features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Roles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-conan-a-good-choice" class="md-nav__link">
+    <span class="md-ellipsis">
+      What makes Conan a good choice
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#my-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      My approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issues-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issues and Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-support-for-multiple-versions-distinct-prefixes-per-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      No support for multiple versions (distinct prefixes per tool)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prior-attempts-or-requests-to-leverage-conan-for-toolchain-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prior attempts or requests to leverage Conan for toolchain maintenance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prior attempts or requests to leverage Conan for toolchain maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patchelf" class="md-nav__link">
+    <span class="md-ellipsis">
+      patchelf
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual Environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is this
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-things-get-weird" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where things get weird
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="todo">ToDo<a class="headerlink" href="#todo" title="Permanent link">#</a></h1>
+<p>Entire engineering ecosystem - developer sandbox to CI</p>
+<p>The need for Conan</p>
+<ul>
+<li>
+<p>managing multi-platform, multi-configuration builds</p>
+<p><strong>Productize this</strong></p>
+<p>3rdParty software lifecycle management</p>
+</li>
+<li>
+<p>Illustrate architecture</p>
+</li>
+<li>Backstage UI<ul>
+<li>Request new tool/version</li>
+<li>Input tool metadata (Conan, RPM, .deb superset)</li>
+<li>Copy from system RPM where possible?</li>
+</ul>
+</li>
+<li>GitLab monorepo<ul>
+<li>pull_request validation does what?</li>
+<li>merge triggers build and packaging workflow</li>
+</ul>
+</li>
+<li>CI orchestration<ul>
+<li>pull_request for recipe must not trigger build</li>
+<li>operator has to approve recipe/tool for build (3rd Party code execution)</li>
+<li>Need 3rd-party malware/vulnerability scanning/build sandbox environment</li>
+</ul>
+</li>
+<li>Yum repo package delivery</li>
+<li>
+<p>Custom Build container matching deployment environment</p>
+<ul>
+<li>provide any base image tag</li>
+<li>add QEMU suport</li>
+</ul>
+</li>
+<li>
+<p>support multi-version install</p>
+<ul>
+<li>/repo/toolName-vVersion, /repo/toolName/Version</li>
+<li>more complicated to deal with dependency chaining..</li>
+</ul>
+</li>
+</ul>
+<h2 id="frontend">frontend<a class="headerlink" href="#frontend" title="Permanent link">#</a></h2>
+<ul>
+<li>Backtage provisioning workflow templates</li>
+<li>injest new tool</li>
+<li>add/upgrade tool in deployed toolchain</li>
+<li>retire toolchain version</li>
+<li>retire tool version</li>
+<li>Backstage toolchain/tool plugin</li>
+<li>toolchain/tool components<ul>
+<li>show their current support status</li>
+<li>request build-on-demand with deployment to yum repo</li>
+<li>Black Duck plugin</li>
+<li>dependency_tracker plugin</li>
+</ul>
+</li>
+<li>GitLab monorepo</li>
+<li>Pull-request workflow?</li>
+<li>Conan package index<ul>
+<li>start with local fork <a href="https://docs.conan.io/2/devops/devops_local_recipes_index.html">https://docs.conan.io/2/devops/devops_local_recipes_index.html</a></li>
+</ul>
+</li>
+<li>
+<p>CI workflows</p>
+<h3 id="backend">backend<a class="headerlink" href="#backend" title="Permanent link">#</a></h3>
+<ul>
+<li>wrap/maintain package databases</li>
+<li>Conan cache</li>
+<li>yum repository - all generated packages</li>
+</ul>
+<h3 id="system-features">System features<a class="headerlink" href="#system-features" title="Permanent link">#</a></h3>
+<ul>
+<li>Platform bootstrap feature</li>
+<li>conanfile profile/option?<ul>
+<li>avoids mixing the packages and lets recipe work transparently</li>
+</ul>
+</li>
+<li>Replace Conan Docker Tools<ul>
+<li><a href="https://github.com/DaverSomethingSomethingOrg/conan-docker-tools">https://github.com/DaverSomethingSomethingOrg/conan-docker-tools</a></li>
+<li>consistency between Docker toolchain and other Conan use models</li>
+</ul>
+</li>
+</ul>
+<h3 id="user-roles">User Roles<a class="headerlink" href="#user-roles" title="Permanent link">#</a></h3>
+<ul>
+<li>requesting engineer</li>
+<li>backstage new tool request<ul>
+<li>download URL</li>
+<li>short description</li>
+<li>license (will be verified)</li>
+<li>author/maintainer information</li>
+<li>lifecycle stage (alpha/beta/new/mature/deprecated)</li>
+</ul>
+</li>
+<li>devops operator</li>
+<li>validate request</li>
+<li>complete package metadata details (maybe copy RedHat, Ubuntu, whoever)</li>
+<li>commit tool <code>conanfile.py</code></li>
+<li>
+<p>commit toolchain <code>requires</code> change(s)</p>
+</li>
+<li>
+<p>toolchain CLI tool</p>
+</li>
+<li>config file</li>
+<li>define bootstrap process for new platform<ul>
+<li>which order to build/rebuild in</li>
+<li>substitute OS or ignore missing dependencies</li>
+<li>tools can be prioritized in order/parallel builds</li>
+</ul>
+</li>
+<li>build world</li>
+<li>multiple version support</li>
+</ul>
+</li>
+</ul>
+<h3 id="what-makes-conan-a-good-choice">What makes Conan a good choice<a class="headerlink" href="#what-makes-conan-a-good-choice" title="Permanent link">#</a></h3>
+<h3 id="my-approach">My approach<a class="headerlink" href="#my-approach" title="Permanent link">#</a></h3>
+<ol>
+<li>Replace Conan depedencies with prefixed RPM dependencies</li>
+</ol>
+<p>Make sure they are installed prior to the build.  3rdParty builds can
+   do funny things when dependencies are missing.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">prefix</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       <span class="n">yum</span> <span class="o">=</span> <span class="n">package_manager</span><span class="o">.</span><span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       <span class="n">yum</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="si">}</span><span class="s2">-mpc-1.2.0&quot;</span><span class="p">],</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>       <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;mpc/1.2.0&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<ol>
+<li>Conan custom deployer builds RPMs and installs them in dependency order.</li>
+</ol>
+<h3 id="issues-and-limitations">Issues and Limitations<a class="headerlink" href="#issues-and-limitations" title="Permanent link">#</a></h3>
+<h3 id="no-support-for-multiple-versions-distinct-prefixes-per-tool">No support for multiple versions (distinct prefixes per tool)<a class="headerlink" href="#no-support-for-multiple-versions-distinct-prefixes-per-tool" title="Permanent link">#</a></h3>
+<p>It's easy enough to deploy, but gets more complicated at build time,
+locating each dependency prefix for connecting RPATH, etc.</p>
+<h3 id="prior-attempts-or-requests-to-leverage-conan-for-toolchain-maintenance">Prior attempts or requests to leverage Conan for toolchain maintenance<a class="headerlink" href="#prior-attempts-or-requests-to-leverage-conan-for-toolchain-maintenance" title="Permanent link">#</a></h3>
+<div class="admonition question">
+<p class="admonition-title">ToDo</p>
+<ul>
+<li>Need to be way more objective here and go into Pros and Cons of
+  each approach.  Not trying to sell this approach as much as argue
+  that it's the simplest and most reliable and most complete.</li>
+</ul>
+</div>
+<p>Every example I've seen to date requires dependening on some simplifying
+assumptions that rely on well-behaved software builds.  In my experience
+this does not lead to a reliable result.</p>
+<p>In my experience, the most straightforward and reliable mechanism is to
+directly leverage the existing mechanisms that will be used in production
+anyway.</p>
+<p>If we are generating a series of RPMs for each package in our toolchain,
+then those same RPMs should satisfy the role of our dependencies at
+build time also.  Many of these RPMs will be build dependencies for
+other RPMs, not necessarily just runtime.</p>
+<h4 id="patchelf"><code>patchelf</code><a class="headerlink" href="#patchelf" title="Permanent link">#</a></h4>
+<ul>
+<li><a href="https://github.com/conan-io/conan/issues/2660">https://github.com/conan-io/conan/issues/2660</a></li>
+<li><a href="https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/">https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/</a></li>
+</ul>
+<p>This works for locating libraries, but what else?</p>
+<p>gcc hardcodes the path to <code>as</code> and <code>ld</code>, and Python locating it's
+installed modules.  3rdParty tools make themselves non-relocatable for
+many reasons and in many different ways we cannot fathom.  We cannot
+make such assumptions.</p>
+<p>String length is also an issue.  What if you're desired prefix is really long?
+The example works because "XORIGIN" and "$ORIGIN" are the same length string.
+How do we accommodate long strings for <code>patchelf</code> to insert?  How long is
+enough?</p>
+<p>Wait.. we're here trying to modify something already done and working, not
+build it to work by design...</p>
+<p>Here's one example where we end up with the original dependency paths get
+attached to a build in ways that cannot easily be detected and patched
+automatically:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">[</span>root@771677d358c1<span class="w"> </span>aarch64<span class="o">]</span><span class="c1"># /opt/toolchain/bin/gcc-15.1.0 -v</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Using<span class="w"> </span>built-in<span class="w"> </span>specs.
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">COLLECT_GCC</span><span class="o">=</span>/opt/toolchain/bin/gcc-15.1.0
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">COLLECT_LTO_WRAPPER</span><span class="o">=</span>/opt/toolchain/libexec/gcc/aarch64-unknown-linux-gnu/15.1.0/lto-wrapper
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Target:<span class="w"> </span>aarch64-unknown-linux-gnu
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Configured<span class="w"> </span>with:<span class="w"> </span>/tmp/gcc/gcc-v15.1.0/src/configure<span class="w"> </span>--prefix<span class="o">=</span>/opt/toolchain<span class="w"> </span>--bindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span>--sbindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span>--libdir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/lib&#39;</span><span class="w"> </span>--includedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span>--oldincludedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span>--enable-languages<span class="o">=</span>c,c++,fortran<span class="w"> </span>--disable-nls<span class="w"> </span>--disable-multilib<span class="w"> </span>--disable-bootstrap<span class="w"> </span>--with-pkgversion<span class="o">=</span><span class="s1">&#39;conan GCC 15.1.0&#39;</span><span class="w"> </span>--program-suffix<span class="o">=</span>-15.1.0<span class="w"> </span>--with-bugurl<span class="o">=</span>https://github.com/conan-io/conan-center-index/issues<span class="w"> </span>--with-zlib<span class="o">=</span>/root/.conan2/p/b/zlib4f3877b444fa4/p<span class="w"> </span>--with-isl<span class="o">=</span>/root/.conan2/p/b/isl59366a6d529b1/p<span class="w"> </span>--with-gmp<span class="o">=</span>/root/.conan2/p/b/gmpcc5fb91b1428b/p<span class="w"> </span>--with-mpc<span class="o">=</span>/root/.conan2/p/b/mpc66365fb0210d9/p<span class="w"> </span>--with-mpfr<span class="o">=</span>/root/.conan2/p/b/mpfr067752b1b16f6/p
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Thread<span class="w"> </span>model:<span class="w"> </span>posix
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Supported<span class="w"> </span>LTO<span class="w"> </span>compression<span class="w"> </span>algorithms:<span class="w"> </span>zlib
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>gcc<span class="w"> </span>version<span class="w"> </span><span class="m">15</span>.1.0<span class="w"> </span><span class="o">(</span>conan<span class="w"> </span>GCC<span class="w"> </span><span class="m">15</span>.1.0<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="o">[</span>root@771677d358c1<span class="w"> </span>aarch64<span class="o">]</span><span class="c1"># </span>
+</span></code></pre></div>
+<h3 id="virtual-environment">Virtual Environment<a class="headerlink" href="#virtual-environment" title="Permanent link">#</a></h3>
+<p>No absolute paths available without <code>chroot</code></p>
+<ul>
+<li><a href="https://github.com/conan-io/conan/issues/3280">https://github.com/conan-io/conan/issues/3280</a></li>
+<li>"We want to define the destination directory at consumption-time, not package-time."<ul>
+<li>Won't work for non-relocatable tools.</li>
+</ul>
+</li>
+<li><a href="https://github.com/conan-io/conan/issues/7432">https://github.com/conan-io/conan/issues/7432</a></li>
+<li><a href="https://github.com/conan-io/conan/issues/3243">https://github.com/conan-io/conan/issues/3243</a></li>
+<li><a href="https://github.com/conan-io/conan/issues/2660#issuecomment-406557370">https://github.com/conan-io/conan/issues/2660#issuecomment-406557370</a></li>
+<li><a href="https://github.com/conan-io/conan/issues/5664">https://github.com/conan-io/conan/issues/5664</a></li>
+<li>
+<p><a href="https://github.com/conan-io/conan/issues/11686">https://github.com/conan-io/conan/issues/11686</a></p>
+</li>
+<li>
+<p><a href="https://github.com/conan-io/conan/issues/3541#issuecomment-420949405">https://github.com/conan-io/conan/issues/3541#issuecomment-420949405</a></p>
+</li>
+<li>
+<p>Consistently documented configuration for all tool versions across
+  all supported platforms</p>
+</li>
+<li>Package Dependency Integration with OS/minimal base image</li>
+<li>Accommodate custom environment or dependency version requirements
+  indepent of OS</li>
+<li>Conan is not intended to support non-relocatable tools out of the box.</li>
+<li>Integrity validated end-to-end</li>
+<li>Source tarball sha is checked prior to unpacking</li>
+<li>Conan provides built-in integrity validation for packages<ul>
+<li><code>conan cache check-integrity &lt;pattern&gt;</code></li>
+</ul>
+</li>
+<li>Custom deployer tool generates signed packages using OS tools</li>
+</ul>
+<h3 id="what-is-this">What is this<a class="headerlink" href="#what-is-this" title="Permanent link">#</a></h3>
+<ul>
+<li>
+<p>Conan tweaks and enhancements to support building and deploying tools
+  to a set prefix, including non-relocatable tools.</p>
+</li>
+<li>
+<p>Source is downloaded, stored as original artifact</p>
+</li>
+<li>Signed commit in git or generic package in Artifactory</li>
+<li>Source may be patched, but not changed.  Patches need to be checksum'd too</li>
+<li>Build Configuration changes are patch releases also</li>
+<li>Packaged into Conan for C/C++ product integration</li>
+<li>Python for AI Apps, shared library dependencies</li>
+<li>Conan provides source and binary integrity validation on every install</li>
+<li>Packaged into RPMs for devcontainers, CI containers, production release containers</li>
+<li>RPM provides connection from container image to original source</li>
+<li>Software Composition Analysis gets a record of each.</li>
+<li>Original Source Component tarball<ul>
+<li>Where did it come from</li>
+<li>Original signature/checksum</li>
+</ul>
+</li>
+<li>Signed RH* Conatainer image records all installed packages <code>rpm -qa</code></li>
+<li>Signed RPM package records original source package </li>
+<li>Conan provides dependency graph</li>
+<li>We can easily traverse the tree, <code>build world</code> in order of dependency resolution<ul>
+<li>Or specify pattern[s] of packages to install (with dependencies)</li>
+</ul>
+</li>
+<li>Conan will even build any missing (not already pre-built) dependencies and package them up too</li>
+</ul>
+<h3 id="where-things-get-weird">Where things get weird<a class="headerlink" href="#where-things-get-weird" title="Permanent link">#</a></h3>
+<p>We completely diverge from standard Conan behavior where dependencies
+are concerned.  For these toolchain builds we disable the defined
+Conan dependencies and replace them by installing prebuilt toolchain
+RPMs.</p>
+<p>We make sure to install dependency RPMs to use as
+dependency for tools higher in the chain.</p>
+<p>It's important that the resulting toolchain deployment be entirely
+self-sufficient with no dependencies on anything outside of the toolchain
+or provided explicitly through OS dependencies (/usr, /lib)</p>
+<div class="admonition warning annotate">
+<p class="admonition-title">Warning</p>
+<p>The Conan authors discourage use of Conan for this purpose, but Conan
+is the only tool that can provide strong consistency and runtime link
+compatibility between developer toolchain, runtime depdendencies, and
+containerized runtime environment (or NFS automounted repository).</p>
+<p>Conan Deployer Best Practices (see Note at bottom):</p>
+<ul>
+<li><a href="https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html">https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html</a></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2025, David L. Armstrong.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
