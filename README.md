@@ -8,12 +8,42 @@ to build a toolchain that works by design.  Configured built, and installed
 consistently, rather than trying to manipulate tools to work in
 configurations they were not originally built for.
 
-This project consists primarily of a fairly simple (but critical) custom
-deployer for the [Conan C/C++ package manager](https://conan.io).  This
-deployer allows us to deliver a complete toolchain, built using consistent
-host configurations, and delivered in the form of OS packages for Linux.
-Today we have an RPM package deployer, with a Debian .deb package deployer
-coming soon.
+To achieve this we leverage the [Conan C/C++ package manager](https://conan.io)
+to produce repeatable builds using consistent host configutations,
+delivering a complete toolchain in the form of OS packages for Linux.
+
+To put this all together, I've developed some integration pieces:
+
+!!! github-reference annotate "[conan-system-packaging](https://github.com/DaverSomethingSomethingOrg/conan-system-packaging)"
+
+    RPM and .deb package generation using Conan.  `conan-system-packaging`
+    provides `rpm_deployer` and `deb_deployer`
+    [custom deployers](https://docs.conan.io/2/reference/extensions/deployers.html)
+    
+    - https://github.com/DaverSomethingSomethingOrg/conan-system-packaging
+
+!!! github-reference annotate "[conan-github-workflows](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows)"
+
+    Custom [GitHub Actions Reusable Workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows)
+    to provide multi-platform build/test/release workflows for individual
+    Conan builds, and for complete toolchain builds.
+
+    - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
+
+!!! gitlab-reference annotate "[conan-gitlab-components](https://gitlab.com/DaverSomethingSomethingGroup/conan-gitlab-components)"
+
+    Custom [GitLab CI-CD Components](https://docs.gitlab.com/development/cicd/components)
+    to provide multi-platform build/test/release pipelines for individual
+    Conan builds, and for complete toolchain builds.
+
+    - https://gitlab.com/DaverSomethingSomethingGroup/conan-gitlab-components
+
+!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
+
+    Custom Docker container images for building Conan packages.
+
+    - https://github.com/DaverSomethingSomethingOrg/conan-build-container
+
 
 By delivering OS packages, we are able to:
 
@@ -47,3 +77,9 @@ read on..
 - [But Why?](docs/ButWhy.md)
 - [Sample Usage](docs/SampleUsage.md)
 - [Conan Setup and Recipe Pre-requisites](docs/ConanRecipePreReqs.md)
+
+## License and Copyright
+
+Copyright © 2025 David L. Armstrong
+
+[Apache-2.0](LICENSE.txt)

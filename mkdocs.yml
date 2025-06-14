@@ -28,6 +28,9 @@ theme:
     - content.code.annotate
     - navigation.footer
 
+extra_css:
+  - stylesheets/extra.css
+
 markdown_extensions:
   - toc:
       permalink: '#'
@@ -36,6 +39,9 @@ markdown_extensions:
   - def_list
   - tables
   - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.magiclink
   - pymdownx.highlight:
       anchor_linenums: true
