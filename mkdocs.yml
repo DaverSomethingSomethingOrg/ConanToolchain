@@ -71,7 +71,7 @@ watch:
 #  - src/
 
 nav:
-  - Introduction:  'README.md'
+  - Introduction: 'index.md'
   - ButWhy.md
   - 'SampleUsage.md'
   - 'ConanRecipePreReqs.md'
