@@ -752,6 +752,46 @@ containerized runtime environment (or NFS automounted repository).</p>
 <li><a href="https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html">https://docs.conan.io/2/examples/extensions/deployers/dev/development_deploy.html</a></li>
 </ul>
 </div>
+<div class="admonition question">
+<p class="admonition-title">ToDo - CI Workflows</p>
+<ul>
+<li>
+<p>Detect new toolchain package definition</p>
+<ul>
+<li>require approval to <em>build world</em></li>
+</ul>
+</li>
+<li>
+<p>Detect modified toolchain package definition</p>
+<ul>
+<li>require approval to <em>build and deploy changes</em></li>
+</ul>
+</li>
+<li>
+<p>SCA built-in or connected</p>
+<ul>
+<li>Black Duck support</li>
+<li>dependency_tracker</li>
+</ul>
+</li>
+<li>
+<p>Build-on-demand workflows</p>
+<ul>
+<li>single tool-version/platform (+ dependencies)</li>
+<li><a href="https://docs.github.com/en/rest/actions/workflows?#create-a-workflow-dispatch-event">https://docs.github.com/en/rest/actions/workflows?#create-a-workflow-dispatch-event</a></li>
+<li><a href="https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline">https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline</a></li>
+</ul>
+</li>
+<li>
+<p>Two approaches</p>
+<ul>
+<li>build world - build/version the whole repo as a unit</li>
+<li>build a single tool version, integrate and redeploy repo</li>
+<li>individual tool build - add/replace a single tool</li>
+</ul>
+</li>
+</ul>
+</div>
 
 
 

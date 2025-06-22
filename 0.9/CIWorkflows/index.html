@@ -399,6 +399,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triggering-a-toolchain-build-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triggering a Toolchain Build (demo)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -538,6 +553,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triggering-a-toolchain-build-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triggering a Toolchain Build (demo)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -582,7 +612,7 @@ Conan builds, and for complete toolchain builds.</p>
 <h2 id="demo-multi-phase-build">Demo Multi-Phase Build<a class="headerlink" href="#demo-multi-phase-build" title="Permanent link">#</a></h2>
 <p>We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.</p>
-<p>Using cacheing in GitHub Actions, we can connect multiple toolchain
+<p>Using caching in GitHub Actions, we can connect multiple toolchain
 workflows to each other, so that dependencies built in one phase
 can be installed during subsequent phases.</p>
 <h3 id="phase-1-gnu-binutils">Phase 1 - GNU binutils<a class="headerlink" href="#phase-1-gnu-binutils" title="Permanent link">#</a></h3>
@@ -614,7 +644,8 @@ tools we built in the previous phases, and rebuild all of our tools.</p>
 <p>By using the OS-minimal image this time, we can be certain that there
 will be no surprise dependencies at all on the OS-vendor toolchain.</p>
 <p>We only upload these builds to Artifact Management, along with a brand
-new Conan Build container image for building all other tools we support.</p>
+new Conan Build container image for building all other tools we support.
+The previous packages built with our bootstrap image are discarded.</p>
 <div class="language-python highlight"><span class="filename">phase 3 - conanfile.py</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;make/4.4.1&quot;</span><span class="p">)</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;cmake/4.0.1&quot;</span><span class="p">)</span>
@@ -628,46 +659,28 @@ new Conan Build container image for building all other tools we support.</p>
 <h4 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h4>
 <div class="admonition github-reference annotate">
 <p class="admonition-title"><a href="https://github.com/conan-io/conan-docker-tools">conan-docker-tools</a></p>
-<p>The Conan project builds similar images for this purpose, but the
-difference here is that we use the same Conan recipes to build our
-build container that we do for the regular Conan developer use cases.</p>
+<p>The Conan project builds similar images for this purpose, but with a
+few significant differences:</p>
 <ul>
-<li><a href="https://github.com/conan-io/conan-docker-tools">https://github.com/conan-io/conan-docker-tools</a></li>
+<li>We use the same Conan recipes and mechanism (conan) to build our
+  build container toolchain that we provide to developers.</li>
+<li>We build both Ubuntu and AlmaLinux (RedHat compatible), as well as
+  ARM and x86 CPU architectures. </li>
 </ul>
 </div>
 <h2 id="basic-operation">Basic Operation<a class="headerlink" href="#basic-operation" title="Permanent link">#</a></h2>
-<div class="admonition question">
-<p class="admonition-title">ToDo</p>
-<ul>
-<li>Detect new toolchain package definition</li>
-<li>require approval to <em>build world</em></li>
-<li>Detect modified toolchain package definition</li>
-<li>require approval to <em>build and deploy changes</em></li>
-<li>
-<p>Optional build platform</p>
-</li>
-<li>
-<p>SCA built-in or connected</p>
-</li>
-<li>Black Duck support</li>
-<li>
-<p>dependency_tracker I guess</p>
-</li>
-<li>
-<p>Build-on-demand workflows</p>
-</li>
-<li>single tool-version/platform (+ dependencies)</li>
-<li><a href="https://docs.github.com/en/rest/actions/workflows?#create-a-workflow-dispatch-event">https://docs.github.com/en/rest/actions/workflows?#create-a-workflow-dispatch-event</a></li>
-<li>
-<p><a href="https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline">https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline</a></p>
-</li>
-<li>
-<p>Two approaches</p>
-</li>
-<li>build world - build/version the whole repo as a unit</li>
-<li>build a single tool version, integrate and redeploy repo</li>
-<li>individual tool build - add/replace a single tool</li>
-</ul>
+<h3 id="triggering-a-toolchain-build-demo">Triggering a Toolchain Build (demo)<a class="headerlink" href="#triggering-a-toolchain-build-demo" title="Permanent link">#</a></h3>
+<div class="admonition github-reference annotate">
+<p class="admonition-title">Conan Toolchain Workflow Dispatch</p>
+<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_dispatch.png" /></p>
+</div>
+<div class="admonition github-reference annotate">
+<p class="admonition-title">Conan Multi-Platform Chart</p>
+<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_chart.png" /></p>
+</div>
+<div class="admonition github-reference annotate">
+<p class="admonition-title">Conan Workflow Steps</p>
+<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_steps.png" /></p>
 </div>
 
 
