@@ -25,7 +25,7 @@
 We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.
 
-Using cacheing in GitHub Actions, we can connect multiple toolchain
+Using caching in GitHub Actions, we can connect multiple toolchain
 workflows to each other, so that dependencies built in one phase
 can be installed during subsequent phases.
 
@@ -69,6 +69,7 @@ will be no surprise dependencies at all on the OS-vendor toolchain.
 
 We only upload these builds to Artifact Management, along with a brand
 new Conan Build container image for building all other tools we support.
+The previous packages built with our bootstrap image are discarded.
 
 ```python title="phase 3 - conanfile.py"
     def requirements(self):
@@ -86,33 +87,27 @@ new Conan Build container image for building all other tools we support.
 
 !!! github-reference annotate "[conan-docker-tools](https://github.com/conan-io/conan-docker-tools)"
 
-    The Conan project builds similar images for this purpose, but the
-    difference here is that we use the same Conan recipes to build our
-    build container that we do for the regular Conan developer use cases.
+    The Conan project builds similar images for this purpose, but with a
+    few significant differences:
+
+    - We use the same Conan recipes and mechanism (conan) to build our
+      build container toolchain that we provide to developers.
+    - We build both Ubuntu and AlmaLinux (RedHat compatible), as well as
+      ARM and x86 CPU architectures. 
     
-    - https://github.com/conan-io/conan-docker-tools
 
 ## Basic Operation
 
+### Triggering a Toolchain Build (demo)
 
-!!! question "ToDo"
+!!! github-reference annotate "Conan Toolchain Workflow Dispatch"
 
-    - Detect new toolchain package definition
-      - require approval to *build world*
-    - Detect modified toolchain package definition
-      - require approval to *build and deploy changes*
-    - Optional build platform
- 
-    - SCA built-in or connected
-      - Black Duck support
-      - dependency_tracker I guess
+    ![GitHub Workflow Dispatch](img/github_workflow_dispatch.png)
 
-    - Build-on-demand workflows
-      - single tool-version/platform (+ dependencies)
-      - https://docs.github.com/en/rest/actions/workflows?#create-a-workflow-dispatch-event
-      - https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline
+!!! github-reference annotate "Conan Multi-Platform Chart"
 
-    - Two approaches
-      - build world - build/version the whole repo as a unit
-      - build a single tool version, integrate and redeploy repo
-      - individual tool build - add/replace a single tool
+    ![GitHub Workflow Dispatch](img/github_workflow_chart.png)
+
+!!! github-reference annotate "Conan Workflow Steps"
+
+    ![GitHub Workflow Dispatch](img/github_workflow_steps.png)
