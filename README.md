@@ -1,6 +1,6 @@
 # Toolchain Build System using Conan
 
-[Click here to view the published version of this documentation](https://daversomethingsomethingorg.github.io/ConanToolchain/)
+[Click here to view the published version of this documentation with more details](https://daversomethingsomethingorg.github.io/ConanToolchain/)
 
 Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
 for all developers offers some significant challenges.
@@ -13,6 +13,24 @@ configurations they were not originally built for.
 To achieve this we leverage the [Conan C/C++ package manager](https://conan.io)
 to produce repeatable builds using consistent host configutations,
 delivering a complete toolchain in the form of OS packages for Linux.
+
+To put this all together, I've developed some integration pieces:
+
+- https://github.com/DaverSomethingSomethingOrg/conan-system-packaging
+
+   RPM and .deb package generation using Conan.  `conan-system-packaging`
+   provides `rpm_deployer` and `deb_deployer`
+   [custom deployers](https://docs.conan.io/2/reference/extensions/deployers.html)
+
+- https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
+
+    Custom [GitHub Actions Reusable Workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows)
+    to provide multi-platform build/test/release workflows for individual
+    Conan builds, and for complete toolchain builds.
+
+- https://github.com/DaverSomethingSomethingOrg/conan-build-container
+
+    Custom Docker container images for building Conan packages.
 
 By delivering OS packages, we are able to:
 
@@ -31,7 +49,7 @@ configurations for your products, then you will likely want your
 toolchains to be built using configurations consistent and compatible with
 your products.
 
-[Click here to view the published version of this documentation](https://daversomethingsomethingorg.github.io/ConanToolchain/)
+[Click here to view the published version of this documentation with more details](https://daversomethingsomethingorg.github.io/ConanToolchain/)
 
 ## License and Copyright
 
