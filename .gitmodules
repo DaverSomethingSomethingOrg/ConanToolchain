@@ -1,4 +1,0 @@
-[submodule "src/demo/toolchain/conan-center-index"]
-	path = src/demo/toolchain/conan-center-index
-	url = git@github.com:DaverSomethingSomethingOrg/conan-center-index.git
-	branch = feature/prefix

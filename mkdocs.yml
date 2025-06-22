@@ -38,7 +38,7 @@ theme:
     - navigation.footer
 
 extra_css:
-  - stylesheets/extra.css
+  - css/extra.css
 
 markdown_extensions:
   - toc:
@@ -75,7 +75,6 @@ nav:
   - ButWhy.md
   - 'SampleUsage.md'
   - 'ConanRecipePreReqs.md'
-#  - 'ConanCustomDeployer.md'
-#  - 'RPMPackageGen.md'
-#  - 'CIWorkflows.md'
+  - 'CIWorkflows.md'
+#  - 'ConanSystemPackaging.md'
   - Apache License v2.0: 'LICENSE.txt'

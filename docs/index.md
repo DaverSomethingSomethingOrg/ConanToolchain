@@ -65,10 +65,6 @@ For more in-depth discussion of the issues in maintaining an Enterprise
 Engineering Development toolchain, and the benefits of this solution,
 read on..
 
-- [But Why?](ButWhy.md)
-- [Sample Usage](SampleUsage.md)
-- [Conan Setup and Recipe Pre-requisites](ConanRecipePreReqs.md)
-
 ## License and Copyright
 
 Copyright © 2025 David L. Armstrong

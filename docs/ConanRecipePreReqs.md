@@ -50,3 +50,19 @@ conancenter: https://center2.conan.io [Verify SSL: True, Enabled: False]
 conancenter-local: /workspaces/ConanToolchain/src/demo/toolchain/conan-center-index [local-recipes-index, Enabled: True]
 $ 
 ```
+
+### Maintaining the Conan Package Index
+
+```none title="Sample Conan Package Index Directory Tree"
+recipes
+├── gcc
+│   └── all
+│       ├── conandata.yml
+│       ├── conanfile.py
+│       └── test_package
+└── binutils
+    └── all
+        ├── conandata.yml
+        ├── conanfile.py
+        └── test_package
+```
