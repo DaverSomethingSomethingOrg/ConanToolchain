@@ -14,7 +14,7 @@
         <link rel="prev" href="../SampleUsage/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../CIWorkflows/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -45,7 +45,7 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -312,12 +312,48 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Local Conan recipe index">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maintaining-the-conan-package-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maintaining the Conan Package Index
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CIWorkflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI Workflows
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -385,6 +421,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Local Conan recipe index">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maintaining-the-conan-package-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maintaining the Conan Package Index
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -449,6 +500,19 @@ not already supported by package options,</p>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>conancenter-local:<span class="w"> </span>/workspaces/ConanToolchain/src/demo/toolchain/conan-center-index<span class="w"> </span><span class="o">[</span>local-recipes-index,<span class="w"> </span>Enabled:<span class="w"> </span>True<span class="o">]</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$<span class="w"> </span>
 </span></code></pre></div>
+<h3 id="maintaining-the-conan-package-index">Maintaining the Conan Package Index<a class="headerlink" href="#maintaining-the-conan-package-index" title="Permanent link">#</a></h3>
+<div class="language-text highlight"><span class="filename">Sample Conan Package Index Directory Tree</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>recipes
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── gcc
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   └── all
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│       ├── conandata.yml
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│       ├── conanfile.py
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│       └── test_package
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>└── binutils
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    └── all
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        ├── conandata.yml
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        ├── conanfile.py
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        └── test_package
+</span></code></pre></div>
 
 
 
@@ -495,13 +559,13 @@ not already supported by package options,</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../CIWorkflows/" class="md-footer__link md-footer__link--next" aria-label="Next: CI Workflows">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                CI Workflows
               </div>
             </div>
             <div class="md-footer__button md-icon">

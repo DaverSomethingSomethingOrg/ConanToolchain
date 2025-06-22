@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/0.9/ConanCustomDeployer/">
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/0.9/ConanSystemPackaging/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>rpm_deployer.py - Conan Custom Deployer - Toolchain Build System using Conan</title>
+        <title>Conan System Packaging - Custom Deployers - Toolchain Build System using Conan</title>
       
     
     
@@ -41,7 +41,7 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rpm_deployerpy-conan-custom-deployer" class="md-skip">
+        <a href="#conan-system-packaging-custom-deployers" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              rpm_deployer.py - Conan Custom Deployer
+              Conan System Packaging - Custom Deployers
             
           </span>
         </div>
@@ -266,6 +266,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../CIWorkflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI Workflows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -317,7 +338,16 @@
   
 
 
-<h1 id="rpm_deployerpy-conan-custom-deployer"><code>rpm_deployer.py</code> - Conan Custom Deployer<a class="headerlink" href="#rpm_deployerpy-conan-custom-deployer" title="Permanent link">#</a></h1>
+<h1 id="conan-system-packaging-custom-deployers">Conan System Packaging - Custom Deployers<a class="headerlink" href="#conan-system-packaging-custom-deployers" title="Permanent link">#</a></h1>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-system-packaging">conan-system-packaging</a></p>
+<p>RPM and .deb package generation using Conan.  <code>conan-system-packaging</code>
+provides <code>rpm_deployer</code> and <code>deb_deployer</code>
+<a href="https://docs.conan.io/2/reference/extensions/deployers.html">custom deployers</a></p>
+<ul>
+<li><a href="https://github.com/DaverSomethingSomethingOrg/conan-system-packaging">https://github.com/DaverSomethingSomethingOrg/conan-system-packaging</a></li>
+</ul>
+</div>
 <ul>
 <li>Iterate through the dependency graph</li>
 <li>copy the package contents of each dependency into a tree rpmbuild can use</li>
@@ -360,6 +390,58 @@
 <ul>
 <li><a href="https://docs.conan.io/2/reference/conanfile/methods/deploy.html">https://docs.conan.io/2/reference/conanfile/methods/deploy.html</a></li>
 <li><a href="https://github.com/conan-io/conan-center-index/blob/master/recipes/gcc/all/conanfile.py">https://github.com/conan-io/conan-center-index/blob/master/recipes/gcc/all/conanfile.py</a></li>
+</ul>
+</div>
+<h1 id="rpm-deb-package-generation">RPM / .deb Package Generation<a class="headerlink" href="#rpm-deb-package-generation" title="Permanent link">#</a></h1>
+<h2 id="confirmed">Confirmed<a class="headerlink" href="#confirmed" title="Permanent link">#</a></h2>
+<ul>
+<li><code>toolchain-</code> prefixed package name to avoid OS package conflicts</li>
+<li>Make sure to turn off AutoReqProv, we will specify dependencies by
+  package name/version only.</li>
+<li><code>%files</code> section merely specifies <code>prefix</code> (includes all contained
+  subdirectories and files recorsively)</li>
+</ul>
+<h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">#</a></h2>
+<ul>
+<li>translate conan runtime dependencies into RPM dependencies, assuming
+  RPMs exist for each dependency.</li>
+<li>Runtime dependencies should be installed in advance</li>
+<li>
+<p>Build dependencies should be installed, but not spec'd</p>
+<ul>
+<li>Verify they exist/work in advance too!</li>
+</ul>
+</li>
+<li>
+<p>If Conan GCC depends on Conan binutils, first build binutils package
+  and publish package.</p>
+</li>
+<li>Pass Prefix into conan install/build, ensuring all toolchain tools
+  have a consistent prefix.</li>
+<li>Since we'll use non-default/standard prefix, we'll want to make sure
+    we don't publish the Conan package beyond the cache.  It's only
+    temporary to in order to deploy RPM packages from.</li>
+<li>Next yum install the binutils RPM into our prefix so it's available
+  as a build dependency for GCC</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">ToDo</p>
+<ul>
+<li>allow package to provide custom RPM spec template</li>
+<li>special dependencies</li>
+<li>custom file permissions?  setuid/setgid, etc.  lsof/top?</li>
+</ul>
+</div>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<ul>
+<li><a href="https://backreference.org/2011/09/17/some-tips-on-rpm-conditional-macros/index.html">https://backreference.org/2011/09/17/some-tips-on-rpm-conditional-macros/index.html</a></li>
+<li><a href="https://rpm-software-management.github.io/rpm/manual/macros">https://rpm-software-management.github.io/rpm/manual/macros</a></li>
+<li><a href="https://rpm-packaging-guide.github.io/#packaging-software">https://rpm-packaging-guide.github.io/#packaging-software</a></li>
+<li><a href="https://rpm-packaging-guide.github.io/">https://rpm-packaging-guide.github.io/</a></li>
+<li><a href="https://docs.redhat.com/fr/documentation/red_hat_enterprise_linux/9/html/packaging_and_distributing_software/assembly_what-a-spec-file-is_packaging-software#ref_spec-file-preamble-items_assembly_what-a-spec-file-is">https://docs.redhat.com/fr/documentation/red_hat_enterprise_linux/9/html/packaging_and_distributing_software/assembly_what-a-spec-file-is_packaging-software#ref_spec-file-preamble-items_assembly_what-a-spec-file-is</a></li>
+<li><a href="https://www.redhat.com/en/blog/create-rpm-package">https://www.redhat.com/en/blog/create-rpm-package</a></li>
+<li><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/packaging_and_distributing_software/advanced-topics">https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/packaging_and_distributing_software/advanced-topics</a></li>
 </ul>
 </div>
 
