@@ -54,7 +54,16 @@
     
     
     
-  </head>
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
   
   
     <body dir="ltr">
@@ -602,12 +611,12 @@ Conan builds, and for complete toolchain builds.</p>
 <h2 id="toolchain-workflow">Toolchain Workflow<a class="headerlink" href="#toolchain-workflow" title="Permanent link">#</a></h2>
 <div class="admonition note annotate">
 <p class="admonition-title">Basic Conan Toolchain Workflow</p>
-<p><img alt="Conan Toolchain Workflow" src="../img/conan_toolchain_workflow.png" /></p>
+<p><a class="glightbox" href="../img/conan_toolchain_workflow.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Workflow" src="../img/conan_toolchain_workflow.png" /></a></p>
 </div>
 <h2 id="multi-platform-toolchain-workflow">Multi-Platform Toolchain Workflow<a class="headerlink" href="#multi-platform-toolchain-workflow" title="Permanent link">#</a></h2>
 <div class="admonition note annotate">
 <p class="admonition-title">Multi-Platform Conan Toolchain Workflow</p>
-<p><img alt="Multi-Platform Conan Toolchain Workflow" src="../img/conan_multiplatform_toolchain.png" /></p>
+<p><a class="glightbox" href="../img/conan_multiplatform_toolchain.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Multi-Platform Conan Toolchain Workflow" src="../img/conan_multiplatform_toolchain.png" /></a></p>
 </div>
 <h2 id="demo-multi-phase-build">Demo Multi-Phase Build<a class="headerlink" href="#demo-multi-phase-build" title="Permanent link">#</a></h2>
 <p>We use our tools to build our tools.  But we need to get started
@@ -654,7 +663,7 @@ The previous packages built with our bootstrap image are discarded.</p>
 </span></code></pre></div>
 <div class="admonition note annotate">
 <p class="admonition-title">For each platform, we end up with an overall flow that looks like this</p>
-<p><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></p>
+<p><a class="glightbox" href="../img/conan_toolchain_demo.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></a></p>
 </div>
 <h4 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h4>
 <div class="admonition github-reference annotate">
@@ -672,15 +681,15 @@ few significant differences:</p>
 <h3 id="triggering-a-toolchain-build-demo">Triggering a Toolchain Build (demo)<a class="headerlink" href="#triggering-a-toolchain-build-demo" title="Permanent link">#</a></h3>
 <div class="admonition github-reference annotate">
 <p class="admonition-title">Conan Toolchain Workflow Dispatch</p>
-<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_dispatch.png" /></p>
+<p><a class="glightbox" href="../img/github_workflow_dispatch.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_dispatch.png" /></a></p>
 </div>
 <div class="admonition github-reference annotate">
 <p class="admonition-title">Conan Multi-Platform Chart</p>
-<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_chart.png" /></p>
+<p><a class="glightbox" href="../img/github_workflow_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_chart.png" /></a></p>
 </div>
 <div class="admonition github-reference annotate">
 <p class="admonition-title">Conan Workflow Steps</p>
-<p><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_steps.png" /></p>
+<p><a class="glightbox" href="../img/github_workflow_steps.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_steps.png" /></a></p>
 </div>
 
 
@@ -778,5 +787,7 @@ few significant differences:</p>
       <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>
