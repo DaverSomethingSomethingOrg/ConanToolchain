@@ -23,7 +23,7 @@
   want the benefit of "just works" package installation picking up
   all required OS dependencies.
 - You need to add support for a new OS distro/version/architecture,
-  but need your tools to work consistently with the existing platforms.
+  but need your tools to work consistently with your existing platforms.
 
 ### The system has to outlast the original maintainer
 
@@ -95,20 +95,20 @@ LD_PRELOAD=/opt/toolchain/lib64/libasan.so.8
 
 Conan can speak Yum (RedHat), Apt (Debian), and more!  While this feature
 is intended to provide a working build and runtime for native Conan
-packages, we can leverage this metadata to connect our package builds to
-OS-provided packages, not just other Conan packages.
+packages, we can leverage this metadata to connect our system package
+builds to OS-provided packages, not just other Conan packages.
 
 !!! note annotate "Reference"
 
     - https://docs.conan.io/2/reference/tools/system/package_manager.html
 
-## Why OS packaging?
+## Why System Packaging?
 
 ### Ease of Use
 
 When building custom container images using our toolchain packages, we
 want the installation process to be as straightforward as possible.
-In an enterprise Engineering organization, we want each product to be
+In an enterprise Engineering organization, we want each product team to be
 able to customize their sandbox or CI environments with minimal friction.
 
 When we `yum install -y toolchain-gcc` in a fresh container, we want a
@@ -117,13 +117,13 @@ dependencies that we happen to know GCC requires.
 
 As we want to support the Developer Sandbox with DevContainers, it's
 important to make it as easy as possible for each developer to install
-our preferred packages to ensure a reliable result.
+our preferred and trusted packages to ensure a reliable result.
 
 When developers find working with the toolchain difficult or
 unproductive, they are often entirely capable of implementing their
 own.
 
-The impact:
+When developers roll their own toolchains, the impact looks like:
 
 - Duplication of effort building and deploying the tools/libraries
 - Unreproducible builds, requiring "tribal knowledge"
@@ -136,13 +136,13 @@ The impact:
 
 ### SBoM / Software Composition Analysis
 
-Dependency tracking tools like Black Duck and syft are able to scan
-container images and record installed RedHat RPMs, Debian .deb, and
-macOS .dmg out of the box.
+Dependency tracking tools like Black Duck, syft, and Artifactory are able
+to scan container images and record installed RedHat RPMs, Debian .deb,
+and macOS .dmg out of the box.
 
 In contrast, files that are simply copied into a container image are
-difficult to determine the originating source for, and often result in
-incorrect dependencies detected, creating a mess that needs to be
+difficult to determine the originating source for. This results in
+incorrect dependencies being detected, creating a mess that needs to be
 manually sorted out by DevOps or Release Mangagement.
 
 In one example, a product team includes a particular open-source
@@ -154,11 +154,11 @@ were a mess, resulting in a quality escalation.  It delayed the product
 release.
 
 Even worse, a false positive result could be hiding a vulnerability in
-your product!  Black hats don't put their faith in your SBoM. :-) OS
-packaging significantly reduces false positives and negatives.
+your product!  Black hats don't put their faith in your SBoM! OS
+packaging significantly reduces both false positives and negatives.
 
 Relying on file-system scan for your SBoM means *a lot* of manual
-data correction within your SCA tool, often on a file-by-file basis.
+data correction within your SCA tool, sometimes on a file-by-file basis.
 Leveraging the system package manager creates a vital linkage in your
 release provenance documentation.  It ensures accurate results, and
 saves time, especially in unplanned escalations.
@@ -188,6 +188,7 @@ graph LR
 
     - https://rpm-packaging-guide.github.io/#Signing-Packages
     - http://ftp.rpm.org/max-rpm/ch-rpm-verify.html
+    - https://www.debian.org/doc/manuals/securing-debian-manual/deb-pack-sign.en.html
 
 ## Common Issues
 
@@ -200,8 +201,8 @@ reliably.  RedHat's own `yum` tool depends on python as well..
 What if we want to support multiple toolchains in the same host or
 container image?  Cross-compiling, product branching..
 
-In this system, we name each package carefully to associate it with
-the toolchain/prefix it supports.
+In this system, we name each package using a convention that associates
+it with the toolchain/prefix it supports.
 
 ```bash title="Multiple GCC versions installed without conflict"
 $ rpm -q --whatprovides /usr/bin/gcc
