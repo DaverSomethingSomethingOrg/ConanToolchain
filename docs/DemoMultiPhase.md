@@ -14,7 +14,7 @@ compiler to build our tools though, so we'll use a special bootstrap
 container image with the OS Vendor's compiler chain installed.
 
 ```python title="phase 1 - conanfile.py"
-    # For this bootstrapping phase we'll depend on OS vendor-provided compilers
+    # For this bootstrapping phase we'll depend on OS vendor-provided tools
     def system_requirements(self):
         Apt(self).install(["make", "cmake", "binutils", "gcc"])
         Yum(self).install(["make", "cmake", "binutils", "gcc"])
@@ -30,10 +30,14 @@ Phase 1.  We're still depending on the system GCC however, so we still want
 the OS Vendor's binutils available for their GCC as well.
 
 ```python title="phase 2 - conanfile.py"
-    # For this bootstrapping phase we'll depend on OS vendor-provided compilers
+    # For this bootstrapping phase we'll depend on OS vendor-provided tools
     def system_requirements(self):
-        Apt(self).install(["make", "cmake", "binutils", "gcc"])
-        Yum(self).install(["make", "cmake", "binutils", "gcc"])
+        Apt(self).install(["make", "cmake", "binutils", "gcc",
+                           "opt+toolchain-binutils_2.42-1",
+                          ])
+        Yum(self).install(["make", "cmake", "binutils", "gcc",
+                           "opt_toolchain-binutils-2.42-1",
+                          ])
 
     def requirements(self):
         self.requires("make/4.4.1")
@@ -54,6 +58,19 @@ new Conan Build container image for building all other tools we support.
 The previous packages built with our bootstrap image are discarded.
 
 ```python title="phase 3 - conanfile.py"
+    # Finally, we use our tools from phase 1 and 2 to build our tools again
+    def system_requirements(self):
+        Apt(self).install(["opt+toolchain-make-4.4.1-1",
+                           "opt+toolchain-cmake-4.0.1-1",
+                           "opt+toolchain-gcc-12.2.0-1",
+                           "opt+toolchain-binutils_2.42-1",
+                          ])
+        Yum(self).install(["opt_toolchain-make-4.4.1-1",
+                           "opt_toolchain-cmake-4.0.1-1",
+                           "opt_toolchain-gcc-12.2.0-1",
+                           "opt_toolchain-binutils-2.42-1",
+                          ])
+
     def requirements(self):
         self.requires("make/4.4.1")
         self.requires("cmake/4.0.1")
