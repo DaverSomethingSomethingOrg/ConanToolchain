@@ -339,13 +339,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-os-packaging" class="md-nav__link">
+  <a href="#why-system-packaging" class="md-nav__link">
     <span class="md-ellipsis">
-      Why OS packaging?
+      Why System Packaging?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Why OS packaging?">
+    <nav class="md-nav" aria-label="Why System Packaging?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -619,13 +619,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-os-packaging" class="md-nav__link">
+  <a href="#why-system-packaging" class="md-nav__link">
     <span class="md-ellipsis">
-      Why OS packaging?
+      Why System Packaging?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Why OS packaging?">
+    <nav class="md-nav" aria-label="Why System Packaging?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -725,7 +725,7 @@
   want the benefit of "just works" package installation picking up
   all required OS dependencies.</li>
 <li>You need to add support for a new OS distro/version/architecture,
-  but need your tools to work consistently with the existing platforms.</li>
+  but need your tools to work consistently with your existing platforms.</li>
 </ul>
 <h3 id="the-system-has-to-outlast-the-original-maintainer">The system has to outlast the original maintainer<a class="headerlink" href="#the-system-has-to-outlast-the-original-maintainer" title="Permanent link">#</a></h3>
 <ul>
@@ -787,30 +787,30 @@ your software!</p>
 <h3 id="system-package-integration">System Package Integration<a class="headerlink" href="#system-package-integration" title="Permanent link">#</a></h3>
 <p>Conan can speak Yum (RedHat), Apt (Debian), and more!  While this feature
 is intended to provide a working build and runtime for native Conan
-packages, we can leverage this metadata to connect our package builds to
-OS-provided packages, not just other Conan packages.</p>
+packages, we can leverage this metadata to connect our system package
+builds to OS-provided packages, not just other Conan packages.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Reference</p>
 <ul>
 <li><a href="https://docs.conan.io/2/reference/tools/system/package_manager.html">https://docs.conan.io/2/reference/tools/system/package_manager.html</a></li>
 </ul>
 </div>
-<h2 id="why-os-packaging">Why OS packaging?<a class="headerlink" href="#why-os-packaging" title="Permanent link">#</a></h2>
+<h2 id="why-system-packaging">Why System Packaging?<a class="headerlink" href="#why-system-packaging" title="Permanent link">#</a></h2>
 <h3 id="ease-of-use">Ease of Use<a class="headerlink" href="#ease-of-use" title="Permanent link">#</a></h3>
 <p>When building custom container images using our toolchain packages, we
 want the installation process to be as straightforward as possible.
-In an enterprise Engineering organization, we want each product to be
+In an enterprise Engineering organization, we want each product team to be
 able to customize their sandbox or CI environments with minimal friction.</p>
 <p>When we <code>yum install -y toolchain-gcc</code> in a fresh container, we want a
 working <code>gcc</code> when it's done!  We don't want to have to add other system
 dependencies that we happen to know GCC requires.</p>
 <p>As we want to support the Developer Sandbox with DevContainers, it's
 important to make it as easy as possible for each developer to install
-our preferred packages to ensure a reliable result.</p>
+our preferred and trusted packages to ensure a reliable result.</p>
 <p>When developers find working with the toolchain difficult or
 unproductive, they are often entirely capable of implementing their
 own.</p>
-<p>The impact:</p>
+<p>When developers roll their own toolchains, the impact looks like:</p>
 <ul>
 <li>Duplication of effort building and deploying the tools/libraries</li>
 <li>Unreproducible builds, requiring "tribal knowledge"</li>
@@ -824,12 +824,12 @@ own.</p>
 </ul>
 </div>
 <h3 id="sbom-software-composition-analysis">SBoM / Software Composition Analysis<a class="headerlink" href="#sbom-software-composition-analysis" title="Permanent link">#</a></h3>
-<p>Dependency tracking tools like Black Duck and syft are able to scan
-container images and record installed RedHat RPMs, Debian .deb, and
-macOS .dmg out of the box.</p>
+<p>Dependency tracking tools like Black Duck, syft, and Artifactory are able
+to scan container images and record installed RedHat RPMs, Debian .deb,
+and macOS .dmg out of the box.</p>
 <p>In contrast, files that are simply copied into a container image are
-difficult to determine the originating source for, and often result in
-incorrect dependencies detected, creating a mess that needs to be
+difficult to determine the originating source for. This results in
+incorrect dependencies being detected, creating a mess that needs to be
 manually sorted out by DevOps or Release Mangagement.</p>
 <p>In one example, a product team includes a particular open-source
 JavaScript library in their product.  The SCA file system scan found
@@ -839,10 +839,10 @@ known Firefox CVEs to be associated with that product.  Quality metrics
 were a mess, resulting in a quality escalation.  It delayed the product
 release.</p>
 <p>Even worse, a false positive result could be hiding a vulnerability in
-your product!  Black hats don't put their faith in your SBoM. :-) OS
-packaging significantly reduces false positives and negatives.</p>
+your product!  Black hats don't put their faith in your SBoM! OS
+packaging significantly reduces both false positives and negatives.</p>
 <p>Relying on file-system scan for your SBoM means <em>a lot</em> of manual
-data correction within your SCA tool, often on a file-by-file basis.
+data correction within your SCA tool, sometimes on a file-by-file basis.
 Leveraging the system package manager creates a vital linkage in your
 release provenance documentation.  It ensures accurate results, and
 saves time, especially in unplanned escalations.</p>
@@ -871,6 +871,7 @@ saves time, especially in unplanned escalations.</p>
 <ul>
 <li><a href="https://rpm-packaging-guide.github.io/#Signing-Packages">https://rpm-packaging-guide.github.io/#Signing-Packages</a></li>
 <li><a href="http://ftp.rpm.org/max-rpm/ch-rpm-verify.html">http://ftp.rpm.org/max-rpm/ch-rpm-verify.html</a></li>
+<li><a href="https://www.debian.org/doc/manuals/securing-debian-manual/deb-pack-sign.en.html">https://www.debian.org/doc/manuals/securing-debian-manual/deb-pack-sign.en.html</a></li>
 </ul>
 </div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">#</a></h2>
@@ -880,8 +881,8 @@ IT needs their python version on every system for Ansible to work
 reliably.  RedHat's own <code>yum</code> tool depends on python as well..</p>
 <p>What if we want to support multiple toolchains in the same host or
 container image?  Cross-compiling, product branching..</p>
-<p>In this system, we name each package carefully to associate it with
-the toolchain/prefix it supports.</p>
+<p>In this system, we name each package using a convention that associates
+it with the toolchain/prefix it supports.</p>
 <div class="language-bash highlight"><span class="filename">Multiple GCC versions installed without conflict</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/usr/bin/gcc
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gcc-11.5.0-5.el9_5.alma.1.aarch64
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$

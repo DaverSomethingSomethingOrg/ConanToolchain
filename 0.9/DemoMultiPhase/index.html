@@ -533,7 +533,7 @@ the OS Vendor's binutils available for their GCC as well.</p>
 <p>Finally, we will go back to our OS-minimal container image, install the
 tools we built in the previous phases, and rebuild all of our tools.</p>
 <p>By using the OS-minimal image this time, we can be certain that there
-will be no surprise dependencies at all on the original OS Vendor toolchain.</p>
+will be no surprise dependencies on the original OS Vendor toolchain.</p>
 <p>We only upload these final builds to Artifact Management, along with a brand
 new Conan Build container image for building all other tools we support.
 The previous packages built with our bootstrap image are discarded.</p>
@@ -568,7 +568,7 @@ few significant differences:</p>
 <ul>
 <li>We use the same Conan recipes and mechanism (Conan) to build the
   toolchain container that we provide to developers.</li>
-<li>We build both Ubuntu and AlmaLinux (RedHat compatible), as well as
+<li>We build both Ubuntu and AlmaLinux (RedHat derived), as well as
   ARM and x86 CPU architectures.</li>
 </ul>
 </div>
