@@ -14,7 +14,7 @@
         <link rel="prev" href="../ConanRecipePreReqs/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../DemoMultiPhase/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -345,63 +345,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#demo-multi-phase-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Demo Multi-Phase Build
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Demo Multi-Phase Build">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-gnu-binutils" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 1 - GNU binutils
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-bootstrapping-cmake-gnu-make-and-gcc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 2 - bootstrapping CMake, GNU Make, and GCC
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-3-clean-rebuilds-using-our-toolchain" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 3 - Clean rebuilds using our toolchain
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Phase 3 - Clean rebuilds using our toolchain">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      See Also
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#basic-operation" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Operation
@@ -429,6 +372,27 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DemoMultiPhase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - MultiPhase Toolchain Build
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -499,63 +463,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#demo-multi-phase-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Demo Multi-Phase Build
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Demo Multi-Phase Build">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-gnu-binutils" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 1 - GNU binutils
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-bootstrapping-cmake-gnu-make-and-gcc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 2 - bootstrapping CMake, GNU Make, and GCC
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phase-3-clean-rebuilds-using-our-toolchain" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 3 - Clean rebuilds using our toolchain
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Phase 3 - Clean rebuilds using our toolchain">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      See Also
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#basic-operation" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Operation
@@ -618,65 +525,6 @@ Conan builds, and for complete toolchain builds.</p>
 <p class="admonition-title">Multi-Platform Conan Toolchain Workflow</p>
 <p><a class="glightbox" href="../img/conan_multiplatform_toolchain.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Multi-Platform Conan Toolchain Workflow" src="../img/conan_multiplatform_toolchain.png" /></a></p>
 </div>
-<h2 id="demo-multi-phase-build">Demo Multi-Phase Build<a class="headerlink" href="#demo-multi-phase-build" title="Permanent link">#</a></h2>
-<p>We use our tools to build our tools.  But we need to get started
-on a new platform by building our basic compiler suite.</p>
-<p>Using caching in GitHub Actions, we can connect multiple toolchain
-workflows to each other, so that dependencies built in one phase
-can be installed during subsequent phases.</p>
-<h3 id="phase-1-gnu-binutils">Phase 1 - GNU binutils<a class="headerlink" href="#phase-1-gnu-binutils" title="Permanent link">#</a></h3>
-<p>GCC depends on binutils, so that's where we start.  We need a working
-compiler to build our tools though, so we'll use a special bootstrap
-container image with the OS Vendor's compiler chain installed.</p>
-<div class="language-python highlight"><span class="filename">phase 1 - conanfile.py</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided compilers</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">system_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;binutils/2.42&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="phase-2-bootstrapping-cmake-gnu-make-and-gcc">Phase 2 - bootstrapping CMake, GNU Make, and GCC<a class="headerlink" href="#phase-2-bootstrapping-cmake-gnu-make-and-gcc" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><span class="filename">phase 2 - conanfile.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided compilers</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">system_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;make/4.4.1&quot;</span><span class="p">)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;cmake/4.0.1&quot;</span><span class="p">)</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span>
-</span></code></pre></div>
-<h3 id="phase-3-clean-rebuilds-using-our-toolchain">Phase 3 - Clean rebuilds using our toolchain<a class="headerlink" href="#phase-3-clean-rebuilds-using-our-toolchain" title="Permanent link">#</a></h3>
-<p>Finally, we will go back to our OS-minimal container image, install the
-tools we built in the previous phases, and rebuild all of our tools.</p>
-<p>By using the OS-minimal image this time, we can be certain that there
-will be no surprise dependencies at all on the OS-vendor toolchain.</p>
-<p>We only upload these builds to Artifact Management, along with a brand
-new Conan Build container image for building all other tools we support.
-The previous packages built with our bootstrap image are discarded.</p>
-<div class="language-python highlight"><span class="filename">phase 3 - conanfile.py</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;make/4.4.1&quot;</span><span class="p">)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;cmake/4.0.1&quot;</span><span class="p">)</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;binutils/2.42&quot;</span><span class="p">)</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span>
-</span></code></pre></div>
-<div class="admonition note annotate">
-<p class="admonition-title">For each platform, we end up with an overall flow that looks like this</p>
-<p><a class="glightbox" href="../img/conan_toolchain_demo.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></a></p>
-</div>
-<h4 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h4>
-<div class="admonition github-reference annotate">
-<p class="admonition-title"><a href="https://github.com/conan-io/conan-docker-tools">conan-docker-tools</a></p>
-<p>The Conan project builds similar images for this purpose, but with a
-few significant differences:</p>
-<ul>
-<li>We use the same Conan recipes and mechanism (conan) to build our
-  build container toolchain that we provide to developers.</li>
-<li>We build both Ubuntu and AlmaLinux (RedHat compatible), as well as
-  ARM and x86 CPU architectures. </li>
-</ul>
-</div>
 <h2 id="basic-operation">Basic Operation<a class="headerlink" href="#basic-operation" title="Permanent link">#</a></h2>
 <h3 id="triggering-a-toolchain-build-demo">Triggering a Toolchain Build (demo)<a class="headerlink" href="#triggering-a-toolchain-build-demo" title="Permanent link">#</a></h3>
 <div class="admonition github-reference annotate">
@@ -684,12 +532,12 @@ few significant differences:</p>
 <p><a class="glightbox" href="../img/github_workflow_dispatch.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_dispatch.png" /></a></p>
 </div>
 <div class="admonition github-reference annotate">
-<p class="admonition-title">Conan Multi-Platform Chart</p>
-<p><a class="glightbox" href="../img/github_workflow_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_chart.png" /></a></p>
+<p class="admonition-title">Conan Multi-Phase Multi-Platform Chart</p>
+<p><a class="glightbox" href="../img/github_workflow_chart.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Multi-Phase Multi-Platform Chart" src="../img/github_workflow_chart.png" /></a></p>
 </div>
 <div class="admonition github-reference annotate">
 <p class="admonition-title">Conan Workflow Steps</p>
-<p><a class="glightbox" href="../img/github_workflow_steps.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="GitHub Workflow Dispatch" src="../img/github_workflow_steps.png" /></a></p>
+<p><a class="glightbox" href="../img/github_workflow_steps.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Workflow Steps" src="../img/github_workflow_steps.png" /></a></p>
 </div>
 
 
@@ -737,13 +585,13 @@ few significant differences:</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../DemoMultiPhase/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - MultiPhase Toolchain Build">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                Demo - MultiPhase Toolchain Build
               </div>
             </div>
             <div class="md-footer__button md-icon">
