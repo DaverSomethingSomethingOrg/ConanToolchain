@@ -19,12 +19,11 @@ To put this all together, I've developed some integration pieces:
 - https://github.com/DaverSomethingSomethingOrg/conan-system-packaging
 
    RPM and .deb package generation using Conan.  `conan-system-packaging`
-   provides `rpm_deployer` and `deb_deployer`
-   [custom deployers](https://docs.conan.io/2/reference/extensions/deployers.html)
+   provides `rpm_deployer` and `deb_deployer` custom deployers.
 
 - https://github.com/DaverSomethingSomethingOrg/conan-github-workflows
 
-    Custom [GitHub Actions Reusable Workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows)
+    Custom GitHub Actions Reusable Workflows
     to provide multi-platform build/test/release workflows for individual
     Conan builds, and for complete toolchain builds.
 

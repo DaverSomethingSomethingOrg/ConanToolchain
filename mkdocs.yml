@@ -77,5 +77,6 @@ nav:
   - 'SampleUsage.md'
   - 'ConanRecipePreReqs.md'
   - 'CIWorkflows.md'
+  - 'DemoMultiPhase.md'
 #  - 'ConanSystemPackaging.md'
   - Apache License v2.0: 'LICENSE.txt'
