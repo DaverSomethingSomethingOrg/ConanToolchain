@@ -510,7 +510,7 @@
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>$<span class="w"> </span>
 </span></code></pre></div>
 <h2 id="custom-conan-profile">Custom Conan Profile<a class="headerlink" href="#custom-conan-profile" title="Permanent link">#</a></h2>
-<p>We need to add a <code>install_prefix</code> option to a custom Conan profile.
+<p>We need to add an <code>install_prefix</code> option to a custom Conan profile.
 Specify the path you wish to build and install your toolchain to.
 (I use <code>/opt/toolchain</code> in this example)</p>
 <div class="language-text highlight"><span class="filename">~/.conan2/profiles/optPrefix</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[settings]
@@ -582,11 +582,11 @@ version issues early in the process.</p>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                </span>.
 </span></code></pre></div>
 <div class="language-text highlight"><span class="filename">Sample Directory Tree Output</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>rpm_deploy
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── toolchain-gcc-15.1.0
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── opt-toolchain-gcc-15.1.0
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│   └── opt/toolchain
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│       ├── bin/make
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│       └── share/info/make.info
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>└── toolchain-gmp-6.3.0
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>└── opt-toolchain-gmp-6.3.0
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    └── opt/toolchain
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        ├── include/gmp.h
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        ├── lib/libgmp.a

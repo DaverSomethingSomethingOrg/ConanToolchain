@@ -351,6 +351,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#other" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -422,38 +439,7 @@ provides <code>rpm_deployer</code> and <code>deb_deployer</code>
 <li><a href="https://github.com/conan-io/conan-center-index/blob/master/recipes/gcc/all/conanfile.py">https://github.com/conan-io/conan-center-index/blob/master/recipes/gcc/all/conanfile.py</a></li>
 </ul>
 </div>
-<h1 id="rpm-deb-package-generation">RPM / .deb Package Generation<a class="headerlink" href="#rpm-deb-package-generation" title="Permanent link">#</a></h1>
-<h2 id="confirmed">Confirmed<a class="headerlink" href="#confirmed" title="Permanent link">#</a></h2>
-<ul>
-<li><code>toolchain-</code> prefixed package name to avoid OS package conflicts</li>
-<li>Make sure to turn off AutoReqProv, we will specify dependencies by
-  package name/version only.</li>
-<li><code>%files</code> section merely specifies <code>prefix</code> (includes all contained
-  subdirectories and files recorsively)</li>
-</ul>
 <h2 id="other">Other<a class="headerlink" href="#other" title="Permanent link">#</a></h2>
-<ul>
-<li>translate conan runtime dependencies into RPM dependencies, assuming
-  RPMs exist for each dependency.</li>
-<li>Runtime dependencies should be installed in advance</li>
-<li>
-<p>Build dependencies should be installed, but not spec'd</p>
-<ul>
-<li>Verify they exist/work in advance too!</li>
-</ul>
-</li>
-<li>
-<p>If Conan GCC depends on Conan binutils, first build binutils package
-  and publish package.</p>
-</li>
-<li>Pass Prefix into conan install/build, ensuring all toolchain tools
-  have a consistent prefix.</li>
-<li>Since we'll use non-default/standard prefix, we'll want to make sure
-    we don't publish the Conan package beyond the cache.  It's only
-    temporary to in order to deploy RPM packages from.</li>
-<li>Next yum install the binutils RPM into our prefix so it's available
-  as a build dependency for GCC</li>
-</ul>
 <div class="admonition question">
 <p class="admonition-title">ToDo</p>
 <ul>

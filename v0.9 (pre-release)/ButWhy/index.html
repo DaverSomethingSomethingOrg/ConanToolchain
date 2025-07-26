@@ -306,6 +306,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-is-installation-prefix-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why is installation prefix important?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#why-conan" class="md-nav__link">
     <span class="md-ellipsis">
       Why Conan?
@@ -586,6 +595,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-is-installation-prefix-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why is installation prefix important?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#why-conan" class="md-nav__link">
     <span class="md-ellipsis">
       Why Conan?
@@ -707,8 +725,9 @@
 <h2 id="difficulties-in-toolchain-maintenance">Difficulties in toolchain maintenance<a class="headerlink" href="#difficulties-in-toolchain-maintenance" title="Permanent link">#</a></h2>
 <h3 id="supporting-shared-toolchains-is-easy">Supporting shared toolchains is easy<a class="headerlink" href="#supporting-shared-toolchains-is-easy" title="Permanent link">#</a></h3>
 <p>...but complicated!</p>
+<p>Perhaps you've experienced some of these scenarios.  I certainly have!</p>
 <ul>
-<li>You've had to turn off a feature on one platform because a
+<li>You've had to turn off a tool feature on one platform because a
   dependency was not supported or available for that platform.</li>
 <li>Platform is new and compiler chain requires bootstrapping.</li>
 <li>The time that developer needed a patch applied for their specific
@@ -718,14 +737,15 @@
   duplication of effort!</li>
 <li>The time a certain customer made a deal with your company to
   better prioritize your product's quality on their difficult-to-work-with
-  platform over your developers' preferred platform.</li>
+  platform.  Over your developers' preferred platform.</li>
 <li>Commercial tool is only available in binary form, and installer
   only speaks "/usr/local".</li>
 <li>We want to avoid conflicts with OS vendor-provided packages, but also
   want the benefit of "just works" package installation picking up
   all required OS dependencies.</li>
 <li>You need to add support for a new OS distro/version/architecture,
-  but need your tools to work consistently with your existing platforms.</li>
+  but need your toolchain on the new platform to behave consistently with
+  your existing platform toolchains.</li>
 </ul>
 <h3 id="the-system-has-to-outlast-the-original-maintainer">The system has to outlast the original maintainer<a class="headerlink" href="#the-system-has-to-outlast-the-original-maintainer" title="Permanent link">#</a></h3>
 <ul>
@@ -739,17 +759,24 @@ In a container environment you are incentivized to install only the desired
 tool versions that are appropriate for running the application or task.
 Whichever tool your default <code>$PATH</code> locates should be the correct choice.</p>
 <p>On a VM or baremetal host, with tools installed in <code>/usr/local</code>, or
-perhaps in an automounted NFS repositories, <code>$PATH</code> has to be set
-carefully to find the right tool installations, and it's not set by
-default.  Additionally, a user may still run a tool that isn't in their
-<code>$PATH</code>, and what then?  If <em>that</em> tool relies on other tools (such as
-<code>gcc</code> needing <code>as</code> and <code>ld</code> from binutils), how does it find the right
-ones?  How can that user be confident it will work correctly and
-reliably?</p>
+perhaps in an automounted NFS repositories, everything works differently.
+<code>$PATH</code> has to be set carefully to find the right tool installations, and
+it's not set by default.  Additionally, a user may still run a tool that
+isn't in their <code>$PATH</code>, so what then?  If <em>that</em> tool relies on other
+tools (such as <code>gcc</code> calling <code>as</code> and <code>ld</code> from binutils), how does it
+find the right ones?  How can that user be confident it will work
+correctly and reliably?</p>
+<h2 id="why-is-installation-prefix-important">Why is installation prefix important?<a class="headerlink" href="#why-is-installation-prefix-important" title="Permanent link">#</a></h2>
+<p>A great deal of software is written in relocatable form these days, but
+there is still a long way to go.  Tools such as GCC need to be able to
+locate it's own libraries, as well as tools like <code>as</code> and <code>ld</code> from a
+different package (binutils).  Relying on <code>$PATH</code> or <code>$ORIGIN</code> may not
+be sufficient to consistently and reliably locate the correct
+dependency versions.</p>
 <h2 id="why-conan">Why Conan?<a class="headerlink" href="#why-conan" title="Permanent link">#</a></h2>
 <p>Conan is designed for building, installing, and packaging 3rdParty
 software, especially open-source software.</p>
-<p>Conan doesn't completely satisfy our toolchain installation requirements
+<p>Conan does not completely satisfy our toolchain installation requirements
 on it's own, but it gets us about 90% of the way there.  Check out these
 features:</p>
 <ul>
@@ -801,21 +828,21 @@ builds to OS-provided packages, not just other Conan packages.</p>
 want the installation process to be as straightforward as possible.
 In an enterprise Engineering organization, we want each product team to be
 able to customize their sandbox or CI environments with minimal friction.</p>
-<p>When we <code>yum install -y toolchain-gcc</code> in a fresh container, we want a
-working <code>gcc</code> when it's done!  We don't want to have to add other system
-dependencies that we happen to know GCC requires.</p>
-<p>As we want to support the Developer Sandbox with DevContainers, it's
-important to make it as easy as possible for each developer to install
-our preferred and trusted packages to ensure a reliable result.</p>
+<p>When we <code>yum install -y opt-toolchain-gcc</code> in a fresh container, we want a
+working <code>gcc</code> when it's done!  We don't want to have to remember to add
+other system dependencies that we happen to know GCC depends on.</p>
+<p>As we also want to support the Developer Sandbox with DevContainers, it is
+critically important to make it as easy as possible for each developer to
+install our preferred and trusted packages to ensure a reliable result.</p>
 <p>When developers find working with the toolchain difficult or
 unproductive, they are often entirely capable of implementing their
-own.</p>
-<p>When developers roll their own toolchains, the impact looks like:</p>
+own.  When developers start rolling their own toolchains, the impact may
+look like any of the following:</p>
 <ul>
-<li>Duplication of effort building and deploying the tools/libraries</li>
-<li>Unreproducible builds, requiring "tribal knowledge"</li>
-<li>"Works on my machine" tests failing in CI/production</li>
-<li>Software supply chain vulnerabilities</li>
+<li>Duplication of effort: building and deploying the tools/libraries</li>
+<li>Unreproducible builds, requiring "tribal knowledge" within their team</li>
+<li>"Works on my machine": tests failing in CI/production</li>
+<li>Undetected software supply chain vulnerabilities</li>
 </ul>
 <div class="admonition note annotate">
 <p class="admonition-title">Reference</p>
@@ -824,20 +851,21 @@ own.</p>
 </ul>
 </div>
 <h3 id="sbom-software-composition-analysis">SBoM / Software Composition Analysis<a class="headerlink" href="#sbom-software-composition-analysis" title="Permanent link">#</a></h3>
-<p>Dependency tracking tools like Black Duck, syft, and Artifactory are able
-to scan container images and record installed RedHat RPMs, Debian .deb,
-and macOS .dmg out of the box.</p>
+<p>Dependency and vulnerability tracking tools like Black Duck, Dependency
+Track, and Artifactory are able to scan container images and record
+installed RedHat RPMs, Debian .deb, and macOS .dmg out of the box.</p>
 <p>In contrast, files that are simply copied into a container image are
-difficult to determine the originating source for. This results in
+difficult to track back to their originating source. This results in
 incorrect dependencies being detected, creating a mess that needs to be
 manually sorted out by DevOps or Release Mangagement.</p>
-<p>In one example, a product team includes a particular open-source
-JavaScript library in their product.  The SCA file system scan found
-that library, but identified the component source for that file as
-Firefox because Firefox also includes that library.  This caused all
-known Firefox CVEs to be associated with that product.  Quality metrics
-were a mess, resulting in a quality escalation.  It delayed the product
-release.</p>
+<p>In one example, a product team included a particular open-source
+JavaScript library in their product.  The file system scan by the SCA
+tool found that library, but identified the component source for that
+file as Firefox because Firefox also includes that library in their
+database.  This caused all known Firefox CVEs to be associated with
+that product.  Quality metrics were a mess, resulting in a quality
+escalation.  It delayed the product release through no fault of the
+product team.</p>
 <p>Even worse, a false positive result could be hiding a vulnerability in
 your product!  Black hats don't put their faith in your SBoM! OS
 packaging significantly reduces both false positives and negatives.</p>
@@ -863,8 +891,8 @@ saves time, especially in unplanned escalations.</p>
 <ul>
 <li>System packages can (and should be) be signed, ensuring they are from
   trusted sources at install time.</li>
-<li>After installation the installed contents can be verified to be unchanged
-  as well.</li>
+<li>After package installation, the installed content integrity can be
+  verified to be intact and unchanged as well.</li>
 </ul>
 <div class="admonition note annotate">
 <p class="admonition-title">Reference</p>
@@ -878,7 +906,8 @@ saves time, especially in unplanned escalations.</p>
 <h3 id="avoiding-package-name-conflicts">Avoiding package name conflicts<a class="headerlink" href="#avoiding-package-name-conflicts" title="Permanent link">#</a></h3>
 <p>What if we want RedHat's system python installed as well as our own?
 IT needs their python version on every system for Ansible to work
-reliably.  RedHat's own <code>yum</code> tool depends on python as well..</p>
+reliably.  RedHat's own <code>yum</code> tool depends on python.. it's a very
+likely scenario.</p>
 <p>What if we want to support multiple toolchains in the same host or
 container image?  Cross-compiling, product branching..</p>
 <p>In this system, we name each package using a convention that associates
@@ -888,7 +917,7 @@ it with the toolchain/prefix it supports.</p>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/opt/toolchain/bin/gcc
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>opt_toolchain-gcc-15.1.0-1.el9.aarch64
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>opt-toolchain-gcc-15.1.0-1.el9.aarch64
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$
 </span></code></pre></div>
 

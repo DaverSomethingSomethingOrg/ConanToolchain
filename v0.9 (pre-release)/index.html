@@ -241,15 +241,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-is-installation-prefix-important" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why is installation prefix important?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#license-and-copyright" class="md-nav__link">
     <span class="md-ellipsis">
       License and Copyright
@@ -419,15 +410,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-is-installation-prefix-important" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why is installation prefix important?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#license-and-copyright" class="md-nav__link">
     <span class="md-ellipsis">
       License and Copyright
@@ -459,13 +441,13 @@
 <p>Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
 for all developers offers some significant challenges.</p>
 <p>The goal of this project is to provide a comprehensive, reliable system
-to build a toolchain that works by design.  Configured built, and installed
-consistently, rather than trying to manipulate tools to work in
+to build a toolchain that works by design.  Configured, built, and installed
+consistently.  Rather than trying to manipulate tools to work in
 configurations they were not originally built for.</p>
 <p>To achieve this we leverage the <a href="https://conan.io">Conan C/C++ package manager</a>
-to produce repeatable builds using consistent host configutations,
-delivering a complete toolchain in the form of OS packages for Linux.</p>
-<p>To put this all together, I've developed some integration pieces:</p>
+to produce repeatable builds using consistent host configutations.
+Delivering a complete toolchain in the form of OS System packages for Linux.</p>
+<p>To put this all together, I've developed these integration pieces:</p>
 <div class="admonition github-reference annotate">
 <p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-system-packaging">conan-system-packaging</a></p>
 <p>RPM and .deb package generation using Conan.  <code>conan-system-packaging</code>
@@ -493,10 +475,10 @@ Conan builds, and for complete toolchain builds.</p>
 </div>
 <p>By delivering OS packages, we are able to:</p>
 <ul>
-<li>Provide the simplest, easiest tool installation for Developers,
-  especially for custom Container images</li>
-<li>Link to any vendor-provided OS dependencies so <code>yum install -y &lt;tool&gt;</code>
-  or <code>apt-get install -y &lt;tool&gt;</code> "just works".</li>
+<li>Provide the simplest, easiest tool installation for Developers.
+  Especially for custom Container images</li>
+<li>Link to any vendor-provided OS dependencies so that <code>yum install -y &lt;tool&gt;</code>
+  or <code>apt-get install -y &lt;tool&gt;</code> "just works"</li>
 <li>Register our tool component packages with Software Composition
   Analysis (SCA) tools like
   <a href="https://www.blackduck.com/software-composition-analysis-tools/black-duck-sca.html">Black Duck SCA</a>
@@ -507,12 +489,6 @@ Conan builds, and for complete toolchain builds.</p>
 configurations for your products, then you will likely want your
 toolchains to be built using configurations consistent and compatible with
 your products.</p>
-<h2 id="why-is-installation-prefix-important">Why is installation prefix important?<a class="headerlink" href="#why-is-installation-prefix-important" title="Permanent link">#</a></h2>
-<p>A great deal of software is written in relocatable form these days, but
-there is still a long way to go.  Tools such as GCC need to be able to
-locate it's own libraries, as well as tools like <code>as</code> and <code>ld</code> from a
-different package (binutils).  Relying on <code>$PATH</code> or <code>$ORIGIN</code> may not
-be sufficient to consistently and reliably locate the correct ones.</p>
 <p>For more in-depth discussion of the issues in maintaining an Enterprise
 Engineering Development toolchain, and the benefits of this solution,
 read on..</p>

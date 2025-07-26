@@ -516,11 +516,24 @@ Conan builds, and for complete toolchain builds.</p>
 </ul>
 </div>
 <h2 id="toolchain-workflow">Toolchain Workflow<a class="headerlink" href="#toolchain-workflow" title="Permanent link">#</a></h2>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">Link to <code>conan-toolchain.yml</code></a></p>
+<p>Our Conan Toolchain workflow is a simplified Conan CI workflow,
+not intended to do any quality validation of the individual tools
+in the toolchain.  If the tools are already available in the Conan
+cache (this is adviseable for regular toolchain maintenance!),
+this workflow will not even rebuild them.</p>
+<p>For each tool in the toolchain, this workflow will run the specified RPM
+or Debian package deployer and then cache the generated packages.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Basic Conan Toolchain Workflow</p>
 <p><a class="glightbox" href="../img/conan_toolchain_workflow.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Workflow" src="../img/conan_toolchain_workflow.png" /></a></p>
 </div>
 <h2 id="multi-platform-toolchain-workflow">Multi-Platform Toolchain Workflow<a class="headerlink" href="#multi-platform-toolchain-workflow" title="Permanent link">#</a></h2>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">Link to <code>conan-multiPlatformToolchain.yml</code></a></p>
+<p>Our Multi-Platform workflow allows us to selectively enable thre platforms
+we would like to build on-demand.  We can also specify the toolchain
+<code>install_prefix</code> to pass in to Conan.  From there it will simply run a
+matrix of <code>conan-toolchain.yml</code> jobs, one for each platform in parallel.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Multi-Platform Conan Toolchain Workflow</p>
 <p><a class="glightbox" href="../img/conan_multiplatform_toolchain.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Multi-Platform Conan Toolchain Workflow" src="../img/conan_multiplatform_toolchain.png" /></a></p>
