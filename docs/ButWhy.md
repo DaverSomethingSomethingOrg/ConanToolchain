@@ -6,7 +6,9 @@
 
 ...but complicated!
 
-- You've had to turn off a feature on one platform because a
+Perhaps you've experienced some of these scenarios.  I certainly have!
+
+- You've had to turn off a tool feature on one platform because a
   dependency was not supported or available for that platform.
 - Platform is new and compiler chain requires bootstrapping.
 - The time that developer needed a patch applied for their specific
@@ -16,14 +18,15 @@
   duplication of effort!
 - The time a certain customer made a deal with your company to
   better prioritize your product's quality on their difficult-to-work-with
-  platform over your developers' preferred platform.
+  platform.  Over your developers' preferred platform.
 - Commercial tool is only available in binary form, and installer
   only speaks "/usr/local".
 - We want to avoid conflicts with OS vendor-provided packages, but also
   want the benefit of "just works" package installation picking up
   all required OS dependencies.
 - You need to add support for a new OS distro/version/architecture,
-  but need your tools to work consistently with your existing platforms.
+  but need your toolchain on the new platform to behave consistently with
+  your existing platform toolchains.
 
 ### The system has to outlast the original maintainer
 
@@ -39,20 +42,29 @@ tool versions that are appropriate for running the application or task.
 Whichever tool your default `$PATH` locates should be the correct choice.
 
 On a VM or baremetal host, with tools installed in `/usr/local`, or
-perhaps in an automounted NFS repositories, `$PATH` has to be set
-carefully to find the right tool installations, and it's not set by
-default.  Additionally, a user may still run a tool that isn't in their
-`$PATH`, and what then?  If *that* tool relies on other tools (such as
-`gcc` needing `as` and `ld` from binutils), how does it find the right
-ones?  How can that user be confident it will work correctly and
-reliably?
+perhaps in an automounted NFS repositories, everything works differently.
+`$PATH` has to be set carefully to find the right tool installations, and
+it's not set by default.  Additionally, a user may still run a tool that
+isn't in their `$PATH`, so what then?  If *that* tool relies on other
+tools (such as `gcc` calling `as` and `ld` from binutils), how does it
+find the right ones?  How can that user be confident it will work
+correctly and reliably?
+
+## Why is installation prefix important?
+
+A great deal of software is written in relocatable form these days, but
+there is still a long way to go.  Tools such as GCC need to be able to
+locate it's own libraries, as well as tools like `as` and `ld` from a
+different package (binutils).  Relying on `$PATH` or `$ORIGIN` may not
+be sufficient to consistently and reliably locate the correct
+dependency versions.
 
 ## Why Conan?
 
 Conan is designed for building, installing, and packaging 3rdParty
 software, especially open-source software.
 
-Conan doesn't completely satisfy our toolchain installation requirements
+Conan does not completely satisfy our toolchain installation requirements
 on it's own, but it gets us about 90% of the way there.  Check out these
 features:
 
@@ -111,24 +123,23 @@ want the installation process to be as straightforward as possible.
 In an enterprise Engineering organization, we want each product team to be
 able to customize their sandbox or CI environments with minimal friction.
 
-When we `yum install -y toolchain-gcc` in a fresh container, we want a
-working `gcc` when it's done!  We don't want to have to add other system
-dependencies that we happen to know GCC requires.
+When we `yum install -y opt-toolchain-gcc` in a fresh container, we want a
+working `gcc` when it's done!  We don't want to have to remember to add
+other system dependencies that we happen to know GCC depends on.
 
-As we want to support the Developer Sandbox with DevContainers, it's
-important to make it as easy as possible for each developer to install
-our preferred and trusted packages to ensure a reliable result.
+As we also want to support the Developer Sandbox with DevContainers, it is
+critically important to make it as easy as possible for each developer to
+install our preferred and trusted packages to ensure a reliable result.
 
 When developers find working with the toolchain difficult or
 unproductive, they are often entirely capable of implementing their
-own.
+own.  When developers start rolling their own toolchains, the impact may
+look like any of the following:
 
-When developers roll their own toolchains, the impact looks like:
-
-- Duplication of effort building and deploying the tools/libraries
-- Unreproducible builds, requiring "tribal knowledge"
-- "Works on my machine" tests failing in CI/production
-- Software supply chain vulnerabilities
+- Duplication of effort: building and deploying the tools/libraries
+- Unreproducible builds, requiring "tribal knowledge" within their team
+- "Works on my machine": tests failing in CI/production
+- Undetected software supply chain vulnerabilities
 
 !!! note annotate "Reference"
 
@@ -136,22 +147,23 @@ When developers roll their own toolchains, the impact looks like:
 
 ### SBoM / Software Composition Analysis
 
-Dependency tracking tools like Black Duck, syft, and Artifactory are able
-to scan container images and record installed RedHat RPMs, Debian .deb,
-and macOS .dmg out of the box.
+Dependency and vulnerability tracking tools like Black Duck, Dependency
+Track, and Artifactory are able to scan container images and record
+installed RedHat RPMs, Debian .deb, and macOS .dmg out of the box.
 
 In contrast, files that are simply copied into a container image are
-difficult to determine the originating source for. This results in
+difficult to track back to their originating source. This results in
 incorrect dependencies being detected, creating a mess that needs to be
 manually sorted out by DevOps or Release Mangagement.
 
-In one example, a product team includes a particular open-source
-JavaScript library in their product.  The SCA file system scan found
-that library, but identified the component source for that file as
-Firefox because Firefox also includes that library.  This caused all
-known Firefox CVEs to be associated with that product.  Quality metrics
-were a mess, resulting in a quality escalation.  It delayed the product
-release.
+In one example, a product team included a particular open-source
+JavaScript library in their product.  The file system scan by the SCA
+tool found that library, but identified the component source for that
+file as Firefox because Firefox also includes that library in their
+database.  This caused all known Firefox CVEs to be associated with
+that product.  Quality metrics were a mess, resulting in a quality
+escalation.  It delayed the product release through no fault of the
+product team.
 
 Even worse, a false positive result could be hiding a vulnerability in
 your product!  Black hats don't put their faith in your SBoM! OS
@@ -181,8 +193,8 @@ graph LR
 
 - System packages can (and should be) be signed, ensuring they are from
   trusted sources at install time.
-- After installation the installed contents can be verified to be unchanged
-  as well.
+- After package installation, the installed content integrity can be
+  verified to be intact and unchanged as well.
 
 !!! note annotate "Reference"
 
@@ -196,7 +208,8 @@ graph LR
 
 What if we want RedHat's system python installed as well as our own?
 IT needs their python version on every system for Ansible to work
-reliably.  RedHat's own `yum` tool depends on python as well..
+reliably.  RedHat's own `yum` tool depends on python.. it's a very
+likely scenario.
 
 What if we want to support multiple toolchains in the same host or
 container image?  Cross-compiling, product branching..
@@ -210,6 +223,6 @@ gcc-11.5.0-5.el9_5.alma.1.aarch64
 $
 
 $ rpm -q --whatprovides /opt/toolchain/bin/gcc
-opt_toolchain-gcc-15.1.0-1.el9.aarch64
+opt-toolchain-gcc-15.1.0-1.el9.aarch64
 $
 ```

@@ -21,7 +21,7 @@ $
 
 ## Custom Conan Profile
 
-We need to add a `install_prefix` option to a custom Conan profile.
+We need to add an `install_prefix` option to a custom Conan profile.
 Specify the path you wish to build and install your toolchain to.
 (I use `/opt/toolchain` in this example)
 
@@ -104,11 +104,11 @@ $ conan install --deployer-folder=rpm_deploy \
 
 ```none title="Sample Directory Tree Output"
 rpm_deploy
-├── toolchain-gcc-15.1.0
+├── opt-toolchain-gcc-15.1.0
 │   └── opt/toolchain
 │       ├── bin/make
 │       └── share/info/make.info
-└── toolchain-gmp-6.3.0
+└── opt-toolchain-gmp-6.3.0
     └── opt/toolchain
         ├── include/gmp.h
         ├── lib/libgmp.a

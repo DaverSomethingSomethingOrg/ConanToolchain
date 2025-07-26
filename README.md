@@ -6,15 +6,15 @@ Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
 for all developers offers some significant challenges.
 
 The goal of this project is to provide a comprehensive, reliable system
-to build a toolchain that works by design.  Configured built, and installed
-consistently, rather than trying to manipulate tools to work in
+to build a toolchain that works by design.  Configured, built, and installed
+consistently.  Rather than trying to manipulate tools to work in
 configurations they were not originally built for.
 
 To achieve this we leverage the [Conan C/C++ package manager](https://conan.io)
-to produce repeatable builds using consistent host configutations,
-delivering a complete toolchain in the form of OS packages for Linux.
+to produce repeatable builds using consistent host configutations.
+Delivering a complete toolchain in the form of OS System packages for Linux.
 
-To put this all together, I've developed some integration pieces:
+To put this all together, I've developed these integration pieces:
 
 - https://github.com/DaverSomethingSomethingOrg/conan-system-packaging
 
@@ -33,10 +33,10 @@ To put this all together, I've developed some integration pieces:
 
 By delivering OS packages, we are able to:
 
-- Provide the simplest, easiest tool installation for Developers,
-  especially for custom Container images
-- Link to any vendor-provided OS dependencies so `yum install -y <tool>`
-  or `apt-get install -y <tool>` "just works".
+- Provide the simplest, easiest tool installation for Developers.
+  Especially for custom Container images
+- Link to any vendor-provided OS dependencies so that `yum install -y <tool>`
+  or `apt-get install -y <tool>` "just works"
 - Register our tool component packages with Software Composition
   Analysis (SCA) tools like
   [Black Duck SCA](https://www.blackduck.com/software-composition-analysis-tools/black-duck-sca.html)

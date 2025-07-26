@@ -4,8 +4,10 @@ We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.
 
 Using caching in GitHub Actions, we can connect multiple toolchain
-workflows to each other, so that dependencies built in one phase
-can be installed for use in subsequent phases.
+workflows to each other. Dependencies built in one phase
+will be pre-installed for use in subsequent phases.
+
+[Link to `conan-demoToolchain.yml` workflow](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-demoToolchain.yml)
 
 ## Phase 1 - GNU binutils
 
@@ -22,6 +24,7 @@ container image with the OS Vendor's compiler chain installed.
     def requirements(self):
         self.requires("binutils/2.42")
 ```
+[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase1/conanfile.py)
 
 ## Phase 2 - bootstrapping CMake, GNU Make, and GCC
 
@@ -36,7 +39,7 @@ the OS Vendor's binutils available for their GCC as well.
                            "opt+toolchain-binutils_2.42-0",
                           ])
         Yum(self).install(["make", "cmake", "binutils", "gcc",
-                           "opt_toolchain-binutils-2.42-0",
+                           "opt-toolchain-binutils-2.42-0",
                           ])
 
     def requirements(self):
@@ -44,6 +47,7 @@ the OS Vendor's binutils available for their GCC as well.
         self.requires("cmake/4.0.1")
         self.requires("gcc/12.2.0"
 ```
+[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase2/conanfile.py)
 
 ## Phase 3 - Clean rebuilds using our toolchain
 
@@ -65,10 +69,10 @@ The previous packages built with our bootstrap image are discarded.
                            "opt+toolchain-gcc-12.2.0-0",
                            "opt+toolchain-binutils_2.42-0",
                           ])
-        Yum(self).install(["opt_toolchain-make-4.4.1-0",
-                           "opt_toolchain-cmake-4.0.1-0",
-                           "opt_toolchain-gcc-12.2.0-0",
-                           "opt_toolchain-binutils-2.42-0",
+        Yum(self).install(["opt-toolchain-make-4.4.1-0",
+                           "opt-toolchain-cmake-4.0.1-0",
+                           "opt-toolchain-gcc-12.2.0-0",
+                           "opt-toolchain-binutils-2.42-0",
                           ])
 
     def requirements(self):
@@ -77,6 +81,7 @@ The previous packages built with our bootstrap image are discarded.
         self.requires("binutils/2.42")
         self.requires("gcc/12.2.0"
 ```
+[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase3/conanfile.py)
 
 !!! note annotate "For each platform, we end up with an overall flow that looks like this"
 
@@ -89,7 +94,13 @@ The previous packages built with our bootstrap image are discarded.
     The Conan project builds similar images for this purpose, but with a
     few significant differences:
 
+    - `conan-docker-tools` does a custom compiler build directly in their
+      [Dockerfile](https://github.com/conan-io/conan-docker-tools/blob/master/images/gcc/Dockerfile) and does not use Conan at all.
     - We use the same Conan recipes and mechanism (Conan) to build the
       toolchain container that we provide to developers.
+    - Using system packaging for our toolchain allows temporal-parallelism
+      for our container builds.  Changing container configuration or
+      installing updates does not necessarily require rebuilding the
+      toolchain.
     - We build both Ubuntu and AlmaLinux (RedHat derived), as well as
       ARM and x86 CPU architectures.
