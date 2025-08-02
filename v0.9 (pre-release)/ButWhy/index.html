@@ -725,7 +725,7 @@
 <h2 id="difficulties-in-toolchain-maintenance">Difficulties in toolchain maintenance<a class="headerlink" href="#difficulties-in-toolchain-maintenance" title="Permanent link">#</a></h2>
 <h3 id="supporting-shared-toolchains-is-easy">Supporting shared toolchains is easy<a class="headerlink" href="#supporting-shared-toolchains-is-easy" title="Permanent link">#</a></h3>
 <p>...but complicated!</p>
-<p>Perhaps you've experienced some of these scenarios.  I certainly have!</p>
+<p>Perhaps you've experienced some of these scenarios:</p>
 <ul>
 <li>You've had to turn off a tool feature on one platform because a
   dependency was not supported or available for that platform.</li>
@@ -773,6 +773,16 @@ locate it's own libraries, as well as tools like <code>as</code> and <code>ld</c
 different package (binutils).  Relying on <code>$PATH</code> or <code>$ORIGIN</code> may not
 be sufficient to consistently and reliably locate the correct
 dependency versions.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<p><code>$ORIGIN</code> can be notoriously difficult to work with.  Layered build
+systems can present a significant quoting challenge, so consider
+unconventional methods like <code>XORIGIN</code>.</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect#comment92683351_6324131">rpath=$ORIGIN not having desired effect?</a></li>
+<li><a href="https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/">A description of RPATH $ORIGIN LD_LIBRARY_PATH and portable linux binaries</a></li>
+</ul>
+</div>
 <h2 id="why-conan">Why Conan?<a class="headerlink" href="#why-conan" title="Permanent link">#</a></h2>
 <p>Conan is designed for building, installing, and packaging 3rdParty
 software, especially open-source software.</p>
@@ -914,11 +924,75 @@ container image?  Cross-compiling, product branching..</p>
 it with the toolchain/prefix it supports.</p>
 <div class="language-bash highlight"><span class="filename">Multiple GCC versions installed without conflict</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/usr/bin/gcc
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gcc-11.5.0-5.el9_5.alma.1.aarch64
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/opt/toolchain/bin/gcc
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>opt-toolchain-gcc-15.1.0-1.el9.aarch64
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$<span class="w"> </span>/usr/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/usr/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Using<span class="w"> </span>built-in<span class="w"> </span>specs.
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">COLLECT_GCC</span><span class="o">=</span>/usr/bin/gcc
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">COLLECT_LTO_WRAPPER</span><span class="o">=</span>/usr/libexec/gcc/aarch64-redhat-linux/11/lto-wrapper
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Target:<span class="w"> </span>aarch64-redhat-linux
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Configured<span class="w"> </span>with:<span class="w"> </span>../configure<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">                   </span>--enable-bootstrap<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">                   </span>--enable-host-pie<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">                   </span>--enable-host-bind-now<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">                   </span>--enable-languages<span class="o">=</span>c,c++,fortran,lto<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">                   </span>--prefix<span class="o">=</span>/usr<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">                   </span>--mandir<span class="o">=</span>/usr/share/man<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">                   </span>--infodir<span class="o">=</span>/usr/share/info<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">                   </span>--with-bugurl<span class="o">=</span>http://bugs.almalinux.org/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">                   </span>--enable-shared<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">                   </span>--enable-threads<span class="o">=</span>posix<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">                   </span>--enable-checking<span class="o">=</span>release<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">                   </span>--with-system-zlib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">                   </span>--enable-__cxa_atexit<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">                   </span>--disable-libunwind-exceptions<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">                   </span>--enable-gnu-unique-object<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                   </span>--enable-linker-build-id<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">                   </span>--with-gcc-major-version-only<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                   </span>--enable-plugin<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                   </span>--enable-initfini-array<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                   </span>--without-isl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                   </span>--enable-multilib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                   </span>--with-linker-hash-style<span class="o">=</span>gnu<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                   </span>--enable-gnu-indirect-function<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                   </span>--build<span class="o">=</span>aarch64-redhat-linux<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                   </span>--with-build-config<span class="o">=</span>bootstrap-lto<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">                   </span>--enable-link-serialization<span class="o">=</span><span class="m">1</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Thread<span class="w"> </span>model:<span class="w"> </span>posix
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>Supported<span class="w"> </span>LTO<span class="w"> </span>compression<span class="w"> </span>algorithms:<span class="w"> </span>zlib<span class="w"> </span>zstd
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>gcc<span class="w"> </span>version<span class="w"> </span><span class="m">11</span>.5.0<span class="w"> </span><span class="m">20240719</span><span class="w"> </span><span class="o">(</span>Red<span class="w"> </span>Hat<span class="w"> </span><span class="m">11</span>.5.0-5<span class="o">)</span><span class="w"> </span><span class="o">(</span>GCC<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>$
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/opt/toolchain/bin/gcc
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>opt-toolchain-gcc-15.1.0-1.el9.aarch64
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>$<span class="w"> </span>/opt/toolchain/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>/opt/toolchain/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>Using<span class="w"> </span>built-in<span class="w"> </span>specs.
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="nv">COLLECT_GCC</span><span class="o">=</span>/opt/toolchain/bin/gcc
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="nv">COLLECT_LTO_WRAPPER</span><span class="o">=</span>/opt/toolchain/libexec/gcc/aarch64-unknown-linux-gnu/12.2.0/lto-wrapper
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>Target:<span class="w"> </span>aarch64-unknown-linux-gnu
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>Configured<span class="w"> </span>with:<span class="w"> </span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gcce3fadc7d9cb2a/b/src/configure<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">                   </span>--prefix<span class="o">=</span>/opt/toolchain<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">                   </span>--bindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">                   </span>--sbindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">                   </span>--libdir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/lib&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">                   </span>--includedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">                   </span>--oldincludedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">                   </span>--with-as<span class="o">=</span>/opt/toolchain/bin/as<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">                   </span>--with-ld<span class="o">=</span>/opt/toolchain/bin/ld<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">                   </span>--enable-languages<span class="o">=</span>c,c++,fortran<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">                   </span>--disable-nls<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">                   </span>--disable-multilib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">                   </span>--disable-bootstrap<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">                   </span>--with-zlib<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/zlibf65861dbd5700/p<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">                   </span>--with-isl<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/isle7890ac49bf41/p<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">                   </span>--with-gmp<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gmp2a63bb32f5d6d/p<span class="w"> </span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">                   </span>--with-mpc<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpc8a61687c8a20f/p<span class="w"> </span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">                   </span>--with-mpfr<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpfr0ee7ef75967a2/p<span class="w"> </span>--with-pkgversion<span class="o">=</span><span class="s1">&#39;conan GCC 12.2.0&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">                   </span>--with-bugurl<span class="o">=</span>https://github.com/conan-io/conan-center-index/issues
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>Thread<span class="w"> </span>model:<span class="w"> </span>posix
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>Supported<span class="w"> </span>LTO<span class="w"> </span>compression<span class="w"> </span>algorithms:<span class="w"> </span>zlib
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>gcc<span class="w"> </span>version<span class="w"> </span><span class="m">12</span>.2.0<span class="w"> </span><span class="o">(</span>conan<span class="w"> </span>GCC<span class="w"> </span><span class="m">12</span>.2.0<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>$
 </span></code></pre></div>
 
 
