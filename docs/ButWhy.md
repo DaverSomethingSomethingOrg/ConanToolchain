@@ -6,7 +6,7 @@
 
 ...but complicated!
 
-Perhaps you've experienced some of these scenarios.  I certainly have!
+Perhaps you've experienced some of these scenarios:
 
 - You've had to turn off a tool feature on one platform because a
   dependency was not supported or available for that platform.
@@ -58,6 +58,15 @@ locate it's own libraries, as well as tools like `as` and `ld` from a
 different package (binutils).  Relying on `$PATH` or `$ORIGIN` may not
 be sufficient to consistently and reliably locate the correct
 dependency versions.
+
+!!! note annotate "Reference"
+
+    `$ORIGIN` can be notoriously difficult to work with.  Layered build
+    systems can present a significant quoting challenge, so consider
+    unconventional methods like `XORIGIN`.
+
+    - [rpath=$ORIGIN not having desired effect?](https://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect#comment92683351_6324131)
+    - [A description of RPATH $ORIGIN LD_LIBRARY_PATH and portable linux binaries](https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/)
 
 ## Why Conan?
 
@@ -220,9 +229,73 @@ it with the toolchain/prefix it supports.
 ```bash title="Multiple GCC versions installed without conflict"
 $ rpm -q --whatprovides /usr/bin/gcc
 gcc-11.5.0-5.el9_5.alma.1.aarch64
+$ /usr/bin/gcc -v
+/usr/bin/gcc -v
+Using built-in specs.
+COLLECT_GCC=/usr/bin/gcc
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/aarch64-redhat-linux/11/lto-wrapper
+Target: aarch64-redhat-linux
+Configured with: ../configure \
+                   --enable-bootstrap \
+                   --enable-host-pie \
+                   --enable-host-bind-now \
+                   --enable-languages=c,c++,fortran,lto \
+                   --prefix=/usr \
+                   --mandir=/usr/share/man \
+                   --infodir=/usr/share/info \
+                   --with-bugurl=http://bugs.almalinux.org/ \
+                   --enable-shared \
+                   --enable-threads=posix \
+                   --enable-checking=release \
+                   --with-system-zlib \
+                   --enable-__cxa_atexit \
+                   --disable-libunwind-exceptions \
+                   --enable-gnu-unique-object \
+                   --enable-linker-build-id \
+                   --with-gcc-major-version-only \
+                   --enable-plugin \
+                   --enable-initfini-array \
+                   --without-isl \
+                   --enable-multilib \
+                   --with-linker-hash-style=gnu \
+                   --enable-gnu-indirect-function \
+                   --build=aarch64-redhat-linux \
+                   --with-build-config=bootstrap-lto \
+                   --enable-link-serialization=1
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.5.0 20240719 (Red Hat 11.5.0-5) (GCC) 
 $
 
 $ rpm -q --whatprovides /opt/toolchain/bin/gcc
 opt-toolchain-gcc-15.1.0-1.el9.aarch64
+$ /opt/toolchain/bin/gcc -v
+/opt/toolchain/bin/gcc -v
+Using built-in specs.
+COLLECT_GCC=/opt/toolchain/bin/gcc
+COLLECT_LTO_WRAPPER=/opt/toolchain/libexec/gcc/aarch64-unknown-linux-gnu/12.2.0/lto-wrapper
+Target: aarch64-unknown-linux-gnu
+Configured with: /__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gcce3fadc7d9cb2a/b/src/configure \
+                   --prefix=/opt/toolchain \
+                   --bindir='/opt/toolchain/bin' \
+                   --sbindir='/opt/toolchain/bin' \
+                   --libdir='/opt/toolchain/lib' \
+                   --includedir='/opt/toolchain/include' \
+                   --oldincludedir='/opt/toolchain/include' \
+                   --with-as=/opt/toolchain/bin/as \
+                   --with-ld=/opt/toolchain/bin/ld \
+                   --enable-languages=c,c++,fortran \
+                   --disable-nls \
+                   --disable-multilib \
+                   --disable-bootstrap \
+                   --with-zlib=/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/zlibf65861dbd5700/p \
+                   --with-isl=/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/isle7890ac49bf41/p \
+                   --with-gmp=/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gmp2a63bb32f5d6d/p 
+                   --with-mpc=/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpc8a61687c8a20f/p 
+                   --with-mpfr=/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpfr0ee7ef75967a2/p --with-pkgversion='conan GCC 12.2.0' \
+                   --with-bugurl=https://github.com/conan-io/conan-center-index/issues
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 12.2.0 (conan GCC 12.2.0) 
 $
 ```

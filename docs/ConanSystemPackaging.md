@@ -5,7 +5,7 @@
     RPM and .deb package generation using Conan.  `conan-system-packaging`
     provides `rpm_deployer` and `deb_deployer`
     [custom deployers](https://docs.conan.io/2/reference/extensions/deployers.html)
-    
+
     - https://github.com/DaverSomethingSomethingOrg/conan-system-packaging
 
 - Iterate through the dependency graph
@@ -42,33 +42,9 @@
 
     - https://docs.conan.io/2/reference/conanfile/methods/deploy.html
     - https://github.com/conan-io/conan-center-index/blob/master/recipes/gcc/all/conanfile.py
-# RPM / .deb Package Generation
 
-## Confirmed
-
-- `toolchain-` prefixed package name to avoid OS package conflicts
-- Make sure to turn off AutoReqProv, we will specify dependencies by
-  package name/version only.
-- `%files` section merely specifies `prefix` (includes all contained
-  subdirectories and files recorsively)
 
 ## Other
-
-- translate conan runtime dependencies into RPM dependencies, assuming
-  RPMs exist for each dependency.
-  - Runtime dependencies should be installed in advance
-  - Build dependencies should be installed, but not spec'd
-    - Verify they exist/work in advance too!
-
-- If Conan GCC depends on Conan binutils, first build binutils package
-  and publish package.
-- Pass Prefix into conan install/build, ensuring all toolchain tools
-  have a consistent prefix.
-  - Since we'll use non-default/standard prefix, we'll want to make sure
-    we don't publish the Conan package beyond the cache.  It's only
-    temporary to in order to deploy RPM packages from.
-- Next yum install the binutils RPM into our prefix so it's available
-  as a build dependency for GCC
 
 !!! question "ToDo"
 
