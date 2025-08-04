@@ -7,7 +7,26 @@ Using caching in GitHub Actions, we can connect multiple toolchain
 workflows to each other. Dependencies built in one phase
 will be pre-installed for use in subsequent phases.
 
-[Link to `conan-demoToolchain.yml` workflow](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-demoToolchain.yml)
+Workflow Structure:
+
+<pre id="workflow-tree">
+<a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-demoToolchain.yml">conan-demoToolchain.yml</a></br>
+  ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  └── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+        ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+        ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+        ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+        └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+</pre>
 
 ## Phase 1 - GNU binutils
 
