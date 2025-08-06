@@ -1,5 +1,13 @@
+#workflow-job-structure {
+  line-height: .7; /* Sets line height to single spacing */
+  background-color: var(--md-code-bg-color);
+  margin-block: 1em;
+}
 #workflow-tree {
   line-height: .7; /* Sets line height to single spacing */
+  background-color: var(--md-code-bg-color);
+  margin-block: 1em;
+  margin-left: 2em;
 }
 
 /* GitHub admonition icon and coloring */
