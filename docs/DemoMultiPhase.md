@@ -7,26 +7,35 @@ Using caching in GitHub Actions, we can connect multiple toolchain
 workflows to each other. Dependencies built in one phase
 will be pre-installed for use in subsequent phases.
 
-Workflow Structure:
-
+<div id="workflow-job-structure" class="language-text highlight">
+<span class="filename">Workflow Job Structure</span>
 <pre id="workflow-tree">
+
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-demoToolchain.yml">conan-demoToolchain.yml</a></br>
+  │</br>
   ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  │     │</br>
   │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │</br>
   ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  │     │</br>
   │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │</br>
   └── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+        │</br>
         ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
         ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
         ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
         └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+
 </pre>
+</div>
 
 ## Phase 1 - GNU binutils
 
@@ -43,7 +52,7 @@ container image with the OS Vendor's compiler chain installed.
     def requirements(self):
         self.requires("binutils/2.42")
 ```
-[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase1/conanfile.py)
+[Link to phase 1 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase1/conanfile.py)
 
 ## Phase 2 - bootstrapping CMake, GNU Make, and GCC
 
@@ -66,7 +75,7 @@ the OS Vendor's binutils available for their GCC as well.
         self.requires("cmake/4.0.1")
         self.requires("gcc/12.2.0"
 ```
-[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase2/conanfile.py)
+[Link to phase 2 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase2/conanfile.py)
 
 ## Phase 3 - Clean rebuilds using our toolchain
 
@@ -100,7 +109,7 @@ The previous packages built with our bootstrap image are discarded.
         self.requires("binutils/2.42")
         self.requires("gcc/12.2.0"
 ```
-[Link to full conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase3/conanfile.py)
+[Link to phase 3 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/components/phase3/conanfile.py)
 
 !!! note annotate "For each platform, we end up with an overall flow that looks like this"
 
