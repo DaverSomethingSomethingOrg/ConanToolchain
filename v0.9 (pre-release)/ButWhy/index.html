@@ -1,0 +1,1096 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v0.9 (pre-release)/ButWhy/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../SampleUsage/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+    
+    
+      
+        <title>But Why? - Toolchain Build System using Conan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#but-why" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Toolchain Build System using Conan
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              But Why?
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Toolchain Build System using Conan
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    But Why?
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    But Why?
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#difficulties-in-toolchain-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Difficulties in toolchain maintenance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Difficulties in toolchain maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supporting-shared-toolchains-is-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supporting shared toolchains is easy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-system-has-to-outlast-the-original-maintainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      The system has to outlast the original maintainer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-wrong-with-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's wrong with $PATH?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-is-installation-prefix-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why is installation prefix important?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-conan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Conan?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Conan?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-package-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Package Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-system-packaging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why System Packaging?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why System Packaging?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ease-of-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ease of Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-software-composition-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBoM / Software Composition Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrity-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integrity Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoiding-package-name-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avoiding package name conflicts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SampleUsage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanRecipePreReqs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conan Setup and Recipe Pre-requisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CIWorkflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI Workflows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DemoMultiPhase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - MultiPhase Toolchain Build
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE.txt" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apache License v2.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#difficulties-in-toolchain-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Difficulties in toolchain maintenance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Difficulties in toolchain maintenance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supporting-shared-toolchains-is-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supporting shared toolchains is easy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-system-has-to-outlast-the-original-maintainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      The system has to outlast the original maintainer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-wrong-with-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's wrong with $PATH?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-is-installation-prefix-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why is installation prefix important?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-conan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Conan?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Conan?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-package-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Package Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-system-packaging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why System Packaging?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why System Packaging?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ease-of-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ease of Use
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-software-composition-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBoM / Software Composition Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrity-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integrity Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoiding-package-name-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avoiding package name conflicts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="but-why">But Why?<a class="headerlink" href="#but-why" title="Permanent link">#</a></h1>
+<h2 id="difficulties-in-toolchain-maintenance">Difficulties in toolchain maintenance<a class="headerlink" href="#difficulties-in-toolchain-maintenance" title="Permanent link">#</a></h2>
+<h3 id="supporting-shared-toolchains-is-easy">Supporting shared toolchains is easy<a class="headerlink" href="#supporting-shared-toolchains-is-easy" title="Permanent link">#</a></h3>
+<p>...but complicated!</p>
+<p>Perhaps you've experienced some of these scenarios:</p>
+<ul>
+<li>You've had to turn off a tool feature on one platform because a
+  dependency was not supported or available for that platform.</li>
+<li>Platform is new and compiler chain requires bootstrapping.</li>
+<li>The time that developer needed a patch applied for their specific
+  use case.</li>
+<li>Did you know that developers were copying libraries from your
+  toolchain into product releases?  Let's support that and avoid
+  duplication of effort!</li>
+<li>The time a certain customer made a deal with your company to
+  better prioritize your product's quality on their difficult-to-work-with
+  platform.  Over your developers' preferred platform.</li>
+<li>Commercial tool is only available in binary form, and installer
+  only speaks "/usr/local".</li>
+<li>We want to avoid conflicts with OS vendor-provided packages, but also
+  want the benefit of "just works" package installation picking up
+  all required OS dependencies.</li>
+<li>You need to add support for a new OS distro/version/architecture,
+  but need your toolchain on the new platform to behave consistently with
+  your existing platform toolchains.</li>
+</ul>
+<h3 id="the-system-has-to-outlast-the-original-maintainer">The system has to outlast the original maintainer<a class="headerlink" href="#the-system-has-to-outlast-the-original-maintainer" title="Permanent link">#</a></h3>
+<ul>
+<li>Existing tool build configurations are not well documented, if at all.</li>
+<li>Existing build system is highly customized to for your specific
+  prefix/repository.</li>
+</ul>
+<h3 id="whats-wrong-with-path">What's wrong with <code>$PATH</code>?<a class="headerlink" href="#whats-wrong-with-path" title="Permanent link">#</a></h3>
+<p>Relying on the environment provided is a great solution.. for containers.
+In a container environment you are incentivized to install only the desired
+tool versions that are appropriate for running the application or task.
+Whichever tool your default <code>$PATH</code> locates should be the correct choice.</p>
+<p>On a VM or baremetal host, with tools installed in <code>/usr/local</code>, or
+perhaps in an automounted NFS repositories, everything works differently.
+<code>$PATH</code> has to be set carefully to find the right tool installations, and
+it's not set by default.  Additionally, a user may still run a tool that
+isn't in their <code>$PATH</code>, so what then?  If <em>that</em> tool relies on other
+tools (such as <code>gcc</code> calling <code>as</code> and <code>ld</code> from binutils), how does it
+find the right ones?  How can that user be confident it will work
+correctly and reliably?</p>
+<h2 id="why-is-installation-prefix-important">Why is installation prefix important?<a class="headerlink" href="#why-is-installation-prefix-important" title="Permanent link">#</a></h2>
+<p>A great deal of software is written in relocatable form these days, but
+there is still a long way to go.  Tools such as GCC need to be able to
+locate it's own libraries, as well as tools like <code>as</code> and <code>ld</code> from a
+different package (binutils).  Relying on <code>$PATH</code> or <code>$ORIGIN</code> may not
+be sufficient to consistently and reliably locate the correct
+dependency versions.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<p><code>$ORIGIN</code> can be notoriously difficult to work with.  Layered build
+systems can present a significant quoting challenge, so consider
+unconventional methods like <code>XORIGIN</code>.</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect#comment92683351_6324131">rpath=$ORIGIN not having desired effect?</a></li>
+<li><a href="https://enchildfone.wordpress.com/2010/03/23/a-description-of-rpath-origin-ld_library_path-and-portable-linux-binaries/">A description of RPATH $ORIGIN LD_LIBRARY_PATH and portable linux binaries</a></li>
+</ul>
+</div>
+<h2 id="why-conan">Why Conan?<a class="headerlink" href="#why-conan" title="Permanent link">#</a></h2>
+<p>Conan is designed for building, installing, and packaging 3rdParty
+software, especially open-source software.</p>
+<p>Conan does not completely satisfy our toolchain installation requirements
+on it's own, but it gets us about 90% of the way there.  Check out these
+features:</p>
+<ul>
+<li>Integrity Validation for original tool source, and derived package builds</li>
+<li>DESTDIR installation management built-in</li>
+<li>Built-in <a href="https://docs.conan.io/2/reference/extensions/deployers.html">custom deployer</a>
+  hook exactly where we need it in the process</li>
+<li>Integration with many <a href="https://docs.conan.io/2/integrations.html">3rdParty build systems</a></li>
+<li><a href="https://conan.io/center">Conan Center</a> - Extensive database of build
+  recipes for thousands of open-source tools</li>
+</ul>
+<h3 id="profiles">Profiles<a class="headerlink" href="#profiles" title="Permanent link">#</a></h3>
+<p>Do you need to build your tools for multiple platforms?  Conan profiles
+help with that!  Swap in a different compiler, compiler version, or turn
+on debugging symbols, code coverage, sanitizers, all without modifying
+your software!</p>
+<div class="language-text highlight"><span class="filename">Sample Conan asan profile</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[settings]
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>arch=armv8
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>build_type=Release
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>compiler=gcc
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>compiler.cppstd=gnu17
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>compiler.libcxx=libstdc++11
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>compiler.version=11
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>os=Linux
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>[options]
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>*:install_prefix=/opt/toolchain
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>[buildenv]
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>LD_FLAGS=&quot;-fsanitize=address -static-libasan&quot;
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>[runenv]
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>LD_PRELOAD=/opt/toolchain/lib64/libasan.so.8
+</span></code></pre></div>
+<h3 id="system-package-integration">System Package Integration<a class="headerlink" href="#system-package-integration" title="Permanent link">#</a></h3>
+<p>Conan can speak Yum (RedHat), Apt (Debian), and more!  While this feature
+is intended to provide a working build and runtime for native Conan
+packages, we can leverage this metadata to connect our system package
+builds to OS-provided packages, not just other Conan packages.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<ul>
+<li><a href="https://docs.conan.io/2/reference/tools/system/package_manager.html">https://docs.conan.io/2/reference/tools/system/package_manager.html</a></li>
+</ul>
+</div>
+<h2 id="why-system-packaging">Why System Packaging?<a class="headerlink" href="#why-system-packaging" title="Permanent link">#</a></h2>
+<h3 id="ease-of-use">Ease of Use<a class="headerlink" href="#ease-of-use" title="Permanent link">#</a></h3>
+<p>When building custom container images using our toolchain packages, we
+want the installation process to be as straightforward as possible.
+In an enterprise Engineering organization, we want each product team to be
+able to customize their sandbox or CI environments with minimal friction.</p>
+<p>When we <code>yum install -y opt-toolchain-gcc</code> in a fresh container, we want a
+working <code>gcc</code> when it's done!  We don't want to have to remember to add
+other system dependencies that we happen to know GCC depends on.</p>
+<p>As we also want to support the Developer Sandbox with DevContainers, it is
+critically important to make it as easy as possible for each developer to
+install our preferred and trusted packages to ensure a reliable result.</p>
+<p>When developers find working with the toolchain difficult or
+unproductive, they are often entirely capable of implementing their
+own.  When developers start rolling their own toolchains, the impact may
+look like any of the following:</p>
+<ul>
+<li>Duplication of effort: building and deploying the tools/libraries</li>
+<li>Unreproducible builds, requiring "tribal knowledge" within their team</li>
+<li>"Works on my machine": tests failing in CI/production</li>
+<li>Undetected software supply chain vulnerabilities</li>
+</ul>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<ul>
+<li><a href="https://code.visualstudio.com/docs/devcontainers/containers">https://code.visualstudio.com/docs/devcontainers/containers</a></li>
+</ul>
+</div>
+<h3 id="sbom-software-composition-analysis">SBoM / Software Composition Analysis<a class="headerlink" href="#sbom-software-composition-analysis" title="Permanent link">#</a></h3>
+<p>Dependency and vulnerability tracking tools like Black Duck, Dependency
+Track, and Artifactory are able to scan container images and record
+installed RedHat RPMs, Debian .deb, and macOS .dmg out of the box.</p>
+<p>In contrast, files that are simply copied into a container image are
+difficult to track back to their originating source. This results in
+incorrect dependencies being detected, creating a mess that needs to be
+manually sorted out by DevOps or Release Mangagement.</p>
+<p>In one example, a product team included a particular open-source
+JavaScript library in their product.  The file system scan by the SCA
+tool found that library, but identified the component source for that
+file as Firefox because Firefox also includes that library in their
+database.  This caused all known Firefox CVEs to be associated with
+that product.  Quality metrics were a mess, resulting in a quality
+escalation.  It delayed the product release through no fault of the
+product team.</p>
+<p>Even worse, a false positive result could be hiding a vulnerability in
+your product!  Black hats don't put their faith in your SBoM! OS
+packaging significantly reduces both false positives and negatives.</p>
+<p>Relying on file-system scan for your SBoM means <em>a lot</em> of manual
+data correction within your SCA tool, sometimes on a file-by-file basis.
+Leveraging the system package manager creates a vital linkage in your
+release provenance documentation.  It ensures accurate results, and
+saves time, especially in unplanned escalations.</p>
+<pre class="mermaid"><code>graph LR
+  A[Docker] --&gt; B[RPM];
+  B --&gt; C[OS Release, Yum];
+  B --&gt; D[Application];
+  D --&gt; E[3rdParty];</code></pre>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<ul>
+<li><a href="https://www.endorlabs.com/learn/why-are-all-sca-tools-wrong">Why Your SCA is Always Wrong - Endor Labs Blog</a></li>
+<li><a href="https://blackducksoftware.github.io/blackduck-docker-inspector/latest/advanced/">https://blackducksoftware.github.io/blackduck-docker-inspector/latest/advanced/</a></li>
+<li><a href="https://github.com/anchore/syft#supported-ecosystems">https://github.com/anchore/syft#supported-ecosystems</a></li>
+</ul>
+</div>
+<h3 id="integrity-verification">Integrity Verification<a class="headerlink" href="#integrity-verification" title="Permanent link">#</a></h3>
+<ul>
+<li>System packages can (and should be) be signed, ensuring they are from
+  trusted sources at install time.</li>
+<li>After package installation, the installed content integrity can be
+  verified to be intact and unchanged as well.</li>
+</ul>
+<div class="admonition note annotate">
+<p class="admonition-title">Reference</p>
+<ul>
+<li><a href="https://rpm-packaging-guide.github.io/#Signing-Packages">https://rpm-packaging-guide.github.io/#Signing-Packages</a></li>
+<li><a href="http://ftp.rpm.org/max-rpm/ch-rpm-verify.html">http://ftp.rpm.org/max-rpm/ch-rpm-verify.html</a></li>
+<li><a href="https://www.debian.org/doc/manuals/securing-debian-manual/deb-pack-sign.en.html">https://www.debian.org/doc/manuals/securing-debian-manual/deb-pack-sign.en.html</a></li>
+</ul>
+</div>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">#</a></h2>
+<h3 id="avoiding-package-name-conflicts">Avoiding package name conflicts<a class="headerlink" href="#avoiding-package-name-conflicts" title="Permanent link">#</a></h3>
+<p>What if we want RedHat's system python installed as well as our own?
+IT needs their python version on every system for Ansible to work
+reliably.  RedHat's own <code>yum</code> tool depends on python.. it's a very
+likely scenario.</p>
+<p>What if we want to support multiple toolchains in the same host or
+container image?  Cross-compiling, product branching..</p>
+<p>In this system, we name each package using a convention that associates
+it with the toolchain/prefix it supports.</p>
+<div class="language-bash highlight"><span class="filename">Multiple GCC versions installed without conflict</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/usr/bin/gcc
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gcc-11.5.0-5.el9_5.alma.1.aarch64
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$<span class="w"> </span>/usr/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/usr/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Using<span class="w"> </span>built-in<span class="w"> </span>specs.
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">COLLECT_GCC</span><span class="o">=</span>/usr/bin/gcc
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">COLLECT_LTO_WRAPPER</span><span class="o">=</span>/usr/libexec/gcc/aarch64-redhat-linux/11/lto-wrapper
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Target:<span class="w"> </span>aarch64-redhat-linux
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Configured<span class="w"> </span>with:<span class="w"> </span>../configure<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">                   </span>--enable-bootstrap<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">                   </span>--enable-host-pie<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">                   </span>--enable-host-bind-now<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">                   </span>--enable-languages<span class="o">=</span>c,c++,fortran,lto<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">                   </span>--prefix<span class="o">=</span>/usr<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">                   </span>--mandir<span class="o">=</span>/usr/share/man<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">                   </span>--infodir<span class="o">=</span>/usr/share/info<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">                   </span>--with-bugurl<span class="o">=</span>http://bugs.almalinux.org/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">                   </span>--enable-shared<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">                   </span>--enable-threads<span class="o">=</span>posix<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">                   </span>--enable-checking<span class="o">=</span>release<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">                   </span>--with-system-zlib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">                   </span>--enable-__cxa_atexit<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">                   </span>--disable-libunwind-exceptions<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">                   </span>--enable-gnu-unique-object<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                   </span>--enable-linker-build-id<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">                   </span>--with-gcc-major-version-only<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                   </span>--enable-plugin<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                   </span>--enable-initfini-array<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                   </span>--without-isl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                   </span>--enable-multilib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                   </span>--with-linker-hash-style<span class="o">=</span>gnu<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                   </span>--enable-gnu-indirect-function<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                   </span>--build<span class="o">=</span>aarch64-redhat-linux<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                   </span>--with-build-config<span class="o">=</span>bootstrap-lto<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">                   </span>--enable-link-serialization<span class="o">=</span><span class="m">1</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Thread<span class="w"> </span>model:<span class="w"> </span>posix
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>Supported<span class="w"> </span>LTO<span class="w"> </span>compression<span class="w"> </span>algorithms:<span class="w"> </span>zlib<span class="w"> </span>zstd
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>gcc<span class="w"> </span>version<span class="w"> </span><span class="m">11</span>.5.0<span class="w"> </span><span class="m">20240719</span><span class="w"> </span><span class="o">(</span>Red<span class="w"> </span>Hat<span class="w"> </span><span class="m">11</span>.5.0-5<span class="o">)</span><span class="w"> </span><span class="o">(</span>GCC<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>$
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>$<span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>--whatprovides<span class="w"> </span>/opt/toolchain/bin/gcc
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>opt-toolchain-gcc-15.1.0-1.el9.aarch64
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>$<span class="w"> </span>/opt/toolchain/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>/opt/toolchain/bin/gcc<span class="w"> </span>-v
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>Using<span class="w"> </span>built-in<span class="w"> </span>specs.
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="nv">COLLECT_GCC</span><span class="o">=</span>/opt/toolchain/bin/gcc
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="nv">COLLECT_LTO_WRAPPER</span><span class="o">=</span>/opt/toolchain/libexec/gcc/aarch64-unknown-linux-gnu/12.2.0/lto-wrapper
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>Target:<span class="w"> </span>aarch64-unknown-linux-gnu
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>Configured<span class="w"> </span>with:<span class="w"> </span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gcce3fadc7d9cb2a/b/src/configure<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">                   </span>--prefix<span class="o">=</span>/opt/toolchain<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">                   </span>--bindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">                   </span>--sbindir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/bin&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">                   </span>--libdir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/lib&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">                   </span>--includedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">                   </span>--oldincludedir<span class="o">=</span><span class="s1">&#39;/opt/toolchain/include&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">                   </span>--with-as<span class="o">=</span>/opt/toolchain/bin/as<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">                   </span>--with-ld<span class="o">=</span>/opt/toolchain/bin/ld<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">                   </span>--enable-languages<span class="o">=</span>c,c++,fortran<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">                   </span>--disable-nls<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">                   </span>--disable-multilib<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">                   </span>--disable-bootstrap<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">                   </span>--with-zlib<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/zlibf65861dbd5700/p<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">                   </span>--with-isl<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/isle7890ac49bf41/p<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">                   </span>--with-gmp<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/gmp2a63bb32f5d6d/p<span class="w"> </span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">                   </span>--with-mpc<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpc8a61687c8a20f/p<span class="w"> </span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">                   </span>--with-mpfr<span class="o">=</span>/__w/conan-github-workflows/conan-github-workflows/CONAN_HOME/p/b/mpfr0ee7ef75967a2/p<span class="w"> </span>--with-pkgversion<span class="o">=</span><span class="s1">&#39;conan GCC 12.2.0&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">                   </span>--with-bugurl<span class="o">=</span>https://github.com/conan-io/conan-center-index/issues
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>Thread<span class="w"> </span>model:<span class="w"> </span>posix
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>Supported<span class="w"> </span>LTO<span class="w"> </span>compression<span class="w"> </span>algorithms:<span class="w"> </span>zlib
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>gcc<span class="w"> </span>version<span class="w"> </span><span class="m">12</span>.2.0<span class="w"> </span><span class="o">(</span>conan<span class="w"> </span>GCC<span class="w"> </span><span class="m">12</span>.2.0<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>$
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../SampleUsage/" class="md-footer__link md-footer__link--next" aria-label="Next: Sample Usage">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Sample Usage
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2025, David L. Armstrong.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
