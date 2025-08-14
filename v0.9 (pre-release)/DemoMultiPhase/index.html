@@ -22,7 +22,7 @@
     
     
       
-        <title>Demo - MultiPhase Toolchain Build - Toolchain Build System using Conan</title>
+        <title>Demo - MultiPhase GCC Compiler Bootstrap Build - Toolchain Build System using Conan</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-multiphase-toolchain-build" class="md-skip">
+        <a href="#demo-multiphase-gcc-compiler-bootstrap-build" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo - MultiPhase Toolchain Build
+              Demo - MultiPhase GCC Compiler Bootstrap Build
             
           </span>
         </div>
@@ -313,7 +313,7 @@
           
   
   <span class="md-ellipsis">
-    Demo - MultiPhase Toolchain Build
+    Demo - MultiPhase GCC Compiler Bootstrap Build
     
   </span>
   
@@ -325,7 +325,7 @@
         
   
   <span class="md-ellipsis">
-    Demo - MultiPhase Toolchain Build
+    Demo - MultiPhase GCC Compiler Bootstrap Build
     
   </span>
   
@@ -619,7 +619,7 @@
   
 
 
-<h1 id="demo-multiphase-toolchain-build">Demo - MultiPhase Toolchain Build<a class="headerlink" href="#demo-multiphase-toolchain-build" title="Permanent link">#</a></h1>
+<h1 id="demo-multiphase-gcc-compiler-bootstrap-build">Demo - MultiPhase GCC Compiler Bootstrap Build<a class="headerlink" href="#demo-multiphase-gcc-compiler-bootstrap-build" title="Permanent link">#</a></h1>
 <p>We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.</p>
 <p>Using caching in GitHub Actions, we can connect multiple toolchain
@@ -657,17 +657,15 @@ will be pre-installed for use in subsequent phases.</p>
 
 <h2 id="pre-requisites">Pre-Requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">#</a></h2>
 <h3 id="generate-base-vendor-images">Generate Base Vendor images<a class="headerlink" href="#generate-base-vendor-images" title="Permanent link">#</a></h3>
+<div class="admonition docker-reference annotate">
+<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
+<p>These images provide basic conan functionality and GCC toolchain from OS
+Vendor provided packages.  This demo uses these raw OS Vendor images to
+assemble our GCC toolchain build image.</p>
 <ul>
 <li><code>conan-base-${os_name}:${arch}-latest</code></li>
 <li><code>conan-bootstrap-${os_name}:${arch}-latest</code></li>
 </ul>
-<p>These images provide basic conan functionality and GCC toolchain from OS
-Vendor provided packages.  This demo uses these raw OS Vendor images to
-assemble our GCC toolchain build image.</p>
-<div class="admonition docker-reference annotate">
-<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
-<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a>
-provides the Dockerfiles I use for Conan and the full Toolchain Workflows.</p>
 <p>OS/Platform support includes:</p>
 <ul>
 <li>AlmaLinux 9.6 (x86_64, aarch64)</li>
@@ -758,18 +756,17 @@ The previous packages built with our bootstrap image are discarded.</p>
 <p><a class="glightbox" href="../img/conan_toolchain_demo.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></a></p>
 </div>
 <h3 id="generate-build-and-docker-images">Generate Build and Docker images<a class="headerlink" href="#generate-build-and-docker-images" title="Permanent link">#</a></h3>
+<p>Now that the Workflows have worked their magic with the Vendor Images to
+build and publish our GCC Toolchain, we can build our final form Toolchain
+builder images.</p>
+<div class="admonition docker-reference annotate">
+<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
+<p>These add our own Conan GCC Toolchain and other useful toolchain
+construction tools onto the base image.</p>
 <ul>
 <li><code>conan-build-${os_name}:${arch}-latest</code></li>
 <li><code>conan-docker-build-${os_name}:${arch}-latest</code></li>
 </ul>
-<p>Now that the Workflows have worked their magic with the Vendor Images to
-build and publish our GCC Toolchain, we can build our final form Toolchain
-builder images.</p>
-<p>These images provide basic conan functionality and our Conan GCC Toolchain</p>
-<div class="admonition github-reference annotate">
-<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
-<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a>
-provides the Dockerfiles I use for Conan and the full Toolchain Workflows.</p>
 <p>OS/Platform support includes:</p>
 <ul>
 <li>AlmaLinux 9.6 (x86_64, aarch64)</li>
@@ -777,7 +774,7 @@ provides the Dockerfiles I use for Conan and the full Toolchain Workflows.</p>
 </ul>
 </div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
-<div class="admonition github-reference annotate">
+<div class="admonition docker-reference annotate">
 <p class="admonition-title"><a href="https://github.com/conan-io/conan-docker-tools">conan-docker-tools</a></p>
 <p>The Conan project builds similar images for this purpose, but with a
 few significant differences:</p>
