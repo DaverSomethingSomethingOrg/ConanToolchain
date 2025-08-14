@@ -476,8 +476,22 @@ Starting with the gcc/binutils/make/cmake toolchain installed into our
 <div class="admonition docker-reference annotate">
 <p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
 <p>Custom Docker container images for building Conan packages.</p>
+<p>These images provide basic conan functionality and GCC toolchain
+from OS Vendor provided packages:</p>
 <ul>
-<li><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">https://github.com/DaverSomethingSomethingOrg/conan-build-container</a></li>
+<li><code>conan-base-${os_name}:${arch}-latest</code></li>
+<li><code>conan-bootstrap-${os_name}:${arch}-latest</code></li>
+</ul>
+<p>And these add our own Conan GCC Toolchain and other useful toolchain
+construction tools onto the base image.</p>
+<ul>
+<li><code>conan-build-${os_name}:${arch}-latest</code></li>
+<li><code>conan-docker-build-${os_name}:${arch}-latest</code></li>
+</ul>
+<p>OS/Platform support includes:</p>
+<ul>
+<li>AlmaLinux 9.6 (x86_64, aarch64)</li>
+<li>Ubuntu 24.04LTS (x86_64, aarch64)</li>
 </ul>
 </div>
 <p>By delivering OS packages, we are able to:</p>

@@ -348,6 +348,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Requisites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-Requisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-base-vendor-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Base Vendor images
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-package-upload-configured-and-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nexus package upload configured and implemented
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nexus package upload configured and implemented">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-actions-secrets-and-variables-for-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions secrets and variables for workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#phase-1-gnu-binutils" class="md-nav__link">
     <span class="md-ellipsis">
       Phase 1 - GNU binutils
@@ -371,6 +419,21 @@
       Phase 3 - Clean rebuilds using our toolchain
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 - Clean rebuilds using our toolchain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-build-and-docker-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Build and Docker images
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -439,6 +502,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Requisites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-Requisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-base-vendor-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Base Vendor images
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-package-upload-configured-and-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nexus package upload configured and implemented
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nexus package upload configured and implemented">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-actions-secrets-and-variables-for-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions secrets and variables for workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#phase-1-gnu-binutils" class="md-nav__link">
     <span class="md-ellipsis">
       Phase 1 - GNU binutils
@@ -462,6 +573,21 @@
       Phase 3 - Clean rebuilds using our toolchain
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 - Clean rebuilds using our toolchain">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-build-and-docker-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Build and Docker images
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -529,6 +655,44 @@ will be pre-installed for use in subsequent phases.</p>
 </pre>
 </div>
 
+<h2 id="pre-requisites">Pre-Requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">#</a></h2>
+<h3 id="generate-base-vendor-images">Generate Base Vendor images<a class="headerlink" href="#generate-base-vendor-images" title="Permanent link">#</a></h3>
+<ul>
+<li><code>conan-base-${os_name}:${arch}-latest</code></li>
+<li><code>conan-bootstrap-${os_name}:${arch}-latest</code></li>
+</ul>
+<p>These images provide basic conan functionality and GCC toolchain from OS
+Vendor provided packages.  This demo uses these raw OS Vendor images to
+assemble our GCC toolchain build image.</p>
+<div class="admonition docker-reference annotate">
+<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a>
+provides the Dockerfiles I use for Conan and the full Toolchain Workflows.</p>
+<p>OS/Platform support includes:</p>
+<ul>
+<li>AlmaLinux 9.6 (x86_64, aarch64)</li>
+<li>Ubuntu 24.04LTS (x86_64, aarch64)</li>
+</ul>
+</div>
+<h3 id="nexus-package-upload-configured-and-implemented">Nexus package upload configured and implemented<a class="headerlink" href="#nexus-package-upload-configured-and-implemented" title="Permanent link">#</a></h3>
+<p>Currently supported:</p>
+<ul>
+<li>RPM/Yum</li>
+<li>Deb/Apt</li>
+</ul>
+<h4 id="github-actions-secrets-and-variables-for-workflow">GitHub Actions secrets and variables for workflow<a class="headerlink" href="#github-actions-secrets-and-variables-for-workflow" title="Permanent link">#</a></h4>
+<p>Phase 3 of the demo uploads the final binary packages to Nexus when configured as follows:</p>
+<p>Secrets:</p>
+<ul>
+<li><code>NEXUS_CI_PASSWORD</code>: '<password for $NEXUS_CI_USER>'</li>
+</ul>
+<p>Variables:</p>
+<ul>
+<li><code>NEXUS_SERVER</code>: "&lt;nexus-server-url&gt;"</li>
+<li><code>NEXUS_YUM_REPO</code>: "&lt;yum-repository-name&gt;"</li>
+<li><code>NEXUS_APT_REPO</code>: "&lt;apt-repository-name&gt;"</li>
+<li><code>NEXUS_CI_USER</code>: '&lt;nexus-write-update-user&gt;'</li>
+</ul>
 <h2 id="phase-1-gnu-binutils">Phase 1 - GNU binutils<a class="headerlink" href="#phase-1-gnu-binutils" title="Permanent link">#</a></h2>
 <p>GCC depends on binutils, so that's where we start.  We need a working
 compiler to build our tools though, so we'll use a special bootstrap
@@ -592,6 +756,25 @@ The previous packages built with our bootstrap image are discarded.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">For each platform, we end up with an overall flow that looks like this</p>
 <p><a class="glightbox" href="../img/conan_toolchain_demo.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></a></p>
+</div>
+<h3 id="generate-build-and-docker-images">Generate Build and Docker images<a class="headerlink" href="#generate-build-and-docker-images" title="Permanent link">#</a></h3>
+<ul>
+<li><code>conan-build-${os_name}:${arch}-latest</code></li>
+<li><code>conan-docker-build-${os_name}:${arch}-latest</code></li>
+</ul>
+<p>Now that the Workflows have worked their magic with the Vendor Images to
+build and publish our GCC Toolchain, we can build our final form Toolchain
+builder images.</p>
+<p>These images provide basic conan functionality and our Conan GCC Toolchain</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a></p>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-build-container">conan-build-container</a>
+provides the Dockerfiles I use for Conan and the full Toolchain Workflows.</p>
+<p>OS/Platform support includes:</p>
+<ul>
+<li>AlmaLinux 9.6 (x86_64, aarch64)</li>
+<li>Ubuntu 24.04LTS (x86_64, aarch64)</li>
+</ul>
 </div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
 <div class="admonition github-reference annotate">
