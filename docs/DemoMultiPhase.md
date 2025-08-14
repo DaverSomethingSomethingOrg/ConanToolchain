@@ -41,18 +41,15 @@ will be pre-installed for use in subsequent phases.
 
 ### Generate Base Vendor images
 
-- `conan-base-${os_name}:${arch}-latest`
-- `conan-bootstrap-${os_name}:${arch}-latest`
-
-These images provide basic conan functionality and GCC toolchain from OS
-Vendor provided packages.  This demo uses these raw OS Vendor images to
-assemble our GCC toolchain build image.
-
 !!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
 
-    [conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)
-    provides the Dockerfiles I use for Conan and the full Toolchain Workflows.
+    These images provide basic conan functionality and GCC toolchain from OS
+    Vendor provided packages.  This demo uses these raw OS Vendor images to
+    assemble our GCC toolchain build image.
 
+    - `conan-base-${os_name}:${arch}-latest`
+    - `conan-bootstrap-${os_name}:${arch}-latest`
+    
     OS/Platform support includes:
     
     - AlmaLinux 9.6 (x86_64, aarch64)
@@ -161,29 +158,26 @@ The previous packages built with our bootstrap image are discarded.
 
 ### Generate Build and Docker images
 
-- `conan-build-${os_name}:${arch}-latest`
-- `conan-docker-build-${os_name}:${arch}-latest`
-
 Now that the Workflows have worked their magic with the Vendor Images to
 build and publish our GCC Toolchain, we can build our final form Toolchain
 builder images.
 
-These images provide basic conan functionality and our Conan GCC Toolchain
+!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
 
-!!! github-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
+    These add our own Conan GCC Toolchain and other useful toolchain
+    construction tools onto the base image.
 
-    [conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)
-    provides the Dockerfiles I use for Conan and the full Toolchain Workflows.
+    - `conan-build-${os_name}:${arch}-latest`
+    - `conan-docker-build-${os_name}:${arch}-latest`
 
     OS/Platform support includes:
     
     - AlmaLinux 9.6 (x86_64, aarch64)
     - Ubuntu 24.04LTS (x86_64, aarch64)
 
-
 ## See Also
 
-!!! github-reference annotate "[conan-docker-tools](https://github.com/conan-io/conan-docker-tools)"
+!!! docker-reference annotate "[conan-docker-tools](https://github.com/conan-io/conan-docker-tools)"
 
     The Conan project builds similar images for this purpose, but with a
     few significant differences:
