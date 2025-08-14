@@ -42,7 +42,22 @@ To put this all together, I've developed these integration pieces:
 
     Custom Docker container images for building Conan packages.
 
-    - https://github.com/DaverSomethingSomethingOrg/conan-build-container
+    These images provide basic conan functionality and GCC toolchain
+    from OS Vendor provided packages:
+
+    - `conan-base-${os_name}:${arch}-latest`
+    - `conan-bootstrap-${os_name}:${arch}-latest`
+    
+    And these add our own Conan GCC Toolchain and other useful toolchain
+    construction tools onto the base image.
+
+    - `conan-build-${os_name}:${arch}-latest`
+    - `conan-docker-build-${os_name}:${arch}-latest`
+
+    OS/Platform support includes:
+    
+    - AlmaLinux 9.6 (x86_64, aarch64)
+    - Ubuntu 24.04LTS (x86_64, aarch64)
 
 By delivering OS packages, we are able to:
 

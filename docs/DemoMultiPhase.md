@@ -1,4 +1,4 @@
-# Demo - MultiPhase Toolchain Build
+# Demo - MultiPhase GCC Compiler Bootstrap Build
 
 We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.
@@ -36,6 +36,49 @@ will be pre-installed for use in subsequent phases.
 
 </pre>
 </div>
+
+## Pre-Requisites
+
+### Generate Base Vendor images
+
+- `conan-base-${os_name}:${arch}-latest`
+- `conan-bootstrap-${os_name}:${arch}-latest`
+
+These images provide basic conan functionality and GCC toolchain from OS
+Vendor provided packages.  This demo uses these raw OS Vendor images to
+assemble our GCC toolchain build image.
+
+!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
+
+    [conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)
+    provides the Dockerfiles I use for Conan and the full Toolchain Workflows.
+
+    OS/Platform support includes:
+    
+    - AlmaLinux 9.6 (x86_64, aarch64)
+    - Ubuntu 24.04LTS (x86_64, aarch64)
+
+### Nexus package upload configured and implemented
+
+Currently supported:
+
+- RPM/Yum
+- Deb/Apt
+
+#### GitHub Actions secrets and variables for workflow
+
+Phase 3 of the demo uploads the final binary packages to Nexus when configured as follows:
+
+Secrets:
+
+- `NEXUS_CI_PASSWORD`: '<password for $NEXUS_CI_USER>'
+
+Variables:
+
+- `NEXUS_SERVER`: "&lt;nexus-server-url>"
+- `NEXUS_YUM_REPO`: "&lt;yum-repository-name>"
+- `NEXUS_APT_REPO`: "&lt;apt-repository-name>"
+- `NEXUS_CI_USER`: '&lt;nexus-write-update-user>'
 
 ## Phase 1 - GNU binutils
 
@@ -114,6 +157,29 @@ The previous packages built with our bootstrap image are discarded.
 !!! note annotate "For each platform, we end up with an overall flow that looks like this"
 
     ![Conan Toolchain Demo](img/conan_toolchain_demo.png)
+
+
+### Generate Build and Docker images
+
+- `conan-build-${os_name}:${arch}-latest`
+- `conan-docker-build-${os_name}:${arch}-latest`
+
+Now that the Workflows have worked their magic with the Vendor Images to
+build and publish our GCC Toolchain, we can build our final form Toolchain
+builder images.
+
+These images provide basic conan functionality and our Conan GCC Toolchain
+
+!!! github-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
+
+    [conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)
+    provides the Dockerfiles I use for Conan and the full Toolchain Workflows.
+
+    OS/Platform support includes:
+    
+    - AlmaLinux 9.6 (x86_64, aarch64)
+    - Ubuntu 24.04LTS (x86_64, aarch64)
+
 
 ## See Also
 
