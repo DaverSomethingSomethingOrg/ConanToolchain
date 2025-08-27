@@ -38,10 +38,7 @@ To put this all together, I've developed these integration pieces:
 
     Documented in [Demo - MultiPhase Toolchain Build](DemoMultiPhase.md)
 
-!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
-
-    Custom Docker container images for building Conan packages.
-
+    Includes the Container image builds used in our `conan-github-workflows`.
     These images provide basic conan functionality and GCC toolchain
     from OS Vendor provided packages:
 

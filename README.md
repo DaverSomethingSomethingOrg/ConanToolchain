@@ -33,10 +33,6 @@ To put this all together, I've developed these integration pieces:
     Starting with the gcc/binutils/make/cmake toolchain installed into our
     `conan-build-container`.
 
-- https://github.com/DaverSomethingSomethingOrg/conan-build-container
-
-    Custom Docker container images for building Conan packages.
-
 By delivering OS packages, we are able to:
 
 - Provide the simplest, easiest tool installation for Developers.

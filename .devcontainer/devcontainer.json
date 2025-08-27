@@ -1,9 +1,10 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
-  "name": "Base OS with Python3 and Git",
-//  "build": { "dockerfile": "Dockerfile-python" },
-  "build": { "dockerfile": "Dockerfile-ubuntu" },
-//  "build": { "dockerfile": "Dockerfile-almalinux" },
+  "name": "Regular Build Minimal with Docker, Git, Python3",
+//  "image": "ghcr.io/daversomethingsomethingorg/conan-ubuntu:aarch64-latest",
+  "image": "nexus.homelab/conan-docker-build-ubuntu:aarch64-latest",
+//  "image": "ghcr.io/daversomethingsomethingorg/conan-almalinux:aarch64-latest",
+//  "image": "nexus.homelab/conan-docker-build-almalinux:aarch64-latest",
 
 // feature support is for ubuntu/debian (uses apt-get, etc) apparently...
 /*

@@ -1,4 +1,4 @@
-# Demo - MultiPhase GCC Compiler Bootstrap Build
+# Demo - MultiPhase GCC Compiler Bootstrap
 
 We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.
@@ -12,6 +12,22 @@ will be pre-installed for use in subsequent phases.
 <pre id="workflow-tree">
 
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-demoToolchain.yml">conan-demoToolchain.yml</a></br>
+  │</br>
+  ├── bootstrap_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
+  │     │</br>
+  │     ├── conan-base</br>
+  │     │     │</br>
+  │     │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │     │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │     │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │     │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │     │</br>
+  │     └── conan-bootstrap</br>
+  │           │</br>
+  │           ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │           ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │           ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+  │           └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
   │</br>
   ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
   │     │</br>
@@ -27,33 +43,46 @@ will be pre-installed for use in subsequent phases.
   │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
   │</br>
-  └── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  ├── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-multiPlatformToolchain.yml">conan-multiPlatformToolchain.yml</a></br>
+  │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+  │</br>
+  └── build_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
         │</br>
-        ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
+        ├── conan-base</br>
+        │     │</br>
+        │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │</br>
+        ├── conan-bootstrap</br>
+        │     │</br>
+        │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │</br>
+        ├── conan-build</br>
+        │     │</br>
+        │     ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │     └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+        │</br>
+        └── conan-docker-build</br>
+              │</br>
+              ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+              ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+              ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
+              └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/docker-singlePlatform.yml">docker-singlePlatform.yml</a></br>
 
 </pre>
 </div>
 
 ## Pre-Requisites
-
-### Generate Base Vendor images
-
-!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
-
-    These images provide basic conan functionality and GCC toolchain from OS
-    Vendor provided packages.  This demo uses these raw OS Vendor images to
-    assemble our GCC toolchain build image.
-
-    - `conan-base-${os_name}:${arch}-latest`
-    - `conan-bootstrap-${os_name}:${arch}-latest`
-    
-    OS/Platform support includes:
-    
-    - AlmaLinux 9.6 (x86_64, aarch64)
-    - Ubuntu 24.04LTS (x86_64, aarch64)
 
 ### Nexus package upload configured and implemented
 
@@ -77,6 +106,26 @@ Variables:
 - `NEXUS_APT_REPO`: "&lt;apt-repository-name>"
 - `NEXUS_CI_USER`: '&lt;nexus-write-update-user>'
 
+## bootstrap_container_image
+
+Before we can start on the toolchain, we need minimal base and bootstrap
+container images that can run conan and build the toolchain using the OS
+vendor's gcc toolchain packages.
+
+!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container)"
+
+    These images provide basic conan functionality and GCC toolchain from OS
+    Vendor provided packages.  This demo uses these raw OS Vendor images to
+    assemble our GCC toolchain build image.
+
+    - `conan-base-${os_name}:${arch}-latest`
+    - `conan-bootstrap-${os_name}:${arch}-latest`
+    
+    OS/Platform support includes:
+    
+    - AlmaLinux 9.6 (x86_64, aarch64)
+    - Ubuntu 24.04LTS (x86_64, aarch64)
+
 ## Phase 1 - GNU binutils
 
 GCC depends on binutils, so that's where we start.  We need a working
@@ -92,7 +141,7 @@ container image with the OS Vendor's compiler chain installed.
     def requirements(self):
         self.requires("binutils/2.42")
 ```
-[Link to phase 1 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/components/phase1/conanfile.py)
+[Link to phase 1 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase1/conanfile.py)
 
 ## Phase 2 - bootstrapping CMake, GNU Make, and GCC
 
@@ -115,7 +164,7 @@ the OS Vendor's binutils available for their GCC as well.
         self.requires("cmake/4.0.1")
         self.requires("gcc/12.2.0"
 ```
-[Link to phase 2 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/components/phase2/conanfile.py)
+[Link to phase 2 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase2/conanfile.py)
 
 ## Phase 3 - Clean rebuilds using our toolchain
 
@@ -149,22 +198,21 @@ The previous packages built with our bootstrap image are discarded.
         self.requires("binutils/2.42")
         self.requires("gcc/12.2.0"
 ```
-[Link to phase 3 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/components/phase3/conanfile.py)
+[Link to phase 3 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase3/conanfile.py)
 
 !!! note annotate "For each platform, we end up with an overall flow that looks like this"
 
     ![Conan Toolchain Demo](img/conan_toolchain_demo.png)
 
-
-### Generate Build and Docker images
+## build_container_image
 
 Now that the Workflows have worked their magic with the Vendor Images to
 build and publish our GCC Toolchain, we can build our final form Toolchain
 builder images.
 
-!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-build-container)"
+!!! docker-reference annotate "[conan-build-container](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container)"
 
-    These add our own Conan GCC Toolchain and other useful toolchain
+    These images add our own Conan GCC Toolchain and other useful toolchain
     construction tools onto the base image.
 
     - `conan-build-${os_name}:${arch}-latest`
