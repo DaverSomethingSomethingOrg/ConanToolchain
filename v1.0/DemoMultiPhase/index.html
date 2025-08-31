@@ -432,15 +432,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#room-for-performance-improvement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Room for Performance Improvement
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       See Also
@@ -583,15 +574,6 @@
   <a href="#build_container_image" class="md-nav__link">
     <span class="md-ellipsis">
       build_container_image
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#room-for-performance-improvement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Room for Performance Improvement
     </span>
   </a>
   
@@ -831,91 +813,6 @@ construction tools onto the base image.</p>
 <li>Ubuntu 24.04LTS (x86_64, aarch64)</li>
 </ul>
 </div>
-<h2 id="room-for-performance-improvement">Room for Performance Improvement<a class="headerlink" href="#room-for-performance-improvement" title="Permanent link">#</a></h2>
-<p>This demo serves as a nice proof-of-concept, orchestrating simple
-workflow building blocks to build our development container images
-from scratch.</p>
-<p>This approach saved us a lot of time in implementing, but has a big
-performance issue.  Lock-step parallelism.</p>
-<p>Each subsequent phase of the workflow has to wait for all platforms
-to complete their work from the previous phase before it can begin
-on any platform.  Any platform that finishes the current phase early
-must wait for the other platforms to complete before it can proceed
-as well.</p>
-<p>Since we support a multi-architecture, multi-OS environment, there
-will naturally be significant variation in processing time across
-the platforms.</p>
-<p>In our <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc15-toolchain"><code>gcc15-toolchain</code></a>
-demo we take a different approach for our workflow.</p>
-<!-- markdownlint-disable MD033 -->
-
-<div id="workflow-job-structure" class="language-text highlight">
-<span class="filename">gcc15-toolchain Workflow Job Structure</span>
-<pre id="workflow-tree">
-
-<a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/gcc15-multiPlatform.yml">gcc15-multiPlatform.yml</a></br>
-  │</br>
-  ├── ubuntu-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/gcc15-singlePlatform.yml">gcc15-singlePlatform.yml</a></br>
-  │     │</br>
-  │     ├── bootstrap_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │     │     ├── conan-base</br>
-  │     │     └── conan-bootstrap</br>
-  │     ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     └── build_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │           ├── conan-base</br>
-  │           ├── conan-bootstrap</br>
-  │           ├── conan-build</br>
-  │           └── conan-docker-build</br>
-  │</br>
-  ├── ubuntu-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/gcc15-singlePlatform.yml">gcc15-singlePlatform.yml</a></br>
-  │     │</br>
-  │     ├── bootstrap_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │     │     ├── conan-base</br>
-  │     │     └── conan-bootstrap</br>
-  │     ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     └── build_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │           ├── conan-base</br>
-  │           ├── conan-bootstrap</br>
-  │           ├── conan-build</br>
-  │           └── conan-docker-build</br>
-  │</br>
-  ├── almalinux-aarch64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/gcc15-singlePlatform.yml">gcc15-singlePlatform.yml</a></br>
-  │     │</br>
-  │     ├── bootstrap_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │     │     ├── conan-base</br>
-  │     │     └── conan-bootstrap</br>
-  │     ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     ├── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-  │     └── build_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-  │           ├── conan-base</br>
-  │           ├── conan-bootstrap</br>
-  │           ├── conan-build</br>
-  │           └── conan-docker-build</br>
-  │</br>
-  └── almalinux-x86_64 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/gcc15-singlePlatform.yml">gcc15-singlePlatform.yml</a></br>
-        │</br>
-        ├── bootstrap_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-        │     ├── conan-base</br>
-        │     └── conan-bootstrap</br>
-        ├── phase 1 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        ├── phase 2 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        ├── phase 3 - <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a></br>
-        └── build_container_image - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-build-container.yml">conan-build-container.yml</a></br>
-              ├── conan-base</br>
-              ├── conan-bootstrap</br>
-              ├── conan-build</br>
-              └── conan-docker-build</br>
-  </br>
-</pre>
-</div>
-
-<!-- markdownlint-enable MD033 -->
-
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">#</a></h2>
 <div class="admonition docker-reference annotate">
 <p class="admonition-title"><a href="https://github.com/conan-io/conan-docker-tools">conan-docker-tools</a></p>
