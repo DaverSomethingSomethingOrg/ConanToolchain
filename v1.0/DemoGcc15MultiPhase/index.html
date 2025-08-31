@@ -8,13 +8,9 @@
       
       
       
-        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/DemoMultiPhase/">
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/DemoGcc15MultiPhase/">
       
       
-        <link rel="prev" href="../CIWorkflows/">
-      
-      
-        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -297,31 +293,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Demo - MultiPhase GCC Compiler Bootstrap
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../DemoMultiPhase/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -331,128 +306,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pre-requisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Pre-Requisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pre-Requisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nexus-package-upload-configured-and-implemented" class="md-nav__link">
-    <span class="md-ellipsis">
-      Nexus package upload configured and implemented
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Nexus package upload configured and implemented">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#github-actions-secrets-and-variables-for-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      GitHub Actions secrets and variables for workflow
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bootstrap_container_image" class="md-nav__link">
-    <span class="md-ellipsis">
-      bootstrap_container_image
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-1-gnu-binutils" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 1 - GNU binutils
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-2-bootstrapping-cmake-gnu-make-and-gcc" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 2 - bootstrapping CMake, GNU Make, and GCC
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-3-clean-rebuilds-using-our-toolchain" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phase 3 - Clean rebuilds using our toolchain
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build_container_image" class="md-nav__link">
-    <span class="md-ellipsis">
-      build_container_image
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#room-for-performance-improvement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Room for Performance Improvement
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      See Also
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -958,44 +811,6 @@ few significant differences:</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../CIWorkflows/" class="md-footer__link md-footer__link--prev" aria-label="Previous: CI Workflows">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                CI Workflows
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Apache License v2.0
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
