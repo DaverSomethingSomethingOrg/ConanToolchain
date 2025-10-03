@@ -37,6 +37,10 @@ theme:
     - content.code.copy
     - content.code.annotate
     - navigation.footer
+#  palette:
+#    primary: cyan
+#    scheme: slate
+
 
 extra_css:
   - css/extra.css
@@ -77,6 +81,6 @@ nav:
   - 'SampleUsage.md'
   - 'ConanRecipePreReqs.md'
   - 'CIWorkflows.md'
-  - 'DemoMultiPhase.md'
-#  - 'ConanSystemPackaging.md'
+  - 'DemoGcc12MultiPhase.md'
+  - 'ConanZFSDemo.md'
   - Apache License v2.0: 'LICENSE.txt'

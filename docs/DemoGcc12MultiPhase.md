@@ -1,4 +1,6 @@
-# Demo - MultiPhase GCC Compiler Bootstrap
+# Demo - MultiPhase GCC12 Compiler Bootstrap
+
+<!-- markdownlint-disable MD046 -->
 
 We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.
@@ -7,8 +9,10 @@ Using caching in GitHub Actions, we can connect multiple toolchain
 workflows to each other. Dependencies built in one phase
 will be pre-installed for use in subsequent phases.
 
+<!-- markdownlint-disable MD033 -->
+
 <div id="workflow-job-structure" class="language-text highlight">
-<span class="filename">Workflow Job Structure</span>
+<span class="filename">gcc-toolchain Workflow Job Structure</span>
 <pre id="workflow-tree">
 
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/conan-demoToolchain.yml">conan-demoToolchain.yml</a></br>
@@ -82,6 +86,8 @@ will be pre-installed for use in subsequent phases.
 </pre>
 </div>
 
+<!-- markdownlint-enable MD033 -->
+
 ## Pre-Requisites
 
 ### Nexus package upload configured and implemented
@@ -141,6 +147,7 @@ container image with the OS Vendor's compiler chain installed.
     def requirements(self):
         self.requires("binutils/2.42")
 ```
+
 [Link to phase 1 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase1/conanfile.py)
 
 ## Phase 2 - bootstrapping CMake, GNU Make, and GCC
@@ -153,17 +160,18 @@ the OS Vendor's binutils available for their GCC as well.
     # For this bootstrapping phase we'll depend on OS vendor-provided tools
     def system_requirements(self):
         Apt(self).install(["make", "cmake", "binutils", "gcc",
-                           "opt+toolchain-binutils_2.42-0",
+                           "opt+toolchain-binutils=2.42-1",
                           ])
         Yum(self).install(["make", "cmake", "binutils", "gcc",
-                           "opt-toolchain-binutils-2.42-0",
+                           "opt-toolchain-binutils=2.42-1",
                           ])
 
     def requirements(self):
         self.requires("make/4.4.1")
         self.requires("cmake/4.0.1")
-        self.requires("gcc/12.2.0"
+        self.requires("gcc/12.2.0")
 ```
+
 [Link to phase 2 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase2/conanfile.py)
 
 ## Phase 3 - Clean rebuilds using our toolchain
@@ -181,23 +189,24 @@ The previous packages built with our bootstrap image are discarded.
 ```python title="phase 3 - conanfile.py"
     # Finally, we use our tools from phase 1 and 2 to build our tools again
     def system_requirements(self):
-        Apt(self).install(["opt+toolchain-make-4.4.1-0",
-                           "opt+toolchain-cmake-4.0.1-0",
-                           "opt+toolchain-gcc-12.2.0-0",
-                           "opt+toolchain-binutils_2.42-0",
+        Apt(self).install(["opt+toolchain-make=4.4.1-1",
+                           "opt+toolchain-cmake=4.0.1-1",
+                           "opt+toolchain-gcc=12.2.0-1",
+                           "opt+toolchain-binutils=1.42-1",
                           ])
-        Yum(self).install(["opt-toolchain-make-4.4.1-0",
-                           "opt-toolchain-cmake-4.0.1-0",
-                           "opt-toolchain-gcc-12.2.0-0",
-                           "opt-toolchain-binutils-2.42-0",
+        Yum(self).install(["opt-toolchain-make=4.4.1-1",
+                           "opt-toolchain-cmake=4.0.1-1",
+                           "opt-toolchain-gcc=12.2.0-1",
+                           "opt-toolchain-binutils=2.42-1",
                           ])
 
     def requirements(self):
         self.requires("make/4.4.1")
         self.requires("cmake/4.0.1")
         self.requires("binutils/2.42")
-        self.requires("gcc/12.2.0"
+        self.requires("gcc/12.2.0")
 ```
+
 [Link to phase 3 conanfile.py](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase3/conanfile.py)
 
 !!! note annotate "For each platform, we end up with an overall flow that looks like this"
