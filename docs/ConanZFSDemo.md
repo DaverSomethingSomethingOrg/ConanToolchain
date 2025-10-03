@@ -22,22 +22,23 @@ artifact management service is not local to the build servers, or
 where downloading 50GB or 500GB worth of build artifacts is not practical
 for every CI build or developer workspace.
 
-With this solution we are able to optimze our utilization of CPU, storage
+With this solution we are able to optimize our utilization of CPU, storage
 space, and network bandwidth all in one shot.  Not only are we saving the
 time to drag package artifacts across our network, we're also saving
 duplicated storage on the build side when the same package versions are
 used across multiple SCM workspaces and branches.
 
 When we're supporting multiple compiler configurations (such as optimized,
-debug, coverage, and the various santizer options) across multiple
+debug, coverage, and the various sanitizer options) across multiple
 branches, the storage space required for very large projects can be quite
-siginificant.
+significant.
 
 The cost of this solution is in storage architecture.  In order to maximize
 the value we'll need to design our storage infrastructure specifically
 around this solution.  We'll either need to centralize all CI and developer
 workspaces onto the same storage cluster, or set aside local storage on
-each build host specifically for build cache use.
+each build host specifically for build cache use.  Or some structured
+compromise in between..
 
 Sharing this cache across multiple users is certainly practical and can be
 very effective with this solution.  It brings its own complications such
@@ -63,12 +64,12 @@ most sophisticated build caching technology available, with features such as:
 With these features Conan provides a very strong build-avoidance solution
 at a component level, not just individual objects/targets.  With the build
 system integration, object build-avoidance technologies can still be
-inegrated as well. That's beyond the scope of this demo however.
+integrated as well. That's beyond the scope of this demo however.
 
 Using versioned packages still leaves a lot of room for optimization.
 Downloading pre-built binary packages requires significant network I/O,
 and only partially helps manage storage use in supporting multiple
-developer or CI workspaces.  One fundamental limtation of Conan's package
+developer or CI workspaces.  One fundamental limitation of Conan's package
 cache is that [it does not support concurrency](https://github.com/conan-io/conan/issues/15840).
 Given enough developer workspaces or CI builds trying to share a local
 Conan cache, we *will* run into race conditions eventually, resulting
@@ -82,36 +83,38 @@ performance solution to these Conan limitations.  Use of filesystem clones
 allows multiple CI jobs to operate concurrently with safety.  Each
 parallel runner/job can own its own clone without duplicating storage.
 Further, developers may even clone from last-night's CI builds as long
-as they're operating within the same filesytem (or storage cluster).
+as they're operating within the same filesystem (or storage cluster).
+
+### Proven
 
 The original inspiration for this solution comes from NetApp, where I was
 part of the SCM team supporting ONTAP developer builds in Perforce.  For
-very large source code trees with their resulting large C/C++ builds, we
-were able use NetApp's own thin-provisioned FlexClone technology to
-construct developer workspaces pre-seeded with the latest nightly CI build
-virtually instantaneously.
+our very large source code trees with their resulting large C/C++ builds,
+we leveraged NetApp's own thin-provisioned FlexClone technology. This
+enabled us to construct developer workspaces pre-seeded with the latest
+nightly CI build virtually instantaneously.
 
 NetApp and Perforce have published their Perforce implementation of this
 solution:
 
 - https://swarm.workshop.perforce.com/projects/netapp-p4flex/
 
-This provided a very significant developer productivity gain, in most
-cases.  Developers no longer needed to do an initial ONTAP build in their
-workspaces.  They could simply clone last-night's CI build, sync their
-client to pick up today's changes, and then perform an incremental build
-from there.
+This solution provided a very significant developer productivity gain, in
+most cases.  Developers no longer needed to do an initial ONTAP build in
+their workspaces.  They could simply clone last-night's CI build workspace,
+sync their client to pick up today's changes, and then perform an
+incremental build from there.
 
 Reliability was not perfect however, and broken builds could result in
 the developer having to do a clean full build to get back on track.
 
 Conan improves reliability and error-recovery significantly.  If the Conan
 cache is corrupted somehow, rebuilding the cache is as simple as creating
-a new cache clone, or worst-case, re-populating the cache from artifact
+a new cache clone.  Or worst-case, re-populate the cache from artifact
 management.  Incremental builds become incremental downloads instead.
 Additionally, Conan separates the cache storage from the developer
-workspace, so the impact of cache issues is isolated from the
-SCM workspace, and vice-versa.
+workspace.  The impact of any cache issue is isolated from the SCM
+workspace, and vice-versa.
 
 ## Environment and Initial Setup
 
@@ -145,8 +148,8 @@ In order to delegate management of this pool for this demo, we'll simply
 grant `sudo` access for our CI user `github-runner` to run `/usr/sbin/zfs`.
 
 Sudo is absolutely not a recommended solution for production use, but works
-fine for this single-user demo.  For some alternative suggestions, see this
-section at the bottom:
+fine for this single-user demo.  For some alternative suggestions, see the
+discussion below:
 [sudo vs. zfs allow vs. SSH command key](#sudo-vs-zfs-allow-vs-ssh-command-key)
 
 ```text title="/etc/sudoers entry"
@@ -176,7 +179,7 @@ For this demo I've implemented a simple GitHub Actions Workflow
 [ConanZFSDemo.yml](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/.github/workflows/ConanZFSDemo.yml)
 to manage ZFS, leveraging my existing reusable ConanToolchain workflow
 [conan-toolchain.yml](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml)
-to asemble a project with enough components to be interesting.  The
+to assemble a project with enough components to be interesting.  The
 [Conan Center Index](https://conan.io/center) provided
 all of the components used here (with some minor modifications).
 
@@ -200,7 +203,7 @@ Our snapshot naming looks like:
 
 Example: `zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687`
 
-We give our snapshot a prefix "pre" because the snapshot is readonly, and
+We give our snapshot a prefix `pre` because the snapshot is readonly, and
 we don't really know when or how the original cache state was established.
 We only know that this was the state prior to this build workflow.
 
@@ -362,7 +365,7 @@ Rob Napier at Cisco wrote this excellent and concise whitepaper on
 implementing such solutions for the USENIX LISA Conference.  It's worth a
 read!
 
-- [Secure Automation: Achieving Least Privilege with SSH, Sudo and Setuid](https://www.usenix.org/legacy/event/lisa04/tech/full_papers/napier/napier.pdf)
+- [Secure Automation: Achieving Least Privilege with SSH, Sudo and Setuid](https://www.usenix.org/legacy/publications/library/proceedings/lisa04/tech/napier.html)
 
 ## What's Next
 
