@@ -155,7 +155,7 @@ github-runner    ALL=NOPASSWD: /usr/sbin/zfs
 
 ### Conan Center Index
 
-For use throughout my [ConanToolchain](..) project, I've been maintaining
+For use throughout my [ConanToolchain](index.md) project, I've been maintaining
 a fork of the Conan Center Index recipe repo.
 
 !!! github-reference annotate "[conan-center-index](https://github.com/conan-io/conan-center-index/blob/master/README.md)"
