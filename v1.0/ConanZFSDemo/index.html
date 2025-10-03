@@ -1,0 +1,1242 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanZFSDemo/">
+      
+      
+        <link rel="prev" href="../DemoGcc12MultiPhase/">
+      
+      
+        <link rel="next" href="../LICENSE.txt">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+    
+    
+      
+        <title>Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS - Toolchain Build System using Conan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#demo-optimizing-cc-build-performance-using-conan-and-openzfs" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Toolchain Build System using Conan
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Toolchain Build System using Conan
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ButWhy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    But Why?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SampleUsage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanRecipePreReqs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conan Setup and Recipe Pre-requisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CIWorkflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI Workflows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DemoGcc12MultiPhase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - MultiPhase GCC12 Compiler Bootstrap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-question-of-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      A Question of Scale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conan
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openzfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenZFS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-and-initial-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment and Initial Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment and Initial Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openzfs-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenZFS Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conan-center-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conan Center Index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-actions-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions Workflow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Actions Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-snapshot-and-clone-for-our-new-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create snapshot and clone for our new build cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-the-successful-builds-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote the Successful Build's clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-or-destroy-a-failed-builds-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Save or Destroy a Failed Build's clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updated-cache-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updated cache state
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linking-and-deployment-performance-is-not-optimized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linking and Deployment performance is not optimized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sudo-vs-zfs-allow-vs-ssh-command-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      sudo vs. zfs allow vs. SSH command key
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE.txt" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apache License v2.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-question-of-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      A Question of Scale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conan
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openzfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenZFS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-and-initial-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment and Initial Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment and Initial Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openzfs-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenZFS Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conan-center-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conan Center Index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-actions-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions Workflow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Actions Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-snapshot-and-clone-for-our-new-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create snapshot and clone for our new build cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promote-the-successful-builds-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Promote the Successful Build's clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-or-destroy-a-failed-builds-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Save or Destroy a Failed Build's clone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updated-cache-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updated cache state
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linking-and-deployment-performance-is-not-optimized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linking and Deployment performance is not optimized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sudo-vs-zfs-allow-vs-ssh-command-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      sudo vs. zfs allow vs. SSH command key
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="demo-optimizing-cc-build-performance-using-conan-and-openzfs">Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS<a class="headerlink" href="#demo-optimizing-cc-build-performance-using-conan-and-openzfs" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>In this demo we'll show how to use Conan for build-avoidance along with
+OpenZFS for build-caching.  This solution can provide the highest level of
+build optimization for very, very large C/C++ projects.  Multi-million LoC
+and the like.</p>
+<p>We'll use Conan for build avoidance with pre-built binary packages and
+local caching with artifact management as our backing store.  We'll employ
+OpenZFS to snapshot and clone our Conan Cache to minimize time to
+seed the cache for future builds. OpenZFS will also optimize storage
+utilization across multiple build workspaces, such as massively-parallel
+CI builds.</p>
+<h3 id="a-question-of-scale">A Question of Scale<a class="headerlink" href="#a-question-of-scale" title="Permanent link">#</a></h3>
+<p>For smaller projects this solution probably carries a prohibitive amount
+of storage maintenance.  This solution shines in environments where
+artifact management service is not local to the build servers, or
+where downloading 50GB or 500GB worth of build artifacts is not practical
+for every CI build or developer workspace.</p>
+<p>With this solution we are able to optimze our utilization of CPU, storage
+space, and network bandwidth all in one shot.  Not only are we saving the
+time to drag package artifacts across our network, we're also saving
+duplicated storage on the build side when the same package versions are
+used across multiple SCM workspaces and branches.</p>
+<p>When we're supporting multiple compiler configurations (such as optimized,
+debug, coverage, and the various santizer options) across multiple
+branches, the storage space required for very large projects can be quite
+siginificant.</p>
+<p>The cost of this solution is in storage architecture.  In order to maximize
+the value we'll need to design our storage infrastructure specifically
+around this solution.  We'll either need to centralize all CI and developer
+workspaces onto the same storage cluster, or set aside local storage on
+each build host specifically for build cache use.</p>
+<p>Sharing this cache across multiple users is certainly practical and can be
+very effective with this solution.  It brings its own complications such
+such as file ownership however.  Supporting multiple users is beyond
+the scope of this demo.</p>
+<h2 id="conan">Conan<a class="headerlink" href="#conan" title="Permanent link">#</a></h2>
+<p><a href="https://conan.io/">Conan</a>, the C/C++ Package Manager provides us with the
+most sophisticated build caching technology available, with features such as:</p>
+<ul>
+<li>Component package versioning.</li>
+<li>Binary package support using hashed platform and compiler configurations.</li>
+<li>Local package cache that allows packages to be shared across multiple
+  CI or developer workspaces (with limitations!).</li>
+<li>Native artifact management support in both
+  <a href="https://jfrog.com/help/r/jfrog-artifactory-documentation/supported-package-types">JFrog Artifactory</a>
+  and <a href="https://help.sonatype.com/en/formats.htm">Sonatype Nexus</a>, with
+  GitLab support <a href="https://gitlab.com/groups/gitlab-org/-/epics/8258#note_2726326123">in-progress</a>.</li>
+<li>Build system agnostic, with many integrations including CMake, Bazel,
+  GNU Autotools/Make, and <a href="https://docs.conan.io/2/integrations.html">more</a>.</li>
+</ul>
+<p>With these features Conan provides a very strong build-avoidance solution
+at a component level, not just individual objects/targets.  With the build
+system integration, object build-avoidance technologies can still be
+inegrated as well. That's beyond the scope of this demo however.</p>
+<p>Using versioned packages still leaves a lot of room for optimization.
+Downloading pre-built binary packages requires significant network I/O,
+and only partially helps manage storage use in supporting multiple
+developer or CI workspaces.  One fundamental limtation of Conan's package
+cache is that <a href="https://github.com/conan-io/conan/issues/15840">it does not support concurrency</a>.
+Given enough developer workspaces or CI builds trying to share a local
+Conan cache, we <em>will</em> run into race conditions eventually, resulting
+in a corrupted cache.</p>
+<h2 id="openzfs">OpenZFS<a class="headerlink" href="#openzfs" title="Permanent link">#</a></h2>
+<p><a href="https://openzfs.org/wiki/Main_Page">OpenZFS</a> or other copy-on-write
+filesystems that support clone functionality provide a reliable, high
+performance solution to these Conan limitations.  Use of filesystem clones
+allows multiple CI jobs to operate concurrently with safety.  Each
+parallel runner/job can own its own clone without duplicating storage.
+Further, developers may even clone from last-night's CI builds as long
+as they're operating within the same filesytem (or storage cluster).</p>
+<p>The original inspiration for this solution comes from NetApp, where I was
+part of the SCM team supporting ONTAP developer builds in Perforce.  For
+very large source code trees with their resulting large C/C++ builds, we
+were able use NetApp's own thin-provisioned FlexClone technology to
+construct developer workspaces pre-seeded with the latest nightly CI build
+virtually instantaneously.</p>
+<p>NetApp and Perforce have published their Perforce implementation of this
+solution:</p>
+<ul>
+<li><a href="https://swarm.workshop.perforce.com/projects/netapp-p4flex/">https://swarm.workshop.perforce.com/projects/netapp-p4flex/</a></li>
+</ul>
+<p>This provided a very significant developer productivity gain, in most
+cases.  Developers no longer needed to do an initial ONTAP build in their
+workspaces.  They could simply clone last-night's CI build, sync their
+client to pick up today's changes, and then perform an incremental build
+from there.</p>
+<p>Reliability was not perfect however, and broken builds could result in
+the developer having to do a clean full build to get back on track.</p>
+<p>Conan improves reliability and error-recovery significantly.  If the Conan
+cache is corrupted somehow, rebuilding the cache is as simple as creating
+a new cache clone, or worst-case, re-populating the cache from artifact
+management.  Incremental builds become incremental downloads instead.
+Additionally, Conan separates the cache storage from the developer
+workspace, so the impact of cache issues is isolated from the
+SCM workspace, and vice-versa.</p>
+<h2 id="environment-and-initial-setup">Environment and Initial Setup<a class="headerlink" href="#environment-and-initial-setup" title="Permanent link">#</a></h2>
+<h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
+<ul>
+<li>Server - 8945HS/64GB/SSD</li>
+<li>Workstation - 9900X/32GB/SSD</li>
+<li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
+</ul>
+<h3 id="software">Software<a class="headerlink" href="#software" title="Permanent link">#</a></h3>
+<ul>
+<li>Sonatype Nexus Community Edition</li>
+<li>OpenZFS filesystem</li>
+<li>Conan C/C++ Package Manager</li>
+<li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
+<li>GitHub Actions with a self-hosted Runner</li>
+</ul>
+<h3 id="openzfs-setup">OpenZFS Setup<a class="headerlink" href="#openzfs-setup" title="Permanent link">#</a></h3>
+<p>For this example, we've got 200GB of storage on our NVMe drive unallocated,
+so we'll give it to ZFS and set up a pool to use it.  We don't care about
+tracking file access time in our Conan cache, so we want to make sure we turn
+that off to improve performance.</p>
+<div class="language-bash highlight"><span class="filename">Creating the ZFS Pool</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>zpool<span class="w"> </span>create<span class="w"> </span>zpool-conancache<span class="w"> </span>/dev/nvme0n1p7
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>zfs<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">atime</span><span class="o">=</span>off<span class="w"> </span>zpool-conancache
+</span></code></pre></div>
+<p>In order to delegate management of this pool for this demo, we'll simply
+grant <code>sudo</code> access for our CI user <code>github-runner</code> to run <code>/usr/sbin/zfs</code>.</p>
+<p>Sudo is absolutely not a recommended solution for production use, but works
+fine for this single-user demo.  For some alternative suggestions, see this
+section at the bottom:
+<a href="#sudo-vs-zfs-allow-vs-ssh-command-key">sudo vs. zfs allow vs. SSH command key</a></p>
+<div class="language-text highlight"><span class="filename">/etc/sudoers entry</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>github-runner    ALL=NOPASSWD: /usr/sbin/zfs
+</span></code></pre></div>
+<h3 id="conan-center-index">Conan Center Index<a class="headerlink" href="#conan-center-index" title="Permanent link">#</a></h3>
+<p>For use throughout my <a href="..">ConanToolchain</a> project, I've been maintaining
+a fork of the Conan Center Index recipe repo.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/conan-io/conan-center-index/blob/master/README.md">conan-center-index</a></p>
+<p>Conan Center Index is the source index of recipes of the ConanCenter
+package repository for Conan.</p>
+<ul>
+<li><a href="https://github.com/conan-io/conan-center-index/blob/master/README.md">https://github.com/conan-io/conan-center-index/blob/master/README.md</a></li>
+</ul>
+</div>
+<p>In this fork I've modified the recipes to download source bundles from GNU
+mirrors rather than the primary GNU FTP site, and in some cases commit
+the source bundle into the fork to avoid repeated downloads hammering
+GNU's mirror sites.</p>
+<h3 id="github-actions-workflow">GitHub Actions Workflow<a class="headerlink" href="#github-actions-workflow" title="Permanent link">#</a></h3>
+<p>For this demo I've implemented a simple GitHub Actions Workflow
+<a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/.github/workflows/ConanZFSDemo.yml">ConanZFSDemo.yml</a>
+to manage ZFS, leveraging my existing reusable ConanToolchain workflow
+<a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a>
+to asemble a project with enough components to be interesting.  The
+<a href="https://conan.io/center">Conan Center Index</a> provided
+all of the components used here (with some minor modifications).</p>
+<p>The <code>ConanZFSDemo.yml</code> workflow mixes a combination of shell jobs directly
+on the runner host to manipulate ZFS, and a Docker job to run the
+<code>conan-toolchain.yml</code> workflow leveraging the ZFS cache.</p>
+<h4 id="create-snapshot-and-clone-for-our-new-build-cache">Create snapshot and clone for our new build cache<a class="headerlink" href="#create-snapshot-and-clone-for-our-new-build-cache" title="Permanent link">#</a></h4>
+<p>The first workflow job creates a new temporary snapshot and clone for our
+new build cache.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>zfs<span class="w"> </span>snapshot<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_SNAPSHOT</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>zfs<span class="w"> </span>clone<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_SNAPSHOT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_CLONE</span><span class="si">}</span>
+</span></code></pre></div>
+<p>Our snapshot naming looks like:</p>
+<ul>
+<li><code>${ZPOOL_NAME}/${PROJECT}/${GITHUB_REF_NAME}@${JOB_HOST}-pre${GITHUB_RUN_ID}</code></li>
+</ul>
+<p>Example: <code>zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687</code></p>
+<p>We give our snapshot a prefix "pre" because the snapshot is readonly, and
+we don't really know when or how the original cache state was established.
+We only know that this was the state prior to this build workflow.</p>
+<p>Our clone naming represents the cache state throughout this build:</p>
+<ul>
+<li><code>${ZPOOL_NAME}/${PROJECT}/${GITHUB_REF_NAME}_${JOB_HOST}-${GITHUB_RUN_ID}</code></li>
+</ul>
+<p>Example: <code>zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687</code></p>
+<div class="language-bash highlight"><span class="filename">Example ZFS status with CI snapshots and clones provisioned</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>zfs<span class="w"> </span>list<span class="w"> </span>-r<span class="w"> </span>-o<span class="w"> </span>name,used,avail,refer
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>NAME<span class="w">                                                           </span>USED<span class="w">  </span>AVAIL<span class="w">  </span>REFER
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>zpool-conancache<span class="w">                                              </span><span class="m">7</span>.97G<span class="w">   </span>183G<span class="w">    </span>24K
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>zpool-conancache/gcc12-toolchain<span class="w">                              </span><span class="m">7</span>.96G<span class="w">   </span>183G<span class="w">    </span>25K
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>zpool-conancache/gcc12-toolchain/main<span class="w">                         </span><span class="m">7</span>.96G<span class="w">   </span>183G<span class="w">  </span><span class="m">7</span>.96G
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687<span class="w">     </span>1K<span class="w">   </span>183G<span class="w">  </span><span class="m">7</span>.96G
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>$<span class="w"> </span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>$<span class="w"> </span>zfs<span class="w"> </span>list<span class="w"> </span>-t<span class="w"> </span>snapshot<span class="w"> </span>-o<span class="w"> </span>name,used,refer
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>NAME<span class="w">                                                              </span>USED<span class="w">  </span>REFER
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687<span class="w">     </span>0B<span class="w">  </span><span class="m">7</span>.96G
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>$<span class="w"> </span>
+</span></code></pre></div>
+<h4 id="running-the-build">Running the build<a class="headerlink" href="#running-the-build" title="Permanent link">#</a></h4>
+<p>Running our build is the same as any other Conan project.  We're just
+connecting a special cache directory and making sure our <code>CONAN_HOME</code>
+environment is pointed at it.</p>
+<p>For our CI workflow we reuse the <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a>
+workflow, but in a shell script it looks something like this:</p>
+<div class="language-bash highlight"><span class="filename">Containerized Build Startup</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">DOCKER_IMAGE</span><span class="o">=</span><span class="s2">&quot;nexus.homelab/conan-docker-build-ubuntu:x86_64-latest&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--volume<span class="o">=</span><span class="s2">&quot;/</span><span class="si">${</span><span class="nv">BUILD_CLONE</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">CONTAINER_CONAN_HOME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>--volume<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">CONTAINER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--env<span class="o">=</span><span class="s2">&quot;CONAN_HOME=</span><span class="si">${</span><span class="nv">CONTAINER_CONAN_HOME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--env<span class="o">=</span><span class="s2">&quot;INSTALL_PREFIX=</span><span class="si">${</span><span class="nv">INSTALL_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--env<span class="o">=</span><span class="s2">&quot;CONTAINER_WORKSPACE_ROOT=</span><span class="si">${</span><span class="nv">CONTAINER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>--env<span class="o">=</span><span class="s2">&quot;COMPONENT_SUBDIR=</span><span class="si">${</span><span class="nv">CONTAINER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">WORKSPACE_SUBDIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DOCKER_IMAGE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONTAINER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CONAN_BUILD_SCRIPT</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Detect build failures</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nv">retval</span><span class="o">=</span><span class="nv">$?</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><span class="filename">Conan Build Script</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>conan<span class="w"> </span>profile<span class="w"> </span>detect
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>conan<span class="w"> </span>config<span class="w"> </span>install<span class="w"> </span>https://github.com/DaverSomethingSomethingOrg/conan-system-packaging.git
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>conan<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>-t<span class="w"> </span>local-recipes-index<span class="w"> </span>conan-local-recipes<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONTAINER_WORKSPACE_ROOT</span><span class="si">}</span><span class="s2">/conan-center-index&quot;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>conan<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span>conan-local-recipes<span class="w"> </span>--index<span class="w"> </span><span class="m">0</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>conan<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>conan-local-repo<span class="w"> </span>https://nexus.homelab/repository/conan-homelab
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>conan<span class="w"> </span>remote<span class="w"> </span>update<span class="w"> </span>conan-local-repo<span class="w"> </span>--index<span class="w"> </span><span class="m">0</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>conan<span class="w"> </span>install<span class="w"> </span>--build<span class="o">=</span>missing<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">              </span>--options<span class="o">=</span><span class="s2">&quot;*:install_prefix=</span><span class="si">${</span><span class="nv">INSTALL_PREFIX</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">              </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">COMPONENT_SUBDIR</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h4 id="promote-the-successful-builds-clone">Promote the Successful Build's clone<a class="headerlink" href="#promote-the-successful-builds-clone" title="Permanent link">#</a></h4>
+<p>In order to make sure we don't lose data, we'll follow the typical process
+of renaming the old dataset clone in-place before renaming the new clone
+to the old name.  Only then can we destroy the original (now legacy) clone
+and snapshot.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>zfs<span class="w"> </span>promote<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_CLONE</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>zfs<span class="w"> </span>rename<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BRANCH_DATASET</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BRANCH_DATASET</span><span class="si">}</span><span class="s2">-legacy&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>zfs<span class="w"> </span>rename<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_CLONE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BRANCH_DATASET</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>zfs<span class="w"> </span>destroy<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BRANCH_DATASET</span><span class="si">}</span><span class="s2">-legacy&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>zfs<span class="w"> </span>destroy<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_SNAPSHOT</span><span class="si">}</span>
+</span></code></pre></div>
+<h4 id="save-or-destroy-a-failed-builds-clone">Save or Destroy a Failed Build's clone<a class="headerlink" href="#save-or-destroy-a-failed-builds-clone" title="Permanent link">#</a></h4>
+<p>If our build is configured to save failed builds, we simply do nothing. We
+can leave the new snapshot and clone created for our build just as they
+are, and this ensures all access paths remain the same for troubleshooting
+as well.</p>
+<p>Future builds will snapshot/clone against the original branch dataset just
+as our current build did.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zfs<span class="w"> </span>destroy<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_CLONE</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>zfs<span class="w"> </span>destroy<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZFS_BUILD_SNAPSHOT</span><span class="si">}</span>
+</span></code></pre></div>
+<h4 id="updated-cache-state">Updated cache state<a class="headerlink" href="#updated-cache-state" title="Permanent link">#</a></h4>
+<p>Following a promoted successful build or destroyed failed build, our cache
+state returns to its initial ready state for the branch.  No snapshots, and
+only a dataset representing a the latest good cache for the branch we're
+working on.</p>
+<div class="language-bash highlight"><span class="filename">Example ZFS status with CI snapshots and clones provisioned</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>$<span class="w"> </span>zfs<span class="w"> </span>list<span class="w"> </span>-r<span class="w"> </span>-o<span class="w"> </span>name,used,avail,refer
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>NAME<span class="w">                                                           </span>USED<span class="w">  </span>AVAIL<span class="w">  </span>REFER
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>zpool-conancache<span class="w">                       </span><span class="m">8</span>.62G<span class="w">   </span>182G<span class="w">    </span>24K
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>zpool-conancache/gcc12-toolchain<span class="w">       </span><span class="m">8</span>.61G<span class="w">   </span>182G<span class="w">    </span>25K
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>zpool-conancache/gcc12-toolchain/main<span class="w">  </span><span class="m">8</span>.61G<span class="w">   </span>182G<span class="w">  </span><span class="m">8</span>.61G
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>$<span class="w"> </span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>$<span class="w"> </span>zfs<span class="w"> </span>list<span class="w"> </span>-t<span class="w"> </span>snapshot<span class="w"> </span>-o<span class="w"> </span>name,used,refer
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>no<span class="w"> </span>datasets<span class="w"> </span>available
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>$<span class="w"> </span>
+</span></code></pre></div>
+<h2 id="limitations-and-issues">Limitations and Issues<a class="headerlink" href="#limitations-and-issues" title="Permanent link">#</a></h2>
+<h3 id="linking-and-deployment-performance-is-not-optimized">Linking and Deployment performance is not optimized<a class="headerlink" href="#linking-and-deployment-performance-is-not-optimized" title="Permanent link">#</a></h3>
+<p>While this represents the ultimate compile-avoidance solution, other
+phases of the "build" remain unaffected.  If our application is
+statically linked, bundled into an "image", or even repackaged for
+deployment, we'll need to optimize those steps differently.</p>
+<p>Conan itself does support "vendoring" of dependencies, and this could
+be very useful in building "sub-assemblies" or "subsystem" component
+packages.  This is very effective when development is highly focused on
+a few specific components in our product.  The rest of the components
+can be packaged together (such as archiving static libraries together)
+to simplify the dependency graph and reduce random-access I/O at
+linking time.</p>
+<ul>
+<li><a href="https://docs.conan.io/2/devops/vendoring.html">https://docs.conan.io/2/devops/vendoring.html</a></li>
+</ul>
+<p>Optimizing the full deployment process for our application will be
+very specific to the system architecture and infrastructure.</p>
+<h3 id="sudo-vs-zfs-allow-vs-ssh-command-key"><code>sudo</code> vs. <code>zfs allow</code> vs. SSH command key<a class="headerlink" href="#sudo-vs-zfs-allow-vs-ssh-command-key" title="Permanent link">#</a></h3>
+<p>For the sake of expediency in this demo we used <code>sudo</code> to enable our
+automation user to manipulate ZFS snapshots and clones.  In the real world,
+with multiple users and different use cases we would want a solution with
+stronger security.</p>
+<p>The <code>zfs allow</code> command looks like it should enable this functionality,
+but on Linux the <code>mount</code> (and <code>zfs mount</code>) cannot be delegated so easily
+for our use case.  We can delegate creation of our dataset snapshots and
+clones directly, but if we cannot mount/umount them, we can't use them!</p>
+<ul>
+<li><a href="https://github.com/openzfs/zfs/discussions/10648">Possible Workarounds for Inability to Mount as non-root under Linux</a></li>
+</ul>
+<p>An approach I'd recommended would be to call <code>zfs</code> from behind an SSH
+command key.  With SSH we can implement a server-side script run by a
+special automation user account.  We would only need to grant that one
+account delegated ZFS permissions, and the script could validate the
+authorization for the command being run against our rules for maintaining
+the filesystem.</p>
+<p>Rob Napier at Cisco wrote this excellent and concise whitepaper on
+implementing such solutions for the USENIX LISA Conference.  It's worth a
+read!</p>
+<ul>
+<li><a href="https://www.usenix.org/legacy/event/lisa04/tech/full_papers/napier/napier.pdf">Secure Automation: Achieving Least Privilege with SSH, Sudo and Setuid</a></li>
+</ul>
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
+<p>For our next demo we'll implement a similar solution for use in our
+Kubernetes cluster. Kubernetes brings some significant benefits for
+security and delegated storage management, but also introduces some new
+limitations and challenges to overcome.</p>
+<p>For a bit of a preview, we'll be using these technologies:</p>
+<ul>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/README.md">GitHub Actions Runner Controller</a></li>
+<li><a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">OpenEBS - Local PV ZFS</a></li>
+<li><a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/">K8s remote VS Code DevContainer</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../DemoGcc12MultiPhase/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Demo - MultiPhase GCC12 Compiler Bootstrap">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Demo - MultiPhase GCC12 Compiler Bootstrap
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Apache License v2.0
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2025, David L. Armstrong.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

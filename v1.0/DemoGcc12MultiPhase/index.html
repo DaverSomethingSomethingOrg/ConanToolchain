@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/DemoMultiPhase/">
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/DemoGcc12MultiPhase/">
       
       
         <link rel="prev" href="../CIWorkflows/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../ConanZFSDemo/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Demo - MultiPhase GCC Compiler Bootstrap - Toolchain Build System using Conan</title>
+        <title>Demo - MultiPhase GCC12 Compiler Bootstrap - Toolchain Build System using Conan</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-multiphase-gcc-compiler-bootstrap" class="md-skip">
+        <a href="#demo-multiphase-gcc12-compiler-bootstrap" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo - MultiPhase GCC Compiler Bootstrap
+              Demo - MultiPhase GCC12 Compiler Bootstrap
             
           </span>
         </div>
@@ -313,7 +313,7 @@
           
   
   <span class="md-ellipsis">
-    Demo - MultiPhase GCC Compiler Bootstrap
+    Demo - MultiPhase GCC12 Compiler Bootstrap
     
   </span>
   
@@ -325,7 +325,7 @@
         
   
   <span class="md-ellipsis">
-    Demo - MultiPhase GCC Compiler Bootstrap
+    Demo - MultiPhase GCC12 Compiler Bootstrap
     
   </span>
   
@@ -444,6 +444,27 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanZFSDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -607,7 +628,9 @@
   
 
 
-<h1 id="demo-multiphase-gcc-compiler-bootstrap">Demo - MultiPhase GCC Compiler Bootstrap<a class="headerlink" href="#demo-multiphase-gcc-compiler-bootstrap" title="Permanent link">#</a></h1>
+<h1 id="demo-multiphase-gcc12-compiler-bootstrap">Demo - MultiPhase GCC12 Compiler Bootstrap<a class="headerlink" href="#demo-multiphase-gcc12-compiler-bootstrap" title="Permanent link">#</a></h1>
+<!-- markdownlint-disable MD046 -->
+
 <p>We use our tools to build our tools.  But we need to get started
 on a new platform by building our basic compiler suite.</p>
 <p>Using caching in GitHub Actions, we can connect multiple toolchain
@@ -735,7 +758,7 @@ assemble our GCC toolchain build image.</p>
 <p>GCC depends on binutils, so that's where we start.  We need a working
 compiler to build our tools though, so we'll use a special bootstrap
 container image with the OS Vendor's compiler chain installed.</p>
-<p><div class="language-python highlight"><span class="filename">phase 1 - conanfile.py</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided tools</span>
+<div class="language-python highlight"><span class="filename">phase 1 - conanfile.py</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided tools</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">system_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">])</span>
@@ -743,26 +766,26 @@ container image with the OS Vendor's compiler chain installed.</p>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;binutils/2.42&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase1/conanfile.py">Link to phase 1 conanfile.py</a></p>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase1/conanfile.py">Link to phase 1 conanfile.py</a></p>
 <h2 id="phase-2-bootstrapping-cmake-gnu-make-and-gcc">Phase 2 - bootstrapping CMake, GNU Make, and GCC<a class="headerlink" href="#phase-2-bootstrapping-cmake-gnu-make-and-gcc" title="Permanent link">#</a></h2>
 <p>In Phase 2, we'll build our GCC configured to use our binutils package from
 Phase 1.  We're still depending on the system GCC however, so we still want
 the OS Vendor's binutils available for their GCC as well.</p>
-<p><div class="language-python highlight"><span class="filename">phase 2 - conanfile.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided tools</span>
+<div class="language-python highlight"><span class="filename">phase 2 - conanfile.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>    <span class="c1"># For this bootstrapping phase we&#39;ll depend on OS vendor-provided tools</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">system_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                           <span class="s2">&quot;opt+toolchain-binutils_2.42-0&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                           <span class="s2">&quot;opt+toolchain-binutils=2.42-1&quot;</span><span class="p">,</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                          <span class="p">])</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;binutils&quot;</span><span class="p">,</span> <span class="s2">&quot;gcc&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                           <span class="s2">&quot;opt-toolchain-binutils-2.42-0&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                           <span class="s2">&quot;opt-toolchain-binutils=2.42-1&quot;</span><span class="p">,</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                          <span class="p">])</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;make/4.4.1&quot;</span><span class="p">)</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;cmake/4.0.1&quot;</span><span class="p">)</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase2/conanfile.py">Link to phase 2 conanfile.py</a></p>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase2/conanfile.py">Link to phase 2 conanfile.py</a></p>
 <h2 id="phase-3-clean-rebuilds-using-our-toolchain">Phase 3 - Clean rebuilds using our toolchain<a class="headerlink" href="#phase-3-clean-rebuilds-using-our-toolchain" title="Permanent link">#</a></h2>
 <p>Finally, we will go back to our OS-minimal container image, install the
 tools we built in the previous phases, and rebuild all of our tools.</p>
@@ -771,26 +794,26 @@ will be no surprise dependencies on the original OS Vendor toolchain.</p>
 <p>We only upload these final builds to Artifact Management, along with a brand
 new Conan Build container image for building all other tools we support.
 The previous packages built with our bootstrap image are discarded.</p>
-<p><div class="language-python highlight"><span class="filename">phase 3 - conanfile.py</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="c1"># Finally, we use our tools from phase 1 and 2 to build our tools again</span>
+<div class="language-python highlight"><span class="filename">phase 3 - conanfile.py</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="c1"># Finally, we use our tools from phase 1 and 2 to build our tools again</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">system_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;opt+toolchain-make-4.4.1-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                           <span class="s2">&quot;opt+toolchain-cmake-4.0.1-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                           <span class="s2">&quot;opt+toolchain-gcc-12.2.0-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                           <span class="s2">&quot;opt+toolchain-binutils_2.42-0&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="n">Apt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;opt+toolchain-make=4.4.1-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                           <span class="s2">&quot;opt+toolchain-cmake=4.0.1-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                           <span class="s2">&quot;opt+toolchain-gcc=12.2.0-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                           <span class="s2">&quot;opt+toolchain-binutils=1.42-1&quot;</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                          <span class="p">])</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;opt-toolchain-make-4.4.1-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>                           <span class="s2">&quot;opt-toolchain-cmake-4.0.1-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>                           <span class="s2">&quot;opt-toolchain-gcc-12.2.0-0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>                           <span class="s2">&quot;opt-toolchain-binutils-2.42-0&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">Yum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">install</span><span class="p">([</span><span class="s2">&quot;opt-toolchain-make=4.4.1-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>                           <span class="s2">&quot;opt-toolchain-cmake=4.0.1-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>                           <span class="s2">&quot;opt-toolchain-gcc=12.2.0-1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>                           <span class="s2">&quot;opt-toolchain-binutils=2.42-1&quot;</span><span class="p">,</span>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                          <span class="p">])</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;make/4.4.1&quot;</span><span class="p">)</span>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;cmake/4.0.1&quot;</span><span class="p">)</span>
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;binutils/2.42&quot;</span><span class="p">)</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">(</span><span class="s2">&quot;gcc/12.2.0&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase3/conanfile.py">Link to phase 3 conanfile.py</a></p>
+<p><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/gcc-toolchain/phase3/conanfile.py">Link to phase 3 conanfile.py</a></p>
 <div class="admonition note annotate">
 <p class="admonition-title">For each platform, we end up with an overall flow that looks like this</p>
 <p><a class="glightbox" href="../img/conan_toolchain_demo.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan Toolchain Demo" src="../img/conan_toolchain_demo.png" /></a></p>
@@ -877,13 +900,13 @@ few significant differences:</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../ConanZFSDemo/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
               </div>
             </div>
             <div class="md-footer__button md-icon">
