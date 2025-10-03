@@ -408,6 +408,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="OpenZFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proven" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proven
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -658,6 +673,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="OpenZFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proven" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proven
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -850,20 +880,21 @@ of storage maintenance.  This solution shines in environments where
 artifact management service is not local to the build servers, or
 where downloading 50GB or 500GB worth of build artifacts is not practical
 for every CI build or developer workspace.</p>
-<p>With this solution we are able to optimze our utilization of CPU, storage
+<p>With this solution we are able to optimize our utilization of CPU, storage
 space, and network bandwidth all in one shot.  Not only are we saving the
 time to drag package artifacts across our network, we're also saving
 duplicated storage on the build side when the same package versions are
 used across multiple SCM workspaces and branches.</p>
 <p>When we're supporting multiple compiler configurations (such as optimized,
-debug, coverage, and the various santizer options) across multiple
+debug, coverage, and the various sanitizer options) across multiple
 branches, the storage space required for very large projects can be quite
-siginificant.</p>
+significant.</p>
 <p>The cost of this solution is in storage architecture.  In order to maximize
 the value we'll need to design our storage infrastructure specifically
 around this solution.  We'll either need to centralize all CI and developer
 workspaces onto the same storage cluster, or set aside local storage on
-each build host specifically for build cache use.</p>
+each build host specifically for build cache use.  Or some structured
+compromise in between..</p>
 <p>Sharing this cache across multiple users is certainly practical and can be
 very effective with this solution.  It brings its own complications such
 such as file ownership however.  Supporting multiple users is beyond
@@ -886,11 +917,11 @@ most sophisticated build caching technology available, with features such as:</p
 <p>With these features Conan provides a very strong build-avoidance solution
 at a component level, not just individual objects/targets.  With the build
 system integration, object build-avoidance technologies can still be
-inegrated as well. That's beyond the scope of this demo however.</p>
+integrated as well. That's beyond the scope of this demo however.</p>
 <p>Using versioned packages still leaves a lot of room for optimization.
 Downloading pre-built binary packages requires significant network I/O,
 and only partially helps manage storage use in supporting multiple
-developer or CI workspaces.  One fundamental limtation of Conan's package
+developer or CI workspaces.  One fundamental limitation of Conan's package
 cache is that <a href="https://github.com/conan-io/conan/issues/15840">it does not support concurrency</a>.
 Given enough developer workspaces or CI builds trying to share a local
 Conan cache, we <em>will</em> run into race conditions eventually, resulting
@@ -902,32 +933,33 @@ performance solution to these Conan limitations.  Use of filesystem clones
 allows multiple CI jobs to operate concurrently with safety.  Each
 parallel runner/job can own its own clone without duplicating storage.
 Further, developers may even clone from last-night's CI builds as long
-as they're operating within the same filesytem (or storage cluster).</p>
+as they're operating within the same filesystem (or storage cluster).</p>
+<h3 id="proven">Proven<a class="headerlink" href="#proven" title="Permanent link">#</a></h3>
 <p>The original inspiration for this solution comes from NetApp, where I was
 part of the SCM team supporting ONTAP developer builds in Perforce.  For
-very large source code trees with their resulting large C/C++ builds, we
-were able use NetApp's own thin-provisioned FlexClone technology to
-construct developer workspaces pre-seeded with the latest nightly CI build
-virtually instantaneously.</p>
+our very large source code trees with their resulting large C/C++ builds,
+we leveraged NetApp's own thin-provisioned FlexClone technology. This
+enabled us to construct developer workspaces pre-seeded with the latest
+nightly CI build virtually instantaneously.</p>
 <p>NetApp and Perforce have published their Perforce implementation of this
 solution:</p>
 <ul>
 <li><a href="https://swarm.workshop.perforce.com/projects/netapp-p4flex/">https://swarm.workshop.perforce.com/projects/netapp-p4flex/</a></li>
 </ul>
-<p>This provided a very significant developer productivity gain, in most
-cases.  Developers no longer needed to do an initial ONTAP build in their
-workspaces.  They could simply clone last-night's CI build, sync their
-client to pick up today's changes, and then perform an incremental build
-from there.</p>
+<p>This solution provided a very significant developer productivity gain, in
+most cases.  Developers no longer needed to do an initial ONTAP build in
+their workspaces.  They could simply clone last-night's CI build workspace,
+sync their client to pick up today's changes, and then perform an
+incremental build from there.</p>
 <p>Reliability was not perfect however, and broken builds could result in
 the developer having to do a clean full build to get back on track.</p>
 <p>Conan improves reliability and error-recovery significantly.  If the Conan
 cache is corrupted somehow, rebuilding the cache is as simple as creating
-a new cache clone, or worst-case, re-populating the cache from artifact
+a new cache clone.  Or worst-case, re-populate the cache from artifact
 management.  Incremental builds become incremental downloads instead.
 Additionally, Conan separates the cache storage from the developer
-workspace, so the impact of cache issues is isolated from the
-SCM workspace, and vice-versa.</p>
+workspace.  The impact of any cache issue is isolated from the SCM
+workspace, and vice-versa.</p>
 <h2 id="environment-and-initial-setup">Environment and Initial Setup<a class="headerlink" href="#environment-and-initial-setup" title="Permanent link">#</a></h2>
 <h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
 <ul>
@@ -954,8 +986,8 @@ that off to improve performance.</p>
 <p>In order to delegate management of this pool for this demo, we'll simply
 grant <code>sudo</code> access for our CI user <code>github-runner</code> to run <code>/usr/sbin/zfs</code>.</p>
 <p>Sudo is absolutely not a recommended solution for production use, but works
-fine for this single-user demo.  For some alternative suggestions, see this
-section at the bottom:
+fine for this single-user demo.  For some alternative suggestions, see the
+discussion below:
 <a href="#sudo-vs-zfs-allow-vs-ssh-command-key">sudo vs. zfs allow vs. SSH command key</a></p>
 <div class="language-text highlight"><span class="filename">/etc/sudoers entry</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>github-runner    ALL=NOPASSWD: /usr/sbin/zfs
 </span></code></pre></div>
@@ -979,7 +1011,7 @@ GNU's mirror sites.</p>
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/.github/workflows/ConanZFSDemo.yml">ConanZFSDemo.yml</a>
 to manage ZFS, leveraging my existing reusable ConanToolchain workflow
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml">conan-toolchain.yml</a>
-to asemble a project with enough components to be interesting.  The
+to assemble a project with enough components to be interesting.  The
 <a href="https://conan.io/center">Conan Center Index</a> provided
 all of the components used here (with some minor modifications).</p>
 <p>The <code>ConanZFSDemo.yml</code> workflow mixes a combination of shell jobs directly
@@ -996,7 +1028,7 @@ new build cache.</p>
 <li><code>${ZPOOL_NAME}/${PROJECT}/${GITHUB_REF_NAME}@${JOB_HOST}-pre${GITHUB_RUN_ID}</code></li>
 </ul>
 <p>Example: <code>zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687</code></p>
-<p>We give our snapshot a prefix "pre" because the snapshot is readonly, and
+<p>We give our snapshot a prefix <code>pre</code> because the snapshot is readonly, and
 we don't really know when or how the original cache state was established.
 We only know that this was the state prior to this build workflow.</p>
 <p>Our clone naming represents the cache state throughout this build:</p>
@@ -1127,7 +1159,7 @@ the filesystem.</p>
 implementing such solutions for the USENIX LISA Conference.  It's worth a
 read!</p>
 <ul>
-<li><a href="https://www.usenix.org/legacy/event/lisa04/tech/full_papers/napier/napier.pdf">Secure Automation: Achieving Least Privilege with SSH, Sudo and Setuid</a></li>
+<li><a href="https://www.usenix.org/legacy/publications/library/proceedings/lisa04/tech/napier.html">Secure Automation: Achieving Least Privilege with SSH, Sudo and Setuid</a></li>
 </ul>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <p>For our next demo we'll implement a similar solution for use in our
