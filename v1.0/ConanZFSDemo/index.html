@@ -537,6 +537,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#performance-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance comparisons
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance comparisons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-and-clone-provisioning-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshot and Clone Provisioning Overhead
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limitations-and-issues" class="md-nav__link">
     <span class="md-ellipsis">
       Limitations and Issues
@@ -802,6 +826,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#performance-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance comparisons
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance comparisons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-and-clone-provisioning-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshot and Clone Provisioning Overhead
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limitations-and-issues" class="md-nav__link">
     <span class="md-ellipsis">
       Limitations and Issues
@@ -863,6 +911,9 @@
 
 
 <h1 id="demo-optimizing-cc-build-performance-using-conan-and-openzfs">Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS<a class="headerlink" href="#demo-optimizing-cc-build-performance-using-conan-and-openzfs" title="Permanent link">#</a></h1>
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD034 -->
+
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>In this demo we'll show how to use Conan for build-avoidance along with
 OpenZFS for build-caching.  This solution can provide the highest level of
@@ -912,7 +963,7 @@ most sophisticated build caching technology available, with features such as:</p
   and <a href="https://help.sonatype.com/en/formats.htm">Sonatype Nexus</a>, with
   GitLab support <a href="https://gitlab.com/groups/gitlab-org/-/epics/8258#note_2726326123">in-progress</a>.</li>
 <li>Build system agnostic, with many integrations including CMake, Bazel,
-  GNU Autotools/Make, and <a href="https://docs.conan.io/2/integrations.html">more</a>.</li>
+  GNU Autotools/Make, and <a href="https://docs.conan.io/2/integrations.html">many more</a>.</li>
 </ul>
 <p>With these features Conan provides a very strong build-avoidance solution
 at a component level, not just individual objects/targets.  With the build
@@ -936,7 +987,7 @@ Further, developers may even clone from last-night's CI builds as long
 as they're operating within the same filesystem (or storage cluster).</p>
 <h3 id="proven">Proven<a class="headerlink" href="#proven" title="Permanent link">#</a></h3>
 <p>The original inspiration for this solution comes from NetApp, where I was
-part of the SCM team supporting ONTAP developer builds in Perforce.  For
+part of their SCM team supporting ONTAP developer builds in Perforce.  For
 our very large source code trees with their resulting large C/C++ builds,
 we leveraged NetApp's own thin-provisioned FlexClone technology. This
 enabled us to construct developer workspaces pre-seeded with the latest
@@ -945,6 +996,7 @@ nightly CI build virtually instantaneously.</p>
 solution:</p>
 <ul>
 <li><a href="https://swarm.workshop.perforce.com/projects/netapp-p4flex/">https://swarm.workshop.perforce.com/projects/netapp-p4flex/</a></li>
+<li><a href="https://swarm.workshop.perforce.com/view/guest/netapp/p4flex/extras/docs/P4Flex_Overview_20160511.pdf">https://swarm.workshop.perforce.com/view/guest/netapp/p4flex/extras/docs/P4Flex_Overview_20160511.pdf</a></li>
 </ul>
 <p>This solution provided a very significant developer productivity gain, in
 most cases.  Developers no longer needed to do an initial ONTAP build in
@@ -1119,6 +1171,26 @@ working on.</p>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>no<span class="w"> </span>datasets<span class="w"> </span>available
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>$<span class="w"> </span>
 </span></code></pre></div>
+<h2 id="performance-comparisons">Performance comparisons<a class="headerlink" href="#performance-comparisons" title="Permanent link">#</a></h2>
+<div class="admonition note annotate">
+<p class="admonition-title">Empty cache, clean build without Artifact Management available</p>
+<p><a class="glightbox" href="../img/conan_zfs_clean_build.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Full Build without Artifact Management or seeded cache" src="../img/conan_zfs_clean_build.png" /></a></p>
+</div>
+<div class="admonition note annotate">
+<p class="admonition-title">Empty cache, clean build with full download from Artifact Management</p>
+<p><a class="glightbox" href="../img/conan_zfs_clean_download.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Full Download from Artifact Management" src="../img/conan_zfs_clean_download.png" /></a></p>
+</div>
+<div class="admonition note annotate">
+<p class="admonition-title">Fully seeded cache, clean build</p>
+<p><a class="glightbox" href="../img/conan_zfs_cached.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Fully seeded cache" src="../img/conan_zfs_cached.png" /></a></p>
+</div>
+<h3 id="snapshot-and-clone-provisioning-overhead">Snapshot and Clone Provisioning Overhead<a class="headerlink" href="#snapshot-and-clone-provisioning-overhead" title="Permanent link">#</a></h3>
+<p>To be completely fair, we do need to factor in the time it takes to create
+the ZFS snapshot and clone too</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Snapshot and Clone Provisioning time</p>
+<p><a class="glightbox" href="../img/conan_zfs_clone_creation.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="ZFS Clone Provisioning" src="../img/conan_zfs_clone_creation.png" /></a></p>
+</div>
 <h2 id="limitations-and-issues">Limitations and Issues<a class="headerlink" href="#limitations-and-issues" title="Permanent link">#</a></h2>
 <h3 id="linking-and-deployment-performance-is-not-optimized">Linking and Deployment performance is not optimized<a class="headerlink" href="#linking-and-deployment-performance-is-not-optimized" title="Permanent link">#</a></h3>
 <p>While this represents the ultimate compile-avoidance solution, other
