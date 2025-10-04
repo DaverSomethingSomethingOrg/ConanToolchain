@@ -324,6 +324,11 @@ $
 
 ## Performance comparisons
 
+As mentioned previously, my test environment is hardly representative of
+real-world scenarios this solution would be used for, but showing these
+results at least helps frame the amount of computation and resource
+utilization for each type of operation.
+
 !!! note annotate "Empty cache, clean build without Artifact Management available"
 
     ![Full Build without Artifact Management or seeded cache](img/conan_zfs_clean_build.png)
@@ -339,11 +344,34 @@ $
 ### Snapshot and Clone Provisioning Overhead
 
 To be completely fair, we do need to factor in the time it takes to create
-the ZFS snapshot and clone too
+the ZFS snapshot and clone for our 8.61GB dataset.
 
 !!! note annotate "Snapshot and Clone Provisioning time"
 
     ![ZFS Clone Provisioning](img/conan_zfs_clone_creation.png)
+
+Since it's is hard to get a precise timing on this operation in CI,
+here's the same operation from our interactive shell:
+
+```bash hl_lines="5-6"
+❯ time zfs snapshot zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687; \
+  time zfs clone zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687 \
+                 zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687
+
+zfs snapshot   0.00s user 0.01s system 37% cpu 0.021 total
+zfs clone      0.00s user 0.00s system 21% cpu 0.027 total
+❯
+```
+
+!!! info annotate "Special Note"
+
+    An important consideration here is that both "clean build" and
+    "full download" timings will scale linearly with the size of
+    the project.
+
+    ZFS snapshot/clone timing **should not vary** in relation to the
+    size of the project, depending more on the storage speed and kernel
+    load instead.
 
 ## Limitations and Issues
 
