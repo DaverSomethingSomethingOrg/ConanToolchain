@@ -1172,6 +1172,10 @@ working on.</p>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>$<span class="w"> </span>
 </span></code></pre></div>
 <h2 id="performance-comparisons">Performance comparisons<a class="headerlink" href="#performance-comparisons" title="Permanent link">#</a></h2>
+<p>As mentioned previously, my test environment is hardly representative of
+real-world scenarios this solution would be used for, but showing these
+results at least helps frame the amount of computation and resource
+utilization for each type of operation.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Empty cache, clean build without Artifact Management available</p>
 <p><a class="glightbox" href="../img/conan_zfs_clean_build.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Full Build without Artifact Management or seeded cache" src="../img/conan_zfs_clean_build.png" /></a></p>
@@ -1186,10 +1190,29 @@ working on.</p>
 </div>
 <h3 id="snapshot-and-clone-provisioning-overhead">Snapshot and Clone Provisioning Overhead<a class="headerlink" href="#snapshot-and-clone-provisioning-overhead" title="Permanent link">#</a></h3>
 <p>To be completely fair, we do need to factor in the time it takes to create
-the ZFS snapshot and clone too</p>
+the ZFS snapshot and clone for our 8.61GB dataset.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Snapshot and Clone Provisioning time</p>
 <p><a class="glightbox" href="../img/conan_zfs_clone_creation.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="ZFS Clone Provisioning" src="../img/conan_zfs_clone_creation.png" /></a></p>
+</div>
+<p>Since it's is hard to get a precise timing on this operation in CI,
+here's the same operation from our interactive shell:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>❯<span class="w"> </span><span class="nb">time</span><span class="w"> </span>zfs<span class="w"> </span>snapshot<span class="w"> </span>zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687<span class="p">;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nb">time</span><span class="w"> </span>zfs<span class="w"> </span>clone<span class="w"> </span>zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">                 </span>zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="hll">zfs<span class="w"> </span>snapshot<span class="w">   </span><span class="m">0</span>.00s<span class="w"> </span>user<span class="w"> </span><span class="m">0</span>.01s<span class="w"> </span>system<span class="w"> </span><span class="m">37</span>%<span class="w"> </span>cpu<span class="w"> </span><span class="m">0</span>.021<span class="w"> </span>total
+</span></span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="hll">zfs<span class="w"> </span>clone<span class="w">      </span><span class="m">0</span>.00s<span class="w"> </span>user<span class="w"> </span><span class="m">0</span>.00s<span class="w"> </span>system<span class="w"> </span><span class="m">21</span>%<span class="w"> </span>cpu<span class="w"> </span><span class="m">0</span>.027<span class="w"> </span>total
+</span></span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>❯
+</span></code></pre></div>
+<div class="admonition info annotate">
+<p class="admonition-title">Special Note</p>
+<p>An important consideration here is that both "clean build" and
+"full download" timings will scale linearly with the size of
+the project.</p>
+<p>ZFS snapshot/clone timing <strong>should not vary</strong> in relation to the
+size of the project, depending more on the storage speed and kernel
+load instead.</p>
 </div>
 <h2 id="limitations-and-issues">Limitations and Issues<a class="headerlink" href="#limitations-and-issues" title="Permanent link">#</a></h2>
 <h3 id="linking-and-deployment-performance-is-not-optimized">Linking and Deployment performance is not optimized<a class="headerlink" href="#linking-and-deployment-performance-is-not-optimized" title="Permanent link">#</a></h3>
