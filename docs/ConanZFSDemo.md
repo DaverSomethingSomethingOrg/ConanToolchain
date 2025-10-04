@@ -1,5 +1,8 @@
 # Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
 
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD034 -->
+
 ## Introduction
 
 In this demo we'll show how to use Conan for build-avoidance along with
@@ -59,7 +62,7 @@ most sophisticated build caching technology available, with features such as:
   and [Sonatype Nexus](https://help.sonatype.com/en/formats.htm), with
   GitLab support [in-progress](https://gitlab.com/groups/gitlab-org/-/epics/8258#note_2726326123).
 - Build system agnostic, with many integrations including CMake, Bazel,
-  GNU Autotools/Make, and [more](https://docs.conan.io/2/integrations.html).
+  GNU Autotools/Make, and [many more](https://docs.conan.io/2/integrations.html).
 
 With these features Conan provides a very strong build-avoidance solution
 at a component level, not just individual objects/targets.  With the build
@@ -88,7 +91,7 @@ as they're operating within the same filesystem (or storage cluster).
 ### Proven
 
 The original inspiration for this solution comes from NetApp, where I was
-part of the SCM team supporting ONTAP developer builds in Perforce.  For
+part of their SCM team supporting ONTAP developer builds in Perforce.  For
 our very large source code trees with their resulting large C/C++ builds,
 we leveraged NetApp's own thin-provisioned FlexClone technology. This
 enabled us to construct developer workspaces pre-seeded with the latest
@@ -98,6 +101,7 @@ NetApp and Perforce have published their Perforce implementation of this
 solution:
 
 - https://swarm.workshop.perforce.com/projects/netapp-p4flex/
+- https://swarm.workshop.perforce.com/view/guest/netapp/p4flex/extras/docs/P4Flex_Overview_20160511.pdf
 
 This solution provided a very significant developer productivity gain, in
 most cases.  Developers no longer needed to do an initial ONTAP build in
@@ -317,6 +321,29 @@ $ zfs list -t snapshot -o name,used,refer
 no datasets available
 $ 
 ```
+
+## Performance comparisons
+
+!!! note annotate "Empty cache, clean build without Artifact Management available"
+
+    ![Full Build without Artifact Management or seeded cache](img/conan_zfs_clean_build.png)
+
+!!! note annotate "Empty cache, clean build with full download from Artifact Management"
+
+    ![Full Download from Artifact Management](img/conan_zfs_clean_download.png)
+
+!!! note annotate "Fully seeded cache, clean build"
+
+    ![Fully seeded cache](img/conan_zfs_cached.png)
+
+### Snapshot and Clone Provisioning Overhead
+
+To be completely fair, we do need to factor in the time it takes to create
+the ZFS snapshot and clone too
+
+!!! note annotate "Snapshot and Clone Provisioning time"
+
+    ![ZFS Clone Provisioning](img/conan_zfs_clone_creation.png)
 
 ## Limitations and Issues
 
