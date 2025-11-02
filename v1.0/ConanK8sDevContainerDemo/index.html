@@ -14,7 +14,7 @@
         <link rel="prev" href="../ConanZFSDemo/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../ConanK8sARCDemo/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -484,18 +484,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#initial-parenttoplevel-dataset" class="md-nav__link">
+  <a href="#kubernetes-namespace" class="md-nav__link">
     <span class="md-ellipsis">
-      Initial Parent/Toplevel DataSet
+      Kubernetes Namespace
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kubernetes-namespace" class="md-nav__link">
+  <a href="#initial-parenttoplevel-dataset" class="md-nav__link">
     <span class="md-ellipsis">
-      Kubernetes Namespace
+      Initial Parent/Toplevel DataSet
     </span>
   </a>
   
@@ -674,6 +674,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../ConanK8sARCDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes oh my!
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -809,18 +830,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#initial-parenttoplevel-dataset" class="md-nav__link">
+  <a href="#kubernetes-namespace" class="md-nav__link">
     <span class="md-ellipsis">
-      Initial Parent/Toplevel DataSet
+      Kubernetes Namespace
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#kubernetes-namespace" class="md-nav__link">
+  <a href="#initial-parenttoplevel-dataset" class="md-nav__link">
     <span class="md-ellipsis">
-      Kubernetes Namespace
+      Initial Parent/Toplevel DataSet
     </span>
   </a>
   
@@ -1009,8 +1030,9 @@
 
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>We've demonstrated the benefits of Conan build avoidance with OpenZFS for
-cloning our build cache <a href="../ConanZFSDemo/">in our previous demo</a>.  Now how
-do we extend that benefit to enhance our Developer Experience as well?</p>
+cloning our <a href="https://daversomethingsomethingorg.github.io/ConanToolchain/">Conan Toolchain</a>
+build cache <a href="../ConanZFSDemo/">in our previous demo</a>.  Now how do we
+extend that benefit to enhance our Developer Experience as well?</p>
 <div class="admonition quote inline end">
 <p><a class="glightbox" href="../img/works_on_my_machine.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Works on my machine" src="../img/works_on_my_machine.png" /></a></p>
 </div>
@@ -1035,8 +1057,7 @@ Kubernetes on their development machine in order to gain remote access to
 their shared VS Code development environment.</p>
 <div class="admonition abstract annotate">
 <p class="admonition-title">vxlabs - Using Kubernetes for development containers</p>
-<p>Dr. Charl P. Botha (2021). "Using Kubernetes for development containers"</p>
-<p>vxlabs / visual x laboratories</p>
+<p>Botha, Dr. Charl P., vxlabs (2021). <a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers">"Using Kubernetes for development containers"</a></p>
 <p><a class="glightbox" href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/images/kubernetes-devcontainer.svg" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Diagram - Using Kubernetes for development containers" src="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/images/kubernetes-devcontainer.svg" /></a></p>
 <p>More: <a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers">https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers</a></p>
 </div>
@@ -1158,6 +1179,12 @@ our worker node in here as well as these are Local PVs.</p>
 </span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zfs.csi.openebs.io</span>
 </span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="nt">deletionPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
 </span></code></pre></div>
+<h3 id="kubernetes-namespace">Kubernetes Namespace<a class="headerlink" href="#kubernetes-namespace" title="Permanent link">#</a></h3>
+<p>When creating ZFS PV/PVCs, they all need to exist in the same namespace
+and all need to request the same size storage resource, or things will
+mysteriously not work at all.</p>
+<p>For this demo we'll create a <code>devcontainer</code> namespace
+<a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace">like vxlabs</a>.</p>
 <h3 id="initial-parenttoplevel-dataset">Initial Parent/Toplevel DataSet<a class="headerlink" href="#initial-parenttoplevel-dataset" title="Permanent link">#</a></h3>
 <p>We're using the same <code>zpool-conancache</code> ZFS pool from our previous demo,
 but we want to create a new toplevel dataset to clone from for our Runners
@@ -1177,12 +1204,6 @@ raw ZFS operations in our other demo.</p>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200Gi</span>
 </span></code></pre></div>
-<h3 id="kubernetes-namespace">Kubernetes Namespace<a class="headerlink" href="#kubernetes-namespace" title="Permanent link">#</a></h3>
-<p>When creating ZFS PV/PVCs, they all need to exist in the same namespace
-and all need to request the same size storage resource, or things will
-mysteriously not work at all.</p>
-<p>For this demo we'll create a <code>devcontainer</code> namespace
-<a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace">like vxlabs</a>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>gcc12-toolchain-main_dataset.yaml<span class="w"> </span>--namespace<span class="w"> </span>devcontainer
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>persistentvolumeclaim/gcc12-toolchain-main<span class="w"> </span>created
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>devcontainer
@@ -1305,7 +1326,8 @@ ready to connect our VS Code instance and get to productive!</p>
 <p>Once attached, chose "Open Folder" and navigate to the <code>/workspace/repoName</code>
 directory where we mounted our <code>code-volume</code>.</p>
 <p><a class="glightbox" href="../img/vscode_open_folder_devcontainer.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="VS Code - open folder in DevContainer" src="../img/vscode_open_folder_devcontainer.png" /></a></p>
-<p><strong>DONE!</strong></p>
+<p><strong>DONE!</strong>  We have a working Conan dev environment with a pre-populated
+local cache.</p>
 <p><a class="glightbox" href="../img/vscode_attached_and_ready.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="VS Code - attached and ready" src="../img/vscode_attached_and_ready.png" /></a></p>
 <h2 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">#</a></h2>
 <h3 id="no-waiting-for-source-clone-or-initial-build">No waiting for source clone or initial build<a class="headerlink" href="#no-waiting-for-source-clone-or-initial-build" title="Permanent link">#</a></h3>
@@ -1370,6 +1392,7 @@ build performance using OpenZFS, OpenEBS, and GitHub Actions Runner
 Controller (ARC).</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
+<li><a href="https://daversomethingsomethingorg.github.io/ConanToolchain/">Toolchain Build System using Conan</a></li>
 <li><a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/">vxlabs - Using Kubernetes for development containers</a></li>
 <li><a href="https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/zfs-overview">OpenEBS Local PV ZFS - Overview</a></li>
 <li><a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">OpenEBS Local PV ZFS - GitHub / docs</a></li>
@@ -1420,13 +1443,13 @@ Controller (ARC).</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../ConanK8sARCDemo/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - Conan and ZFS and Kubernetes oh my!">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                Demo - Conan and ZFS and Kubernetes oh my!
               </div>
             </div>
             <div class="md-footer__button md-icon">
