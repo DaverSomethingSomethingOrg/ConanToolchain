@@ -6,8 +6,9 @@
 ## Introduction
 
 We've demonstrated the benefits of Conan build avoidance with OpenZFS for
-cloning our build cache [in our previous demo](ConanZFSDemo.md).  Now how
-do we extend that benefit to enhance our Developer Experience as well?
+cloning our [Conan Toolchain](https://daversomethingsomethingorg.github.io/ConanToolchain/)
+build cache [in our previous demo](ConanZFSDemo.md).  Now how do we
+extend that benefit to enhance our Developer Experience as well?
 
 !!! quote inline end ""
 
@@ -42,10 +43,8 @@ their shared VS Code development environment.
 
 !!! abstract annotate "vxlabs - Using Kubernetes for development containers"
 
-    Dr. Charl P. Botha (2021). "Using Kubernetes for development containers"
+    Botha, Dr. Charl P., vxlabs (2021). ["Using Kubernetes for development containers"](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers)
 
-    vxlabs / visual x laboratories
-    
     ![Diagram - Using Kubernetes for development containers](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/images/kubernetes-devcontainer.svg)
 
     More: https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers
@@ -186,6 +185,15 @@ driver: zfs.csi.openebs.io
 deletionPolicy: Retain
 ```
 
+### Kubernetes Namespace
+
+When creating ZFS PV/PVCs, they all need to exist in the same namespace
+and all need to request the same size storage resource, or things will
+mysteriously not work at all.
+
+For this demo we'll create a `devcontainer` namespace
+[like vxlabs](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace).
+
 ### Initial Parent/Toplevel DataSet
 
 We're using the same `zpool-conancache` ZFS pool from our previous demo,
@@ -209,15 +217,6 @@ spec:
     requests:
       storage: 200Gi
 ```
-
-### Kubernetes Namespace
-
-When creating ZFS PV/PVCs, they all need to exist in the same namespace
-and all need to request the same size storage resource, or things will
-mysteriously not work at all.
-
-For this demo we'll create a `devcontainer` namespace
-[like vxlabs](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace).
 
 ```bash
 ❯ kubectl apply -f gcc12-toolchain-main_dataset.yaml --namespace devcontainer
@@ -361,7 +360,8 @@ directory where we mounted our `code-volume`.
 
 ![VS Code - open folder in DevContainer](img/vscode_open_folder_devcontainer.png)
 
-**DONE!**
+**DONE!**  We have a working Conan dev environment with a pre-populated
+local cache.
 
 ![VS Code - attached and ready](img/vscode_attached_and_ready.png)
 
@@ -452,6 +452,7 @@ Controller (ARC).
 
 ## References
 
+- [Toolchain Build System using Conan](https://daversomethingsomethingorg.github.io/ConanToolchain/)
 - [vxlabs - Using Kubernetes for development containers](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/)
 - [OpenEBS Local PV ZFS - Overview](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/zfs-overview)
 - [OpenEBS Local PV ZFS - GitHub / docs](https://github.com/openebs/zfs-localpv/blob/develop/README.md)
