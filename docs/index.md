@@ -9,7 +9,7 @@ consistently.  Rather than trying to manipulate tools to work in
 configurations they were not originally built for.
 
 To achieve this we leverage the [Conan C/C++ package manager](https://conan.io)
-to produce repeatable builds using consistent host configutations.
+to produce repeatable builds using consistent host configurations.
 Delivering a complete toolchain in the form of OS System packages for Linux.
 
 To put this all together, I've developed these integration pieces:

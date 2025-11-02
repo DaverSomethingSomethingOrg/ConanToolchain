@@ -126,15 +126,16 @@ workspace, and vice-versa.
 
 - Server - 8945HS/64GB/SSD
 - Workstation - 9900X/32GB/SSD
+- Notebook - Macbook Pro M4 Pro, 48GB RAM
 - Network - Ubiquiti UniFi 2.5Gb/s Switch
 
 ### Software
 
-- Sonatype Nexus Community Edition
-- OpenZFS filesystem
-- Conan C/C++ Package Manager
+- [Sonatype Nexus Community Edition](https://www.sonatype.com/products/nexus-community-edition-download)
+- [OpenZFS](https://openzfs.org/) filesystem and storage platform
+- [Conan C/C++ Package Manager](https://conan.io/)
 - Docker - [ConanToolchain Docker Container Image](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md)
-- GitHub Actions with a self-hosted Runner
+- [GitHub Actions](https://github.com/features/actions) with a self-hosted Runner
 
 ### OpenZFS Setup
 
@@ -428,6 +429,8 @@ For our next demo we'll implement a similar solution for use in our
 Kubernetes cluster. Kubernetes brings some significant benefits for
 security and delegated storage management, but also introduces some new
 limitations and challenges to overcome.
+
+Check it out [here](ConanK8sDevContainerDemo.md).
 
 For a bit of a preview, we'll be using these technologies:
 

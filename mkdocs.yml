@@ -83,4 +83,5 @@ nav:
   - 'CIWorkflows.md'
   - 'DemoGcc12MultiPhase.md'
   - 'ConanZFSDemo.md'
+  - 'ConanK8sDevContainerDemo.md'
   - Apache License v2.0: 'LICENSE.txt'

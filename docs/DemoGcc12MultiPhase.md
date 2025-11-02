@@ -103,7 +103,7 @@ Phase 3 of the demo uploads the final binary packages to Nexus when configured a
 
 Secrets:
 
-- `NEXUS_CI_PASSWORD`: '<password for $NEXUS_CI_USER>'
+- `NEXUS_CI_PASSWORD`: '&lt;password for $NEXUS_CI_USER>'
 
 Variables:
 
