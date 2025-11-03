@@ -1068,7 +1068,7 @@ be pretty straightforward to leverage ZFS in those 3rdParty solutions as
 well.</p>
 <h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h2>
 <h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
-<p>We'll be using the same lan and hardware setup as our other demo.</p>
+<p>We'll be using the same lan and hardware setup as our previous demos.</p>
 <ul>
 <li>Server - 8945HS/64GB/SSD</li>
 <li>Workstation - 9900X/32GB/SSD</li>
@@ -1167,8 +1167,8 @@ mysteriously not work at all.</p>
 <h3 id="initial-parenttoplevel-dataset">Initial Parent/Toplevel DataSet<a class="headerlink" href="#initial-parenttoplevel-dataset" title="Permanent link">#</a></h3>
 <p>We're using the same <code>zpool-conancache</code> ZFS pool from our previous demo,
 but we want to create a new toplevel dataset to clone from for our Runners
-and DevContainers.  Just to isolate our Kubernetes operations from our
-raw ZFS operations in our other demo.</p>
+and DevContainers.  Primarily to isolate our Kubernetes operations from our
+raw ZFS operations in our previous demo.</p>
 <p>Reference: <a href="https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-pvc">OpenEBS Local PV ZFS - Create PersistentVolumeClaim</a></p>
 <div class="language-yaml highlight"><span class="filename">gcc12-toolchain-main_dataset.yaml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Initial PVC for gcc12-toolchain main branch dataset</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
@@ -1191,7 +1191,7 @@ raw ZFS operations in our other demo.</p>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>❯
 </span></code></pre></div>
 <h2 id="devcontainer-pod">DevContainer Pod<a class="headerlink" href="#devcontainer-pod" title="Permanent link">#</a></h2>
-<p>With OpenEBS set up, and ZFS ready to go, we're ready to deploy our
+<p>With OpenEBS set up, and ZFS ready to go, we're all set to deploy our
 DevContainer!  We'll create a Pod and attach a PersistentVolumeClaim
 for our Conan Cache.</p>
 <p>Within the Pod we'll run an initContainer in order to clone our git repo
@@ -1246,19 +1246,19 @@ throughout all users of the ZFS dataset.</p>
 </span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-volume</span>
 </span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/vscode/.cache</span>
 </span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache-volume</span>
-</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
-</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
-</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="hll"><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span></span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="hll"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span></span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
 </span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
 </span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-volume</span>
 </span><span id="__span-5-44"><a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">    </span><span class="c1"># https://kubernetes.io/docs/concepts/storage/volumes/#emptydir</span>
 </span><span id="__span-5-45"><a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 </span><span id="__span-5-46"><a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache-volume</span>
 </span><span id="__span-5-47"><a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
-</span><span id="__span-5-48"><a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
-</span><span id="__span-5-49"><a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
-</span><span id="__span-5-50"><a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gcc12-toolchain-main-hephaestus-devcontainer&quot;</span>
-</span><span id="__span-5-51"><a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
+</span><span id="__span-5-48"><a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="hll"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span></span><span id="__span-5-49"><a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="hll"><span class="w">    </span><span class="nt">persistentVolumeClaim</span><span class="p">:</span>
+</span></span><span id="__span-5-50"><a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="hll"><span class="w">      </span><span class="nt">claimName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gcc12-toolchain-main-hephaestus-devcontainer&quot;</span>
+</span></span><span id="__span-5-51"><a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
 </span><span id="__span-5-52"><a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="nn">---</span>
 </span><span id="__span-5-53"><a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>
 </span><span id="__span-5-54"><a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="c1"># Clone CONAN_HOME directly from PVC (internal snapshot)</span>
@@ -1269,14 +1269,14 @@ throughout all users of the ZFS dataset.</p>
 </span><span id="__span-5-59"><a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="nt">spec</span><span class="p">:</span>
 </span><span id="__span-5-60"><a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a><span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openebs-zfspv</span>
 </span><span id="__span-5-61"><a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="w">  </span><span class="nt">dataSource</span><span class="p">:</span>
-</span><span id="__span-5-62"><a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcc12-toolchain-main</span>
-</span><span id="__span-5-63"><a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
-</span><span id="__span-5-64"><a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span>
+</span><span id="__span-5-62"><a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="hll"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcc12-toolchain-main</span>
+</span></span><span id="__span-5-63"><a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="hll"><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+</span></span><span id="__span-5-64"><a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">  </span><span class="nt">accessModes</span><span class="p">:</span>
 </span><span id="__span-5-65"><a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ReadWriteOnce</span>
 </span><span id="__span-5-66"><a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
 </span><span id="__span-5-67"><a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
-</span><span id="__span-5-68"><a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200Gi</span>
-</span></code></pre></div>
+</span><span id="__span-5-68"><a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="hll"><span class="w">      </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200Gi</span>
+</span></span></code></pre></div>
 <h2 id="using-the-devcontainer">Using the DevContainer<a class="headerlink" href="#using-the-devcontainer" title="Permanent link">#</a></h2>
 <h3 id="provisioning">Provisioning<a class="headerlink" href="#provisioning" title="Permanent link">#</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>devContainer-pod.yaml<span class="w"> </span>--namespace<span class="w"> </span>devcontainer
@@ -1296,8 +1296,9 @@ by OpenEBS internally.</p>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>❯
 </span></code></pre></div>
 <h3 id="connecting-vs-code">Connecting VS Code<a class="headerlink" href="#connecting-vs-code" title="Permanent link">#</a></h3>
-<p>The Pod is running, source repo cloned, and cache volume cloned.  We're
-ready to connect our VS Code instance and get to productive!</p>
+<p>The Pod is running, source repo has been <code>git</code> cloned, and cache volume
+has been <code>zfs</code> cloned.  We're ready to connect our VS Code instance and
+get to productive!</p>
 <ul>
 <li><a href="https://code.visualstudio.com/docs/devcontainers/attach-container#_attach-to-a-container-in-a-kubernetes-cluster">VS Code Documentation: Attach to a container in a Kubernetes cluster</a></li>
 </ul>
@@ -1311,24 +1312,25 @@ local cache.</p>
 <h2 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">#</a></h2>
 <h3 id="no-waiting-for-source-clone-or-initial-build">No waiting for source clone or initial build<a class="headerlink" href="#no-waiting-for-source-clone-or-initial-build" title="Permanent link">#</a></h3>
 <p>Remote-managing our developer sandboxes means we can keep a few spare
-devcontainer pods waiting in a warm-standby pool.</p>
+devcontainer pods waiting in a warm-standby pool.  Similar to the way
+we also keep a minimum number of CI runners ready to start jobs with
+no delay.</p>
 <p>When a developer needs a new workspace, we'll just assign one of our
 standby devcontainer pods to them, switch to their desired branch, and
 they're off to the races.</p>
 <h3 id="no-downloading-source-code-to-endpoints">No downloading source code to endpoints<a class="headerlink" href="#no-downloading-source-code-to-endpoints" title="Permanent link">#</a></h3>
-<p>We already take steps to prevent developers from downloading our
-company's intellectual property onto their notebook.  Let's make that
-a positive aspect of their experience rather than a source of friction
-to getting their job done.</p>
+<p>We already take a variety of steps to avoid having developers download our
+company's intellectual property onto their notebooks and mobile endpoints.
+Let's make this a positive aspect of their experience rather than a source
+of friction to getting their job done.</p>
 <p>Not only does this solution avoid having our code exposed on a stolen
-or compromised endpoint, developers won't even want to wait for it to
-download!</p>
+or compromised endpoint, developers won't want to wait for it to download!</p>
 <h3 id="remote-development-with-optimal-text-input-latency-and-response-time">Remote development with optimal text input latency and response time<a class="headerlink" href="#remote-development-with-optimal-text-input-latency-and-response-time" title="Permanent link">#</a></h3>
 <p>Remote desktop display and VDI options have always been a sub-optimal
 developer experience due to high latency in textual input due to
 transmitting the full graphical environment.  This solution keeps the
-graphics local and just the text input and output are transmitted while
-editing code.</p>
+graphics interaction local. Just the text input and output are transmitted
+while editing code.</p>
 <h2 id="demo-limitations">Demo Limitations<a class="headerlink" href="#demo-limitations" title="Permanent link">#</a></h2>
 <p>We've taken some shortcuts in setting up this demo.  Here are some of the
 areas we'd definitely want to tackle before implementing this solution
@@ -1340,7 +1342,7 @@ using our initContainer and have it running and waiting for remote
 connection prior to the developer attaching to it.</p>
 <p>For this demo we rely on VS Code doing the legwork of finalizing the
 DevContainer setup for us, including downloading and installing
-<code>vscode-server</code> and Node.js automatically.  This can be very slow if done
+<code>vscode-server</code> and Node.js when attaching.  This can be very slow if done
 over a low-bandwidth remote connection.  <em>(I've done this from a coffee
 shop and it's not an enjoyable developer experience!)</em></p>
 <h3 id="custom-certificate-authority">Custom Certificate Authority<a class="headerlink" href="#custom-certificate-authority" title="Permanent link">#</a></h3>
@@ -1351,9 +1353,10 @@ ConfigMap mounted into the Runner containers.  Ideally we would do the same
 for DevContainers for consistency and to avoid needing a customized
 container base image.</p>
 <h3 id="security-and-resource-quotas">Security and Resource Quotas<a class="headerlink" href="#security-and-resource-quotas" title="Permanent link">#</a></h3>
-<p>Yeah, we didn't bother with any of that for this demo, but our GitHub ARC
-solution (coming up in our next demo!) handles these issues from the CI
-point of view.</p>
+<p>Yeah, we didn't bother with any of this nonsense (tongue-in-cheek) for
+this demo, but our GitHub ARC solution (coming up in our next demo!)
+handles these issues from the CI point of view.  We'll want to set up our
+DevContainers with a compatible security model.</p>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">#</a></h2>
 <p>Modern technologies like Kubernetes and DevContainers bring a lot to the
 table for bringing the full power of scalable high-performance
