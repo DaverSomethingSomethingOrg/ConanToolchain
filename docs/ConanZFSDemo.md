@@ -126,7 +126,7 @@ workspace, and vice-versa.
 
 - Server - 8945HS/64GB/SSD
 - Workstation - 9900X/32GB/SSD
-- Notebook - Macbook Pro M4 Pro, 48GB RAM
+- Notebook - Macbook Pro M4 Pro
 - Network - Ubiquiti UniFi 2.5Gb/s Switch
 
 ### Software
@@ -152,14 +152,16 @@ zfs set atime=off zpool-conancache
 In order to delegate management of this pool for this demo, we'll simply
 grant `sudo` access for our CI user `github-runner` to run `/usr/sbin/zfs`.
 
-Sudo is absolutely not a recommended solution for production use, but works
-fine for this single-user demo.  For some alternative suggestions, see the
-discussion below:
-[sudo vs. zfs allow vs. SSH command key](#sudo-vs-zfs-allow-vs-ssh-command-key)
-
 ```text title="/etc/sudoers entry"
 github-runner    ALL=NOPASSWD: /usr/sbin/zfs
 ```
+
+!!! warning annotate
+
+    Sudo is absolutely not a recommended solution for production use, but
+    works fine for this single-user demo.  For some alternative
+    suggestions, see the discussion below:
+    [sudo vs. zfs allow vs. SSH command key](#sudo-vs-zfs-allow-vs-ssh-command-key)
 
 ### Conan Center Index
 
@@ -326,7 +328,7 @@ $
 ## Performance comparisons
 
 As mentioned previously, my test environment is hardly representative of
-real-world scenarios this solution would be used for, but showing these
+real-world scenarios this solution would be used for.  Showing these
 results at least helps frame the amount of computation and resource
 utilization for each type of operation.
 
@@ -370,9 +372,8 @@ zfs clone      0.00s user 0.00s system 21% cpu 0.027 total
     "full download" timings will scale linearly with the size of
     the project.
 
-    ZFS snapshot/clone timing **should not vary** in relation to the
-    size of the project, depending more on the storage speed and kernel
-    load instead.
+    ZFS snapshot/clone timing **should be constant**, depending more
+    on the storage speed and kernel load instead of project size.
 
 ## Limitations and Issues
 
@@ -381,13 +382,13 @@ zfs clone      0.00s user 0.00s system 21% cpu 0.027 total
 While this represents the ultimate compile-avoidance solution, other
 phases of the "build" remain unaffected.  If our application is
 statically linked, bundled into an "image", or even repackaged for
-deployment, we'll need to optimize those steps differently.
+deployment, we'll need to optimize those steps separately.
 
 Conan itself does support "vendoring" of dependencies, and this could
 be very useful in building "sub-assemblies" or "subsystem" component
 packages.  This is very effective when development is highly focused on
 a few specific components in our product.  The rest of the components
-can be packaged together (such as archiving static libraries together)
+may be packaged together (such as archiving static libraries together)
 to simplify the dependency graph and reduce random-access I/O at
 linking time.
 
@@ -431,9 +432,3 @@ security and delegated storage management, but also introduces some new
 limitations and challenges to overcome.
 
 Check it out [here](ConanK8sDevContainerDemo.md).
-
-For a bit of a preview, we'll be using these technologies:
-
-- [GitHub Actions Runner Controller](https://github.com/actions/actions-runner-controller/blob/master/README.md)
-- [OpenEBS - Local PV ZFS](https://github.com/openebs/zfs-localpv/blob/develop/README.md)
-- [K8s remote VS Code DevContainer](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/)
