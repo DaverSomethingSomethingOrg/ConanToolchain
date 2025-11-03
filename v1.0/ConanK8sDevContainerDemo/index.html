@@ -14,7 +14,7 @@
         <link rel="prev" href="../ConanZFSDemo/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../ConanK8sARCDemo/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -674,6 +674,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../ConanK8sARCDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes CI!
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -1314,13 +1335,13 @@ local cache.</p>
 devcontainer pods waiting in a warm-standby pool.</p>
 <p>When a developer needs a new workspace, we'll just assign one of our
 standby devcontainer pods to them, switch to their desired branch, and
-they're to the races.</p>
+they're off to the races.</p>
 <h3 id="no-downloading-source-code-to-endpoints">No downloading source code to endpoints<a class="headerlink" href="#no-downloading-source-code-to-endpoints" title="Permanent link">#</a></h3>
 <p>We already take steps to prevent developers from downloading our
 company's intellectual property onto their notebook.  Let's make that
 a positive aspect of their experience rather than a source of friction
-to getting their job done!</p>
-<p>Not only does this solution avoid having our code ending up on a stolen
+to getting their job done.</p>
+<p>Not only does this solution avoid having our code exposed on a stolen
 or compromised endpoint, developers won't even want to wait for it to
 download!</p>
 <h3 id="remote-development-with-optimal-text-input-latency-and-response-time">Remote development with optimal text input latency and response time<a class="headerlink" href="#remote-development-with-optimal-text-input-latency-and-response-time" title="Permanent link">#</a></h3>
@@ -1331,7 +1352,7 @@ graphics local and just the text input and output are transmitted while
 editing code.</p>
 <h2 id="demo-limitations">Demo Limitations<a class="headerlink" href="#demo-limitations" title="Permanent link">#</a></h2>
 <p>We've taken some shortcuts in setting up this demo.  Here are some of the
-areas we'd definitely want to tackle before implementhing this solution
+areas we'd definitely want to tackle before implementing this solution
 in a production engineering environment.</p>
 <h3 id="provisioning-is-not-fully-optimized">Provisioning is not fully optimized<a class="headerlink" href="#provisioning-is-not-fully-optimized" title="Permanent link">#</a></h3>
 <p>In order to eek out every bit of performance from a remote DevContainer,
@@ -1345,11 +1366,11 @@ over a low-bandwidth remote connection.  <em>(I've done this from a coffee
 shop and it's not an enjoyable developer experience!)</em></p>
 <h3 id="custom-certificate-authority">Custom Certificate Authority<a class="headerlink" href="#custom-certificate-authority" title="Permanent link">#</a></h3>
 <p>The container image we use in our DevContainer is already configured with
-our custom internal Certificate Authority (CA).  GitHub Actions Runner
-Controller (ARC) provides custom certificates through a Vault or ConfigMap
-mounted into the Runner containers.  Ideally we would do the same for
-DevContainers for consistency and to avoid needing a customized container
-base image.</p>
+our custom internal Certificate Authority (CA).  For CI jobs, GitHub Actions
+Runner Controller (ARC) provides custom certificates through a Vault or
+ConfigMap mounted into the Runner containers.  Ideally we would do the same
+for DevContainers for consistency and to avoid needing a customized
+container base image.</p>
 <h3 id="security-and-resource-quotas">Security and Resource Quotas<a class="headerlink" href="#security-and-resource-quotas" title="Permanent link">#</a></h3>
 <p>Yeah, we didn't bother with any of that for this demo, but our GitHub ARC
 solution (coming up in our next demo!) handles these issues from the CI
@@ -1364,7 +1385,7 @@ functionality for Conan build optimization in the developer's sandbox.</p>
 <p>Many engineering organizations are already using NetApp storage and
 Kubernetes.  With some creativity and a few config files and integration
 scripts we can extract far more value out of the infrastructure we
-already have.  Making our developers significantly happier in the process.</p>
+already have, making our developers significantly happier in the process.</p>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <p>For our next demo we'll reimplement our raw ZFS CI solution for Conan
 build performance using OpenZFS, OpenEBS, and GitHub Actions Runner
@@ -1422,13 +1443,13 @@ Controller (ARC).</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../ConanK8sARCDemo/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - Conan and ZFS and Kubernetes CI!">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                Demo - Conan and ZFS and Kubernetes CI!
               </div>
             </div>
             <div class="md-footer__button md-icon">
