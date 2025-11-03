@@ -11,10 +11,6 @@
         <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCDemo/">
       
       
-        <link rel="prev" href="../ConanK8sDevContainerDemo/">
-      
-      
-        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +18,7 @@
     
     
       
-        <title>Demo - Conan and ZFS and Kubernetes oh my! - Toolchain Build System using Conan</title>
+        <title>Demo - Conan and ZFS and Kubernetes CI! - Toolchain Build System using Conan</title>
       
     
     
@@ -75,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-conan-and-zfs-and-kubernetes-oh-my" class="md-skip">
+        <a href="#demo-conan-and-zfs-and-kubernetes-ci" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo - Conan and ZFS and Kubernetes oh my!
+              Demo - Conan and ZFS and Kubernetes CI!
             
           </span>
         </div>
@@ -352,308 +348,6 @@
   
 
       </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Demo - Conan and ZFS and Kubernetes oh my!
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Demo - Conan and ZFS and Kubernetes oh my!
-    
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
-    <span class="md-ellipsis">
-      Introduction
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Environment
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Environment">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hardware
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#software" class="md-nav__link">
-    <span class="md-ellipsis">
-      Software
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#openebs-zfs-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      OpenEBS ZFS Setup
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="OpenEBS ZFS Setup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-snapshot-and-clone-for-our-new-build-cache" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create snapshot and clone for our new build cache
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create snapshot and clone for our new build cache">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#github-actions-runner-controller-arc-for-ci-use" class="md-nav__link">
-    <span class="md-ellipsis">
-      GitHub Actions Runner Controller (ARC) for CI use
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="GitHub Actions Runner Controller (ARC) for CI use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-github-arc-runnerscaleset" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configure GitHub ARC RunnerScaleSet
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#attach-conan_home-persistentvolumeclaim-using-hook-extension" class="md-nav__link">
-    <span class="md-ellipsis">
-      Attach $CONAN_HOME PersistentVolumeClaim using Hook Extension
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#github-actions-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      GitHub Actions Workflow
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations-and-open-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations and Open Issues
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusions
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Conclusions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      What's Next
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What&#39;s Next">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#performance-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance Optimization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cache-promotion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cache Promotion
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#saving-broken-builds-for-troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Saving Broken Builds for Troubleshooting
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -964,7 +658,7 @@
   
 
 
-<h1 id="demo-conan-and-zfs-and-kubernetes-oh-my">Demo - Conan and ZFS and Kubernetes oh my!<a class="headerlink" href="#demo-conan-and-zfs-and-kubernetes-oh-my" title="Permanent link">#</a></h1>
+<h1 id="demo-conan-and-zfs-and-kubernetes-ci">Demo - Conan and ZFS and Kubernetes CI!<a class="headerlink" href="#demo-conan-and-zfs-and-kubernetes-ci" title="Permanent link">#</a></h1>
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
 
@@ -1188,44 +882,6 @@ laying around using up our cluster resources, even if they are idle.</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../ConanK8sDevContainerDemo/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Demo - Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Demo - Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Apache License v2.0
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
