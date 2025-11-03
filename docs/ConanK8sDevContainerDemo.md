@@ -54,8 +54,8 @@ Pod deployed in Kubernetes and the required VS Code plugins installed.
 
 We're going to take this a bit further here and assume ***all*** access is
 remote for an Enterprise-ready implementation.  We'll leverage our
-centralized Kubernetes cluster for all development in order to leverage our
-centrally managed, scalable ZFS storage there as well.
+centralized Kubernetes cluster for all development in order to take full
+advantage of our centrally managed, scalable ZFS storage there as well.
 
 ### Related Tools
 
@@ -85,7 +85,7 @@ well.
 
 ### Hardware
 
-We'll be using the same lan and hardware setup as our other demo.
+We'll be using the same lan and hardware setup as our previous demos.
 
 - Server - 8945HS/64GB/SSD
 - Workstation - 9900X/32GB/SSD
@@ -198,8 +198,8 @@ For this demo we'll create a `devcontainer` namespace
 
 We're using the same `zpool-conancache` ZFS pool from our previous demo,
 but we want to create a new toplevel dataset to clone from for our Runners
-and DevContainers.  Just to isolate our Kubernetes operations from our
-raw ZFS operations in our other demo.
+and DevContainers.  Primarily to isolate our Kubernetes operations from our
+raw ZFS operations in our previous demo.
 
 Reference: [OpenEBS Local PV ZFS - Create PersistentVolumeClaim](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-pvc)
 
@@ -229,7 +229,7 @@ gcc12-toolchain-main                           Bound    pvc-4f9dd102-cf04-44a2-8
 
 ## DevContainer Pod
 
-With OpenEBS set up, and ZFS ready to go, we're ready to deploy our
+With OpenEBS set up, and ZFS ready to go, we're all set to deploy our
 DevContainer!  We'll create a Pod and attach a PersistentVolumeClaim
 for our Conan Cache.
 
@@ -250,7 +250,7 @@ by default, we'll continue that here also for convenience.
 
 Reference: [OpenEBS Local PV ZFS - Clone](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/advanced-operations/zfs-clone)
 
-```yaml title="devContainer-pod.yaml"
+```yaml title="devContainer-pod.yaml" hl_lines="39-40 48-50 62-63 68"
 apiVersion: v1
 kind: Pod
 metadata:
@@ -348,8 +348,9 @@ zpool-conancache/pvc-005c989b-75e4-485f-9a19-59877deaa3af                       
 
 ### Connecting VS Code
 
-The Pod is running, source repo cloned, and cache volume cloned.  We're
-ready to connect our VS Code instance and get to productive!
+The Pod is running, source repo has been `git` cloned, and cache volume
+has been `zfs` cloned.  We're ready to connect our VS Code instance and
+get to productive!
 
 - [VS Code Documentation: Attach to a container in a Kubernetes cluster](https://code.visualstudio.com/docs/devcontainers/attach-container#_attach-to-a-container-in-a-kubernetes-cluster)
 
@@ -370,7 +371,9 @@ local cache.
 ### No waiting for source clone or initial build
 
 Remote-managing our developer sandboxes means we can keep a few spare
-devcontainer pods waiting in a warm-standby pool.
+devcontainer pods waiting in a warm-standby pool.  Similar to the way
+we also keep a minimum number of CI runners ready to start jobs with
+no delay.
 
 When a developer needs a new workspace, we'll just assign one of our
 standby devcontainer pods to them, switch to their desired branch, and
@@ -378,22 +381,21 @@ they're off to the races.
 
 ### No downloading source code to endpoints
 
-We already take steps to prevent developers from downloading our
-company's intellectual property onto their notebook.  Let's make that
-a positive aspect of their experience rather than a source of friction
-to getting their job done.
+We already take a variety of steps to avoid having developers download our
+company's intellectual property onto their notebooks and mobile endpoints.
+Let's make this a positive aspect of their experience rather than a source
+of friction to getting their job done.
 
 Not only does this solution avoid having our code exposed on a stolen
-or compromised endpoint, developers won't even want to wait for it to
-download!
+or compromised endpoint, developers won't want to wait for it to download!
 
 ### Remote development with optimal text input latency and response time
 
 Remote desktop display and VDI options have always been a sub-optimal
 developer experience due to high latency in textual input due to
 transmitting the full graphical environment.  This solution keeps the
-graphics local and just the text input and output are transmitted while
-editing code.
+graphics interaction local. Just the text input and output are transmitted
+while editing code.
 
 ## Demo Limitations
 
@@ -410,7 +412,7 @@ connection prior to the developer attaching to it.
 
 For this demo we rely on VS Code doing the legwork of finalizing the
 DevContainer setup for us, including downloading and installing
-`vscode-server` and Node.js automatically.  This can be very slow if done
+`vscode-server` and Node.js when attaching.  This can be very slow if done
 over a low-bandwidth remote connection.  *(I've done this from a coffee
 shop and it's not an enjoyable developer experience!)*
 
@@ -425,9 +427,10 @@ container base image.
 
 ### Security and Resource Quotas
 
-Yeah, we didn't bother with any of that for this demo, but our GitHub ARC
-solution (coming up in our next demo!) handles these issues from the CI
-point of view.
+Yeah, we didn't bother with any of this nonsense (tongue-in-cheek) for
+this demo, but our GitHub ARC solution (coming up in our next demo!)
+handles these issues from the CI point of view.  We'll want to set up our
+DevContainers with a compatible security model.
 
 ## Conclusion
 
