@@ -374,16 +374,16 @@ devcontainer pods waiting in a warm-standby pool.
 
 When a developer needs a new workspace, we'll just assign one of our
 standby devcontainer pods to them, switch to their desired branch, and
-they're to the races.
+they're off to the races.
 
 ### No downloading source code to endpoints
 
 We already take steps to prevent developers from downloading our
 company's intellectual property onto their notebook.  Let's make that
 a positive aspect of their experience rather than a source of friction
-to getting their job done!
+to getting their job done.
 
-Not only does this solution avoid having our code ending up on a stolen
+Not only does this solution avoid having our code exposed on a stolen
 or compromised endpoint, developers won't even want to wait for it to
 download!
 
@@ -398,7 +398,7 @@ editing code.
 ## Demo Limitations
 
 We've taken some shortcuts in setting up this demo.  Here are some of the
-areas we'd definitely want to tackle before implementhing this solution
+areas we'd definitely want to tackle before implementing this solution
 in a production engineering environment.
 
 ### Provisioning is not fully optimized
@@ -417,11 +417,11 @@ shop and it's not an enjoyable developer experience!)*
 ### Custom Certificate Authority
 
 The container image we use in our DevContainer is already configured with
-our custom internal Certificate Authority (CA).  GitHub Actions Runner
-Controller (ARC) provides custom certificates through a Vault or ConfigMap
-mounted into the Runner containers.  Ideally we would do the same for
-DevContainers for consistency and to avoid needing a customized container
-base image.
+our custom internal Certificate Authority (CA).  For CI jobs, GitHub Actions
+Runner Controller (ARC) provides custom certificates through a Vault or
+ConfigMap mounted into the Runner containers.  Ideally we would do the same
+for DevContainers for consistency and to avoid needing a customized
+container base image.
 
 ### Security and Resource Quotas
 
@@ -442,7 +442,7 @@ functionality for Conan build optimization in the developer's sandbox.
 Many engineering organizations are already using NetApp storage and
 Kubernetes.  With some creativity and a few config files and integration
 scripts we can extract far more value out of the infrastructure we
-already have.  Making our developers significantly happier in the process.
+already have, making our developers significantly happier in the process.
 
 ## What's Next
 
