@@ -1038,7 +1038,7 @@ workspace, and vice-versa.</p>
 <ul>
 <li>Server - 8945HS/64GB/SSD</li>
 <li>Workstation - 9900X/32GB/SSD</li>
-<li>Notebook - Macbook Pro M4 Pro, 48GB RAM</li>
+<li>Notebook - Macbook Pro M4 Pro</li>
 <li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
 </ul>
 <h3 id="software">Software<a class="headerlink" href="#software" title="Permanent link">#</a></h3>
@@ -1059,12 +1059,15 @@ that off to improve performance.</p>
 </span></code></pre></div>
 <p>In order to delegate management of this pool for this demo, we'll simply
 grant <code>sudo</code> access for our CI user <code>github-runner</code> to run <code>/usr/sbin/zfs</code>.</p>
-<p>Sudo is absolutely not a recommended solution for production use, but works
-fine for this single-user demo.  For some alternative suggestions, see the
-discussion below:
-<a href="#sudo-vs-zfs-allow-vs-ssh-command-key">sudo vs. zfs allow vs. SSH command key</a></p>
 <div class="language-text highlight"><span class="filename">/etc/sudoers entry</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>github-runner    ALL=NOPASSWD: /usr/sbin/zfs
 </span></code></pre></div>
+<div class="admonition warning annotate">
+<p class="admonition-title">Warning</p>
+<p>Sudo is absolutely not a recommended solution for production use, but
+works fine for this single-user demo.  For some alternative
+suggestions, see the discussion below:
+<a href="#sudo-vs-zfs-allow-vs-ssh-command-key">sudo vs. zfs allow vs. SSH command key</a></p>
+</div>
 <h3 id="conan-center-index">Conan Center Index<a class="headerlink" href="#conan-center-index" title="Permanent link">#</a></h3>
 <p>For use throughout my <a href="../">ConanToolchain</a> project, I've been maintaining
 a fork of the Conan Center Index recipe repo.</p>
@@ -1195,7 +1198,7 @@ working on.</p>
 </span></code></pre></div>
 <h2 id="performance-comparisons">Performance comparisons<a class="headerlink" href="#performance-comparisons" title="Permanent link">#</a></h2>
 <p>As mentioned previously, my test environment is hardly representative of
-real-world scenarios this solution would be used for, but showing these
+real-world scenarios this solution would be used for.  Showing these
 results at least helps frame the amount of computation and resource
 utilization for each type of operation.</p>
 <div class="admonition note annotate">
@@ -1232,21 +1235,20 @@ here's the same operation from our interactive shell:</p>
 <p>An important consideration here is that both "clean build" and
 "full download" timings will scale linearly with the size of
 the project.</p>
-<p>ZFS snapshot/clone timing <strong>should not vary</strong> in relation to the
-size of the project, depending more on the storage speed and kernel
-load instead.</p>
+<p>ZFS snapshot/clone timing <strong>should be constant</strong>, depending more
+on the storage speed and kernel load instead of project size.</p>
 </div>
 <h2 id="limitations-and-issues">Limitations and Issues<a class="headerlink" href="#limitations-and-issues" title="Permanent link">#</a></h2>
 <h3 id="linking-and-deployment-performance-is-not-optimized">Linking and Deployment performance is not optimized<a class="headerlink" href="#linking-and-deployment-performance-is-not-optimized" title="Permanent link">#</a></h3>
 <p>While this represents the ultimate compile-avoidance solution, other
 phases of the "build" remain unaffected.  If our application is
 statically linked, bundled into an "image", or even repackaged for
-deployment, we'll need to optimize those steps differently.</p>
+deployment, we'll need to optimize those steps separately.</p>
 <p>Conan itself does support "vendoring" of dependencies, and this could
 be very useful in building "sub-assemblies" or "subsystem" component
 packages.  This is very effective when development is highly focused on
 a few specific components in our product.  The rest of the components
-can be packaged together (such as archiving static libraries together)
+may be packaged together (such as archiving static libraries together)
 to simplify the dependency graph and reduce random-access I/O at
 linking time.</p>
 <ul>
@@ -1284,12 +1286,6 @@ Kubernetes cluster. Kubernetes brings some significant benefits for
 security and delegated storage management, but also introduces some new
 limitations and challenges to overcome.</p>
 <p>Check it out <a href="../ConanK8sDevContainerDemo/">here</a>.</p>
-<p>For a bit of a preview, we'll be using these technologies:</p>
-<ul>
-<li><a href="https://github.com/actions/actions-runner-controller/blob/master/README.md">GitHub Actions Runner Controller</a></li>
-<li><a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">OpenEBS - Local PV ZFS</a></li>
-<li><a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/">K8s remote VS Code DevContainer</a></li>
-</ul>
 
 
 
