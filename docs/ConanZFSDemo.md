@@ -431,4 +431,4 @@ Kubernetes cluster. Kubernetes brings some significant benefits for
 security and delegated storage management, but also introduces some new
 limitations and challenges to overcome.
 
-Check it out [here](ConanK8sDevContainerDemo.md).
+Check it out here: [Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers](ConanK8sDevContainerDemo.md).
