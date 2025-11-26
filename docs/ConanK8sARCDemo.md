@@ -218,10 +218,10 @@ $job container rather than calling the Kubernetes API.
 
 ### Non-Containerized Workflows
 
-Non-containerized workflows are very similar for both `containerMode: dind`
-and `containerMode: kubernetes`.  The workflows run directly in the Runner
-container.  In effect they are very similar to using the Runner container
-as a dynamically scaled shell runner.
+Non-containerized workflows work very similarly in either `containerMode`.
+No workflow $job container is created, and the workflows run directly in
+the Runner container.  In effect they are very similar to using the Runner
+container as a dynamically scaled shell runner.
 
 !!! note annotate "`Non-Containerized Workflows`"
 
@@ -232,27 +232,44 @@ as a dynamically scaled shell runner.
 Non-Containerized Workflows with GitHub ARC are sub-optimal for a variety
 of reasons.
 
-#### ***TODO***
+- Customizing the container
 
-Customizing the Runner container capabilities requires providing a custom
-Runner container image, or customizing it within the workflow.  Runner
-containers need to be kept up-to-date with your installed GitHub version.
-If you are maintaining your own hosted GitHub Enterprise Server (GHES)
-instance, it's fairly straightforward to rebuild your runner container
-images while upgrading GitHiub.  If you are using GitHub Enterprise Cloud,
-you will need to ensure that your container images are updated on schedule
-with GitHub's regular upgrades.
-  
-Second, similar to `containerMode: dind` we can mount our OpenEBS ZFS
-Conan cache PVC to the Runner container, but this is done at Runner start
-time, not job start time.  The snapshot will be as old as each Runner is
-idle prior to recieving a job to run.
+    Customizing the Runner container requires redeploying the
+    RunnerScaleSet with an updated container image, or making the
+    modifications at workflow runtime.  In order to modify the Runner
+    container image, the Runner software needs to be installed, along
+    with any dependencies for actions or the workflows.
 
-Third, security is minimal.  Your workflows are running with the same
-privilege as your Runner processes.  While Kubernetes generally provides
-a higher level of security in general to shell runners, this is still not
-recommended.  We'll discuss GitHub ARC security in more detail in the
-[Security](#security) section of this article.
+    !!! warning annotate
+
+        "Any updates released for the software, including major, minor, or
+        patch releases, are considered as an available update. If you do
+        not perform a software update within 30 days, the GitHub Actions
+        service will not queue jobs to your runner. In addition, if a
+        critical security update is required, the GitHub Actions service
+        will not queue jobs to your runner until it has been updated."
+
+        *[GitHub Actions Reference - Self-hosted runners](https://docs.github.com/en/actions/reference/runners/self-hosted-runners#runner-software-updates-on-self-hosted-runners)*
+
+- OpenEBS ZFS snapshot and clone are provisioned at Runner start time
+
+    Similar to `containerMode: dind` we can mount our OpenEBS ZFS Conan
+    cache PVC to the Runner container, but this is done at Runner start
+    time, not job start time.  The snapshot will be as old as each Runner
+    has been idle prior to recieving a job to run.
+
+    For a highly utilized RunnerScaleSet, this is probably not a big deal.
+    If you have RunnerScaleSets assigned to quieter branches however, you
+    may want to minimize the number of standby Runners to ensure the Conan
+    cache clone is up-to-date.  This will delay job startup however.
+
+- Security is minimal
+
+    Your workflows are running with the same privilege and access as your
+    Runner processes.  While Kubernetes generally provides a higher level
+    of security in general to shell runners, this is still not
+    recommended.  We'll discuss GitHub ARC security in more detail in the
+    [Security](#security) section of this article.
 
 ***For best results with our ZFS Conan cache it is recommended to fully
 disable support for non-containerized workflows.***
@@ -271,29 +288,31 @@ our RunnerScaleSets, or even restart the runners.
 ### RunnerScaleSet Helm Chart values.yaml
 
 First, we configure our RunnerScaleSet to run in `kubernetes` containerMode
-and to look for our `github-arc-container-hooks` Hook Extension:
+and to look for our `github-arc-container-hooks` Hook Extension.  Click on
+the embedded annotations for more information.
 
-```yaml title="GitHub ARC kubernetes containerMode with Hook Extension Template" hl_lines="2 13-16 20-21 32-34"
+```yaml title="GitHub ARC kubernetes containerMode with Hook Extension Template"
+# hl_lines="2 13-16 20-21 32-34"
 containerMode:
-  type: "kubernetes"
+  type: "kubernetes" # (1)!
 
 template:
   spec:
     containers:
     - name: runner
-      image: ghcr.io/actions/actions-runner:latest
+      image: ghcr.io/actions/actions-runner:latest # (2)!
       command: ["/home/runner/run.sh"]
       env:
-        - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+        - name: ACTIONS_RUNNER_CONTAINER_HOOKS # (3)!
           value: /home/runner/k8s/index.js
-        - name: ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE
+        - name: ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE # (4)!
           value: /home/runner/pod-template/content
-        - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+        - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER # (5)!
           value: "true"
       volumeMounts:
         - name: work
           mountPath: /home/runner/_work
-        - name: container-hooks-volume
+        - name: container-hooks-volume # (6)!
           mountPath: /home/runner/pod-template
     volumes:
     - name: work
@@ -305,10 +324,27 @@ template:
             resources:
               requests:
                 storage: 1Gi
-    - name: container-hooks-volume
+    - name: container-hooks-volume # (7)!
       configMap:
         name: github-arc-container-hooks
 ```
+
+1. Enable `containerMode: kubernetes`!
+
+1. We're using the default Runner container image maintained by GitHub
+
+1. Location where the k8s/index.js hook is installed in the Runner
+   container image
+
+1. Location where our hook extension template will be mounted
+
+1. If a job doesn't specify a container, exit with an Error:
+    ![Error: Jobs without a job container are forbidden on this runner](img/github_arc_noncontainer_forbidden.png)
+
+1. Mount our hook extension volume where
+   `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` can locate it
+
+1. Set up the volume attached to our hook extension ConfigMap
 
 ### Attach `$CONAN_HOME` PersistentVolumeClaim using Hook Extension
 
@@ -328,9 +364,9 @@ Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: github-arc-container-hooks
+  name: github-arc-container-hooks # (1)!
 data:
-  content: |
+  content: \| # (2)!
     metadata:
       annotations:
         example: "extension"
@@ -344,7 +380,7 @@ data:
             - name: conan-home
               mountPath: /CONAN_HOME
           env:
-            - name: CONAN_HOME
+            - name: CONAN_HOME # (3)!
               value: /CONAN_HOME
       volumes:
         - name: conan-home
@@ -354,12 +390,31 @@ data:
                 accessModes: [ "ReadWriteOnce" ]
                 storageClassName: "openebs-zfspv"
                 dataSource:
-                  name: gcc12-toolchain-main
+                  name: gcc12-toolchain-main # (4)!
                   kind: PersistentVolumeClaim
                 resources:
                   requests:
-                    storage: 200Gi
+                    storage: 200Gi # (5)!
 ```
+
+1. The name we use to identify the `container-hooks-volume` in our
+   RunnerScaleSet `values.yaml` above
+
+1. The file will be named `content` and needs to match
+   `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` in our RunnerScaleSet
+   `values.yaml` above.  It is technically yaml, but it's not part
+   of this ConfigMap manifest, it's copied into a separate mainfest.
+   
+    !!! danger annotate
+    
+        *We escape the `|` here with `\` to allow mkdocs to annotate the yaml below, it must not be escaped in the actual ConfigMap!*
+
+1. Let Conan know where we mount our OpenEBS ZFS Conan cache volume
+
+1. The name of our parent OpenEBS ZFS PersistentVolumeClaim to snapshot
+   and clone from
+
+1. Make sure this matches the storage requested by the parent PVC!
 
 ## GitHub Actions Workflow
 
@@ -375,28 +430,51 @@ jobs:
   conan_toolchain:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
     with:
-      conan_home: "/CONAN_HOME"
+      conan_home: "/CONAN_HOME" # (1)!
       [...]
 ```
 
+1. Our reusable workflow defines its own default `$CONAN_HOME` environment
+   variable for reliability, so we need to specify where our Runners mount
+   our cache clone. *(otherwise we could trust `$CONAN_HOME` provided by
+   the workflow `$job` container environment)*
+
 ## Limitations and Open Issues
 
-- The PVC and ZFS clone are removed at job completion (when the runner pod is destroyed).
-    - https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core
-    - Any builds/cache modifications that need to be kept will need to be saved outside of the runner prior to job completion.
-        - Failed builds cannot be saved through the cache clone
-- The PVC is provisioned against a fairly static clone defined in the Hook Extension ConfigMap
-    - Organizational RunnerScaleSets will share the same cache
-        - Multiple independent RunnerScaleSets will need to be set up to accommodate different parent clones.
-    - good for efficiency and performance, but requires coordination to update the original volume
+### The PVC and ZFS clone are removed at job completion
+
+When the runner pod is destroyed, our cache clone PVC and underlying ZFS
+snapshot and clone are all destroyed, regardless of build success or
+failure.
+
+- https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core
+
+If we wish to retain the build or any cache modifications made during the
+worfklow, we'll need to add additional workflow steps to save them outside
+of the Runner prior to job completion.
+
+With this mechanism failed builds cannot be saved through the cache clone
+directly.
+
+### The PVC is provisioned against a static clone
+
+Since we specify the clone parent in the Hook Extension ConfigMap, this
+clone is not updated dynamically like we do in our non-Kubernetes workflow
+using `zfs promote`.
+
+If our RunnerScaleSet is deployed to the Organization rather than a single
+repo, then all workflows accessing the RunnerScaleSet will share the same
+cache.  In order to accommodate distinct parent clones, independent
+RunnerScaleSets will need to be deployed.
+
+This is good for efficiency and performance, but requires coordination to
+update the original parent clone.
 
 ## Security
 
 #### ***TODO***
 
 Reference: https://some-natalie.dev/blog/securing-ghactions-with-arc/
-
-Non-containerized workflows running with Runner privilege
 
 - Running as non-privileged user
 - Runner container and job container need to have compatible securityContexts.
