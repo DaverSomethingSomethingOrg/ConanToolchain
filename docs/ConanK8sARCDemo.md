@@ -268,8 +268,7 @@ of reasons.
     Your workflows are running with the same privilege and access as your
     Runner processes.  While Kubernetes generally provides a higher level
     of security in general to shell runners, this is still not
-    recommended.  We'll discuss GitHub ARC security in more detail in the
-    [Security](#security) section of this article.
+    recommended.
 
 ***For best results with our ZFS Conan cache it is recommended to fully
 disable support for non-containerized workflows.***
@@ -291,60 +290,63 @@ First, we configure our RunnerScaleSet to run in `kubernetes` containerMode
 and to look for our `github-arc-container-hooks` Hook Extension.  Click on
 the embedded annotations for more information.
 
-```yaml title="GitHub ARC kubernetes containerMode with Hook Extension Template"
-# hl_lines="2 13-16 20-21 32-34"
-containerMode:
-  type: "kubernetes" # (1)!
+!!! note annotate "GitHub ARC kubernetes containerMode configured for Hook Extension Template"
 
-template:
-  spec:
-    containers:
-    - name: runner
-      image: ghcr.io/actions/actions-runner:latest # (2)!
-      command: ["/home/runner/run.sh"]
-      env:
-        - name: ACTIONS_RUNNER_CONTAINER_HOOKS # (3)!
-          value: /home/runner/k8s/index.js
-        - name: ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE # (4)!
-          value: /home/runner/pod-template/content
-        - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER # (5)!
-          value: "true"
-      volumeMounts:
+    ```yaml
+    containerMode:
+      type: "kubernetes" # (1)!
+
+    template:
+      spec:
+        containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest # (2)!
+          command: ["/home/runner/run.sh"]
+          env:
+            - name: ACTIONS_RUNNER_CONTAINER_HOOKS # (3)!
+              value: /home/runner/k8s/index.js
+            - name: ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE # (4)!
+              value: /home/runner/pod-template/content
+            - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER # (5)!
+              value: "true"
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: container-hooks-volume # (6)!
+              mountPath: /home/runner/pod-template
+        volumes:
         - name: work
-          mountPath: /home/runner/_work
-        - name: container-hooks-volume # (6)!
-          mountPath: /home/runner/pod-template
-    volumes:
-    - name: work
-      ephemeral:
-        volumeClaimTemplate:
-          spec:
-            accessModes: [ "ReadWriteOnce" ]
-            storageClassName: "local-path"
-            resources:
-              requests:
-                storage: 1Gi
-    - name: container-hooks-volume # (7)!
-      configMap:
-        name: github-arc-container-hooks
-```
+          ephemeral:
+            volumeClaimTemplate:
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                storageClassName: "local-path"
+                resources:
+                  requests:
+                    storage: 1Gi
+        - name: container-hooks-volume # (7)!
+          configMap:
+            name: github-arc-container-hooks
+    ```
 
-1. Enable `containerMode: kubernetes`!
+    1. Enable `containerMode: kubernetes`!
 
-1. We're using the default Runner container image maintained by GitHub
+    1. We're using the default Runner container image maintained by GitHub
 
-1. Location where the k8s/index.js hook is installed in the Runner
-   container image
+    1. Location where the k8s/index.js hook is installed in the Runner
+       container image
 
-1. Location where our hook extension template will be mounted
+    1. Location where our hook extension template will be mounted
 
-1. If a job doesn't specify a container, exit with an Error:
-    ![Error: Jobs without a job container are forbidden on this runner](img/github_arc_noncontainer_forbidden.png)
+    1. If a job doesn't specify a container, exit with an Error:
+        ![Error: Jobs without a job container are forbidden on this runner](img/github_arc_noncontainer_forbidden.png)
 
-1. Mount our hook extension volume where
-   `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` can locate it
+    1. Mount our hook extension volume where
+       `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` can locate it
 
-1. Set up the volume attached to our hook extension ConfigMap
+    1. Set up the volume attached to our hook extension ConfigMap
+
+    *[full source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml)*
 
 ### Attach `$CONAN_HOME` PersistentVolumeClaim using Hook Extension
 
@@ -360,61 +362,65 @@ of leveraging an existing dataset.
 
 Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically)
 
-```yaml title="GitHub ARC Hook Extension ConfigMap"
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: github-arc-container-hooks # (1)!
-data:
-  content: \| # (2)!
+!!! note annotate "GitHub ARC Hook Extension ConfigMap"
+
+    ```yaml
+    apiVersion: v1
+    kind: ConfigMap
     metadata:
-      annotations:
-        example: "extension"
-        annotated-by: "extension"
-      labels:
-        labeled-by: "extension"
-    spec:
-      containers:
-        - name: $job
-          volumeMounts:
+      name: github-arc-container-hooks # (1)!
+    data:
+      content: \| # (2)!
+        metadata:
+          annotations:
+            example: "extension"
+            annotated-by: "extension"
+          labels:
+            labeled-by: "extension"
+        spec:
+          containers:
+            - name: $job
+              volumeMounts:
+                - name: conan-home
+                  mountPath: /CONAN_HOME
+              env:
+                - name: CONAN_HOME # (3)!
+                  value: /CONAN_HOME
+          volumes:
             - name: conan-home
-              mountPath: /CONAN_HOME
-          env:
-            - name: CONAN_HOME # (3)!
-              value: /CONAN_HOME
-      volumes:
-        - name: conan-home
-          ephemeral:
-            volumeClaimTemplate:
-              spec:
-                accessModes: [ "ReadWriteOnce" ]
-                storageClassName: "openebs-zfspv"
-                dataSource:
-                  name: gcc12-toolchain-main # (4)!
-                  kind: PersistentVolumeClaim
-                resources:
-                  requests:
-                    storage: 200Gi # (5)!
-```
+              ephemeral:
+                volumeClaimTemplate:
+                  spec:
+                    accessModes: [ "ReadWriteOnce" ]
+                    storageClassName: "openebs-zfspv"
+                    dataSource:
+                      name: gcc12-toolchain-main # (4)!
+                      kind: PersistentVolumeClaim
+                    resources:
+                      requests:
+                        storage: 200Gi # (5)!
+    ```
 
-1. The name we use to identify the `container-hooks-volume` in our
-   RunnerScaleSet `values.yaml` above
+    1. The name we use to identify the `container-hooks-volume` in our
+       RunnerScaleSet `values.yaml` above
 
-1. The file will be named `content` and needs to match
-   `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` in our RunnerScaleSet
-   `values.yaml` above.  It is technically yaml, but it's not part
-   of this ConfigMap manifest, it's copied into a separate mainfest.
-   
-    !!! danger annotate
-    
-        *We escape the `|` here with `\` to allow mkdocs to annotate the yaml below, it must not be escaped in the actual ConfigMap!*
+    1. The file will be named `content` and needs to match
+       `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` in our RunnerScaleSet
+       `values.yaml` above.  It is technically yaml, but it's not part
+       of this ConfigMap manifest, it's copied into a separate mainfest.
 
-1. Let Conan know where we mount our OpenEBS ZFS Conan cache volume
+        !!! danger annotate
 
-1. The name of our parent OpenEBS ZFS PersistentVolumeClaim to snapshot
-   and clone from
+            *We escape the `|` here with `\` to allow mkdocs to annotate the yaml below, it must not be escaped in the actual ConfigMap!*
 
-1. Make sure this matches the storage requested by the parent PVC!
+    1. Let Conan know where we mount our OpenEBS ZFS Conan cache volume
+
+    1. The name of our parent OpenEBS ZFS PersistentVolumeClaim to snapshot
+       and clone from
+
+    1. Make sure this matches the storage requested by the parent PVC!
+
+    *[full source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml)*
 
 ## GitHub Actions Workflow
 
@@ -470,7 +476,7 @@ RunnerScaleSets will need to be deployed.
 This is good for efficiency and performance, but requires coordination to
 update the original parent clone.
 
-## Security
+## Security Concerns
 
 #### ***TODO***
 
@@ -496,7 +502,18 @@ Reference: https://some-natalie.dev/blog/securing-ghactions-with-arc/
 
 ## Conclusions
 
-#### ***TODO***
+GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
+flexible system providing strong integration from the infrastructure to
+the workflow.
+
+There are a couple drawbacks however:
+
+- While it's fairly simple to maintain, it is complicated to set up.  
+
+- While our CI snapshots and clones are neatly provisioned and cleaned up,
+  we don't get the benefit of `zfs promote`, `zfs rename`, or other more
+  complicated ZFS operations.  This requires additional management
+  automation working behind the scenes.
 
 ## What's Next
 
@@ -506,6 +523,11 @@ While this solution demonstrates our ability to leverage ZFS for maximum
 Conan build performance/avoidance, there are still a few steps we can take
 to optimize GitHub ARC and Runner performance, especially in job startup
 time.
+
+### Security Optimization
+
+We need to address our [Security Concerns](#security-concerns) before
+putting this solution into production use.
 
 ### Cache Promotion
 
