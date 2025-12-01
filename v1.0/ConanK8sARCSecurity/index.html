@@ -8,23 +8,21 @@
       
       
       
-        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/">
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCSecurity/">
       
       
       
-        <link rel="next" href="ButWhy/">
       
-      
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
     
     
       
-        <title>Toolchain Build System using Conan</title>
+        <title>Demo - Securing and Performing with our GitHub ARC deployment - Toolchain Build System using Conan</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
       
       
 
@@ -43,16 +41,16 @@
       
     
     
-      <link rel="stylesheet" href="css/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
     
-   <link href="assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
     .gslide-desc { color: #666; user-select: text; }
@@ -61,7 +59,7 @@
     .gdesc-inner { font-size: 0.75rem; }
     body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
     body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="assets/javascripts/glightbox.min.js"></script></head>
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
   
   
     <body dir="ltr">
@@ -73,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#toolchain-build-system-using-conan" class="md-skip">
+        <a href="#demo-securing-and-performing-with-our-github-arc-deployment" class="md-skip">
           Skip to content
         </a>
       
@@ -93,7 +91,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+    <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -113,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Introduction
+              Demo - Securing and Performing with our GitHub ARC deployment
             
           </span>
         </div>
@@ -163,7 +161,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+    <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -190,31 +188,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Introduction
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -224,35 +201,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#license-and-copyright" class="md-nav__link">
-    <span class="md-ellipsis">
-      License and Copyright
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -264,7 +212,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ButWhy/" class="md-nav__link">
+      <a href="../ButWhy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -285,7 +233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="SampleUsage/" class="md-nav__link">
+      <a href="../SampleUsage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -306,7 +254,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ConanRecipePreReqs/" class="md-nav__link">
+      <a href="../ConanRecipePreReqs/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -327,7 +275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="CIWorkflows/" class="md-nav__link">
+      <a href="../CIWorkflows/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -348,7 +296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="DemoGcc12MultiPhase/" class="md-nav__link">
+      <a href="../DemoGcc12MultiPhase/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -369,7 +317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ConanZFSDemo/" class="md-nav__link">
+      <a href="../ConanZFSDemo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -390,7 +338,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ConanK8sDevContainerDemo/" class="md-nav__link">
+      <a href="../ConanK8sDevContainerDemo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -411,7 +359,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ConanK8sARCDemo/" class="md-nav__link">
+      <a href="../ConanK8sARCDemo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -432,7 +380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="LICENSE.txt" class="md-nav__link">
+      <a href="../LICENSE.txt" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -473,9 +421,96 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#license-and-copyright" class="md-nav__link">
+  <a href="#introduction" class="md-nav__link">
     <span class="md-ellipsis">
-      License and Copyright
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-open-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Open Issues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
     </span>
   </a>
   
@@ -500,82 +535,75 @@
   
 
 
-<h1 id="toolchain-build-system-using-conan">Toolchain Build System using Conan<a class="headerlink" href="#toolchain-build-system-using-conan" title="Permanent link">#</a></h1>
-<p>Maintaining a multi-platform, 3rdParty toolchain ecosystem consistent
-for all developers offers some significant challenges.</p>
-<p>The goal of this project is to provide a comprehensive, reliable system
-to build a toolchain that works by design.  Configured, built, and installed
-consistently.  Rather than trying to manipulate tools to work in
-configurations they were not originally built for.</p>
-<p>To achieve this we leverage the <a href="https://conan.io">Conan C/C++ package manager</a>
-to produce repeatable builds using consistent host configurations.
-Delivering a complete toolchain in the form of OS System packages for Linux.</p>
-<p>To put this all together, I've developed these integration pieces:</p>
-<div class="admonition github-reference annotate">
-<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-system-packaging">conan-system-packaging</a></p>
-<p>RPM and .deb package generation using Conan.  <code>conan-system-packaging</code>
-provides <code>rpm_deployer</code> and <code>deb_deployer</code>
-<a href="https://docs.conan.io/2/reference/extensions/deployers.html">custom deployers</a></p>
-<ul>
-<li><a href="https://github.com/DaverSomethingSomethingOrg/conan-system-packaging">https://github.com/DaverSomethingSomethingOrg/conan-system-packaging</a></li>
-</ul>
+<h1 id="demo-securing-and-performing-with-our-github-arc-deployment">Demo - Securing and Performing with our GitHub ARC deployment<a class="headerlink" href="#demo-securing-and-performing-with-our-github-arc-deployment" title="Permanent link">#</a></h1>
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD034 -->
+
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>Continuing our work with <a href="../ConanK8sARCDemo/">GitHub ARC with ZFS and Conan</a>.</p>
+<p>This time we'll explore optimizing the Performance and Security of our GitHub
+ARC deployment, not that our product build is optimized.</p>
+<div class="admonition quote annotate">
+<p><a class="glightbox" href="../img/GitHubARCRunnerK8sContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png" /></a></p>
+<p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
 </div>
-<div class="admonition github-reference annotate">
-<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows">conan-github-workflows</a></p>
-<p>Custom <a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">GitHub Actions Reusable Workflows</a>
-to provide multi-platform build/test/release workflows for individual
-Conan builds, and for complete toolchain builds.</p>
+<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h2>
+<h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
+<p>We'll be using the same hardware as our previous demos.  All performance
+optimizations in this demo are done in the configuration, we're not doing
+any hardware optimization.</p>
 <ul>
-<li><a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows">https://github.com/DaverSomethingSomethingOrg/conan-github-workflows</a></li>
+<li>Server - AMD 8945HS/64GB/SSD</li>
+<li>Workstation - AMD 9900X/32GB/SSD</li>
+<li>Notebook - Macbook Pro M4 Pro</li>
+<li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
 </ul>
-</div>
-<div class="admonition github-reference annotate">
-<p class="admonition-title"><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo">conan-toolchain-demo</a></p>
-<p>Example Usage of the <code>conan-github-workflows</code> for practical scenarios.
-Starting with the gcc/binutils/make/cmake toolchain installed into our
-<code>conan-build-container</code>.</p>
-<p>Documented in <a href="DemoGcc12MultiPhase/">Demo - MultiPhase Toolchain Build</a></p>
-<p>Includes the Container image builds used in our <code>conan-github-workflows</code>.
-These images provide basic conan functionality and GCC toolchain
-from OS Vendor provided packages:</p>
+<h3 id="software">Software<a class="headerlink" href="#software" title="Permanent link">#</a></h3>
 <ul>
-<li><code>conan-base-${os_name}:${arch}-latest</code></li>
-<li><code>conan-bootstrap-${os_name}:${arch}-latest</code></li>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/README.md">GitHub Actions Runner Controller (ARC)</a></li>
+<li><a href="https://openzfs.org/">OpenZFS</a> filesystem and storage platform</li>
+<li><a href="https://openebs.io/">OpenEBS</a> with <a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">Local PV ZFS plugin</a></li>
+<li><a href="https://conan.io/">Conan C/C++ Package Manager</a></li>
+<li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
+<li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
 </ul>
-<p>And these add our own Conan GCC Toolchain and other useful toolchain
-construction tools onto the base image.</p>
+<h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">#</a></h2>
 <ul>
-<li><code>conan-build-${os_name}:${arch}-latest</code></li>
-<li><code>conan-docker-build-${os_name}:${arch}-latest</code></li>
+<li>Controller and RunnerScaleSet in different namespaces</li>
+<li>Running as non-privileged user</li>
+<li>Runner container and job container need to have compatible securityContexts.</li>
+<li>Runner container runs actions (including containerized Actions), so
+  Runner container generally needs to ensure that all actions containers
+  and job containers run as the same UID.</li>
+<li>It doesn't work when the actions/checkout container clones the repo as
+  root but the workflow/build container runs non-privileged internally.</li>
+<li>non-privileged workflow pods</li>
+<li>locking container versions away from latest</li>
+<li>minimal container images<ul>
+<li>minimal runner</li>
+<li>minimal workflow</li>
 </ul>
-<p>OS/Platform support includes:</p>
+</li>
+<li>no sudo in workflow</li>
+<li>custom crafted workflow containers not modifyable by workflow</li>
+<li>namespace vs. cluster isolation</li>
+<li>dind-rootless</li>
+<li>Links to GitHub ARC documentation on security best practices</li>
+</ul>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">#</a></h2>
 <ul>
-<li>AlmaLinux 9.6 (x86_64, aarch64)</li>
-<li>Ubuntu 24.04LTS (x86_64, aarch64)</li>
+<li>Runner container image caching for startup</li>
+<li>Workflow job container optimization</li>
+<li>actions caching</li>
+<li>node externals</li>
 </ul>
-</div>
-<p>By delivering OS packages, we are able to:</p>
+<h2 id="limitations-and-open-issues">Limitations and Open Issues<a class="headerlink" href="#limitations-and-open-issues" title="Permanent link">#</a></h2>
+<h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
-<li>Provide the simplest, easiest tool installation for Developers.
-  Especially for custom Container images</li>
-<li>Link to any vendor-provided OS dependencies so that <code>yum install -y &lt;tool&gt;</code>
-  or <code>apt-get install -y &lt;tool&gt;</code> "just works"</li>
-<li>Register our tool component packages with Software Composition
-  Analysis (SCA) tools like
-  <a href="https://www.blackduck.com/software-composition-analysis-tools/black-duck-sca.html">Black Duck SCA</a>
-  or <a href="https://dependencytrack.org/">Dependency-Track</a></li>
-<li>Provide an end-to-end auditable software supply chain</li>
+<li><a href="https://some-natalie.dev/blog/securing-ghactions-with-arc/">https://some-natalie.dev/blog/securing-ghactions-with-arc/</a></li>
 </ul>
-<p>If you are using your own compiler/interpreter versions, or special ABI
-configurations for your products, then you will likely want your
-toolchains to be built using configurations consistent and compatible with
-your products.</p>
-<p>For more in-depth discussion of the issues in maintaining an Enterprise
-Engineering Development toolchain, and the benefits of this solution,
-read on..</p>
-<h2 id="license-and-copyright">License and Copyright<a class="headerlink" href="#license-and-copyright" title="Permanent link">#</a></h2>
-<p>Copyright © 2025 David L. Armstrong</p>
-<p><a href="LICENSE.txt">Apache-2.0</a></p>
 
 
 
@@ -600,28 +628,6 @@ read on..</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-        
-          
-          <a href="ButWhy/" class="md-footer__link md-footer__link--next" aria-label="Next: But Why?">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                But Why?
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -650,10 +656,10 @@ read on..</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});

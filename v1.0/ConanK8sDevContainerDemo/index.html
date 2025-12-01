@@ -14,7 +14,7 @@
         <link rel="prev" href="../ConanZFSDemo/">
       
       
-        <link rel="next" href="../LICENSE.txt">
+        <link rel="next" href="../ConanK8sARCDemo/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -417,6 +417,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scope
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -571,6 +580,15 @@
   <a href="#no-downloading-source-code-to-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       No downloading source code to endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-platform-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Native platform development
     </span>
   </a>
   
@@ -674,6 +692,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../ConanK8sARCDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes CI (Oh my!)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -737,6 +776,15 @@
   <a href="#related-tools" class="md-nav__link">
     <span class="md-ellipsis">
       Related Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scope
     </span>
   </a>
   
@@ -896,6 +944,15 @@
   <a href="#no-downloading-source-code-to-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       No downloading source code to endpoints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-platform-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Native platform development
     </span>
   </a>
   
@@ -1028,7 +1085,7 @@ deployed in the same manner.</p>
 <p>"Works on my machine" is really starting to mean something now!</p>
 <div class="admonition quote annotate">
 <p><a class="glightbox" href="../img/ConanK8sDevContainerDemo%20Diagram.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in Remote DevContainers box diagram" src="../img/ConanK8sDevContainerDemo%20Diagram.png" /></a></p>
-<p><em>Thanks to <a href="https://excalidraw.com/">Excalidraw</a> for their nifty diagramming tool.</em></p>
+<p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
 </div>
 <h3 id="inspiration">Inspiration<a class="headerlink" href="#inspiration" title="Permanent link">#</a></h3>
 <p>This was originally inspired by an article from vxlabs where they set up
@@ -1056,8 +1113,9 @@ presenting here.</p>
 <li><a href="https://docs.github.com/en/codespaces">GitHub Codespaces</a></li>
 <li><a href="https://www.loft.sh/blog/comparing-coder-vs-codespaces-vs-gitpod-vs-devpod">Gitpod vs. Codespaces vs. Coder vs. DevPod: 2024 Comparison</a></li>
 </ul>
-<p>None of these other tools directly address the use case we're showing here;
-leveraging our copy-on-write filesystem to rapidly clone a large
+<h3 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">#</a></h3>
+<p>None of those other tools directly address the use case we're showing here
+though; leveraging our copy-on-write filesystem to rapidly clone a large
 build cache.  So that part is what we'll focus on in this demo.</p>
 <p>We'll set up and detail the configuration for the plumbing required to
 utilize DevContainer technology in bare-bones form, connecting it to
@@ -1070,8 +1128,8 @@ well.</p>
 <h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
 <p>We'll be using the same lan and hardware setup as our previous demos.</p>
 <ul>
-<li>Server - 8945HS/64GB/SSD</li>
-<li>Workstation - 9900X/32GB/SSD</li>
+<li>Server - AMD 8945HS/64GB/SSD</li>
+<li>Workstation - AMD 9900X/32GB/SSD</li>
 <li>Notebook - Macbook Pro M4 Pro</li>
 <li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
 </ul>
@@ -1127,7 +1185,7 @@ well.</p>
 <p>Now that OpenEBS is installed with Local PV ZFS, we'll create our PV and
 snapshot StorageClass definitions.  We'll need to give the PV StorageClass
 the name of our toplevel ZFS pool/dataset, and it's a good idea to specify
-our worker node in here as well as these are Local PVs.</p>
+our worker node in here as well since these are Local PVs.</p>
 <p>Reference: <a href="https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass">OpenEBS Local PV ZFS - Create StorageClass(s)</a></p>
 <div class="language-yaml highlight"><span class="filename">OpenEBS StorageClass definitions</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
@@ -1159,9 +1217,9 @@ our worker node in here as well as these are Local PVs.</p>
 </span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="nt">deletionPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
 </span></code></pre></div>
 <h3 id="kubernetes-namespace">Kubernetes Namespace<a class="headerlink" href="#kubernetes-namespace" title="Permanent link">#</a></h3>
-<p>When creating ZFS PV/PVCs, they all need to exist in the same namespace
-and all need to request the same size storage resource, or things will
-mysteriously not work at all.</p>
+<p>When creating ZFS snapshot and clone PVCs, they all need to exist in the
+same namespace and all need to request the same size storage resource, or
+things will mysteriously not work at all.</p>
 <p>For this demo we'll create a <code>devcontainer</code> namespace
 <a href="https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace">like vxlabs</a>.</p>
 <h3 id="initial-parenttoplevel-dataset">Initial Parent/Toplevel DataSet<a class="headerlink" href="#initial-parenttoplevel-dataset" title="Permanent link">#</a></h3>
@@ -1325,6 +1383,17 @@ Let's make this a positive aspect of their experience rather than a source
 of friction to getting their job done.</p>
 <p>Not only does this solution avoid having our code exposed on a stolen
 or compromised endpoint, developers won't want to wait for it to download!</p>
+<h3 id="native-platform-development">Native platform development<a class="headerlink" href="#native-platform-development" title="Permanent link">#</a></h3>
+<p>When your development environments run in a similar or the same
+environment as production, your endpoint platform is less of a concern.
+In this demo the Kubernetes worker node is running Ubuntu x86_64, while
+the developer notebook is an Apple Silicon ARM-based Macbook.  With
+Docker Desktop and DevContainers it is pretty straightforward to run
+our x86_64 DevContainers, but we pay a severe performance penalty with
+all commands being wrapped by QEMU emulation.</p>
+<p>Allowing developers to work on their preferred productivity platform
+while eliminating any potential compatibility issues is a huge win for
+developer happiness.</p>
 <h3 id="remote-development-with-optimal-text-input-latency-and-response-time">Remote development with optimal text input latency and response time<a class="headerlink" href="#remote-development-with-optimal-text-input-latency-and-response-time" title="Permanent link">#</a></h3>
 <p>Remote desktop display and VDI options have always been a sub-optimal
 developer experience due to high latency in textual input due to
@@ -1359,15 +1428,16 @@ handles these issues from the CI point of view.  We'll want to set up our
 DevContainers with a compatible security model.</p>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">#</a></h2>
 <p>Modern technologies like Kubernetes and DevContainers bring a lot to the
-table for bringing the full power of scalable high-performance
+table for delivering the full power of scalable high-performance
 infrastructure right to the developer's desktop environment without
 having to sacrifice on developer experience.</p>
 <p>In this demo we showed how to leverage our ZFS snapshot and clone
 functionality for Conan build optimization in the developer's sandbox.</p>
 <p>Many engineering organizations are already using NetApp storage and
-Kubernetes.  With some creativity and a few config files and integration
+Kubernetes.  With some creativity, a few config files, and integration
 scripts we can extract far more value out of the infrastructure we
-already have, making our developers significantly happier in the process.</p>
+already have.  Improving developer happiness significantly in the
+process.</p>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <p>For our next demo we'll reimplement our raw ZFS CI solution for Conan
 build performance using OpenZFS, OpenEBS, and GitHub Actions Runner
@@ -1425,13 +1495,13 @@ Controller (ARC).</p>
         
         
           
-          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+          <a href="../ConanK8sARCDemo/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - Conan and ZFS and Kubernetes CI (Oh my!)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Apache License v2.0
+                Demo - Conan and ZFS and Kubernetes CI (Oh my!)
               </div>
             </div>
             <div class="md-footer__button md-icon">

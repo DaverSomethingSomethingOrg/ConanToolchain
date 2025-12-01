@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCDemo/">
       
       
+        <link rel="prev" href="../ConanK8sDevContainerDemo/">
+      
+      
+        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Demo - Conan and ZFS and Kubernetes CI! - Toolchain Build System using Conan</title>
+        <title>Demo - Conan and ZFS and Kubernetes CI (Oh my!) - Toolchain Build System using Conan</title>
       
     
     
@@ -71,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-conan-and-zfs-and-kubernetes-ci" class="md-skip">
+        <a href="#demo-conan-and-zfs-and-kubernetes-ci-oh-my" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo - Conan and ZFS and Kubernetes CI!
+              Demo - Conan and ZFS and Kubernetes CI (Oh my!)
             
           </span>
         </div>
@@ -356,6 +360,305 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes CI (Oh my!)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes CI (Oh my!)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#openebs-zfs-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenEBS ZFS Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-github-arc-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing GitHub ARC Configurations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing GitHub ARC Configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#containermode-kubernetes-with-containerized-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      containerMode: kubernetes with containerized workflows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#containermode-dind-with-containerized-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      containerMode: dind with containerized workflows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-containerized-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Non-Containerized Workflows
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-github-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring GitHub ARC
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring GitHub ARC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runnerscaleset-helm-chart-valuesyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      RunnerScaleSet Helm Chart values.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach-conan_home-persistentvolumeclaim-using-hook-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attach $CONAN_HOME PersistentVolumeClaim using Hook Extension
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-actions-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-open-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Open Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Open Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pvc-and-zfs-clone-are-removed-at-job-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      The PVC and ZFS clone are removed at job completion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pvc-is-provisioned-against-a-static-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      The PVC is provisioned against a static clone
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Concerns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache Promotion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saving-broken-builds-for-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saving Broken Builds for Troubleshooting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     <li class="md-nav__item">
@@ -448,39 +751,42 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="OpenEBS ZFS Setup">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-github-arc-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing GitHub ARC Configurations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing GitHub ARC Configurations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
+  <a href="#containermode-kubernetes-with-containerized-workflows" class="md-nav__link">
     <span class="md-ellipsis">
-      TODO
+      containerMode: kubernetes with containerized workflows
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#create-snapshot-and-clone-for-our-new-build-cache" class="md-nav__link">
+  <a href="#containermode-dind-with-containerized-workflows" class="md-nav__link">
     <span class="md-ellipsis">
-      Create snapshot and clone for our new build cache
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create snapshot and clone for our new build cache">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
+      containerMode: dind with containerized workflows
     </span>
   </a>
   
 </li>
         
-      </ul>
-    </nav>
+          <li class="md-nav__item">
+  <a href="#non-containerized-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Non-Containerized Workflows
+    </span>
+  </a>
   
 </li>
         
@@ -490,19 +796,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#github-actions-runner-controller-arc-for-ci-use" class="md-nav__link">
+  <a href="#configuring-github-arc" class="md-nav__link">
     <span class="md-ellipsis">
-      GitHub Actions Runner Controller (ARC) for CI use
+      Configuring GitHub ARC
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GitHub Actions Runner Controller (ARC) for CI use">
+    <nav class="md-nav" aria-label="Configuring GitHub ARC">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configure-github-arc-runnerscaleset" class="md-nav__link">
+  <a href="#runnerscaleset-helm-chart-valuesyaml" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure GitHub ARC RunnerScaleSet
+      RunnerScaleSet Helm Chart values.yaml
     </span>
   </a>
   
@@ -538,22 +844,22 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security">
+    <nav class="md-nav" aria-label="Limitations and Open Issues">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#todo_2" class="md-nav__link">
+  <a href="#the-pvc-and-zfs-clone-are-removed-at-job-completion" class="md-nav__link">
     <span class="md-ellipsis">
-      TODO
+      The PVC and ZFS clone are removed at job completion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pvc-is-provisioned-against-a-static-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      The PVC is provisioned against a static clone
     </span>
   </a>
   
@@ -571,21 +877,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Conclusions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#todo_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      TODO
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -602,6 +893,15 @@
   <a href="#performance-optimization" class="md-nav__link">
     <span class="md-ellipsis">
       Performance Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Concerns
     </span>
   </a>
   
@@ -658,28 +958,28 @@
   
 
 
-<h1 id="demo-conan-and-zfs-and-kubernetes-ci">Demo - Conan and ZFS and Kubernetes CI!<a class="headerlink" href="#demo-conan-and-zfs-and-kubernetes-ci" title="Permanent link">#</a></h1>
+<h1 id="demo-conan-and-zfs-and-kubernetes-ci-oh-my">Demo - Conan and ZFS and Kubernetes CI (Oh my!)<a class="headerlink" href="#demo-conan-and-zfs-and-kubernetes-ci-oh-my" title="Permanent link">#</a></h1>
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
 
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>Continuing our work with <a href="../ConanZFSDemo/">Conan and ZFS</a> and
-<a href="../ConanK8sDevContainerDemo/">OpenEBS and Kubernetes</a>, this time we'll
-explore implementing a CI solution in our Kubernetes environment.</p>
-<p>Specifically we'll leverage these two tools:</p>
-<ul>
-<li>GitHub Actions Runner Controller (ARC) for CI use</li>
-<li>OpenEBS with Local PV ZFS plugin</li>
-</ul>
+<p>Continuing our work with <a href="../ConanZFSDemo/">Conan Sandboxes with ZFS</a> and
+<a href="../ConanK8sDevContainerDemo/">Conan DevContainers with ZFS in Kubernetes</a>,
+this time we'll explore implementing a CI solution in our Kubernetes
+environment using GitHub Actions Runner Controller (ARC) with OpenEBS.</p>
 <p>We'll skip over most of the boilerplate and default setup and focus on
-just the special configurations required for leveraging our ZFS Conan
-Cache in Kubernetes effectively.</p>
+just the special configuration details required for leveraging our ZFS
+Conan Cache in Kubernetes effectively.</p>
+<div class="admonition quote annotate">
+<p><a class="glightbox" href="../img/GitHubARCRunnerK8sContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png" /></a></p>
+<p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
+</div>
 <h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h2>
 <h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
-<p>We'll be using the same hardware as our previous demos.</p>
+<p>We'll be using the same hardware as we did in our previous demos.</p>
 <ul>
-<li>Server - 8945HS/64GB/SSD</li>
-<li>Workstation - 9900X/32GB/SSD</li>
+<li>Server - AMD 8945HS/64GB/SSD</li>
+<li>Workstation - AMD 9900X/32GB/SSD</li>
 <li>Notebook - Macbook Pro M4 Pro</li>
 <li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
 </ul>
@@ -688,65 +988,273 @@ using only 10GB of RAM and just a fraction of a single CPU core.</p>
 <p><a class="glightbox" href="../img/server_idle_load.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="server load screencap" src="../img/server_idle_load.png" /></a></p>
 <p>Since we're making heavy use of build avoidance through caching, we're
 able to use a power-efficient CPU and don't need a very elaborate storage
-configuration.  We are running a significant number of processes however,
-so we'll want to have a flexible number of CPU cores and a good amount
-of memory.</p>
+configuration.  We are running a significant number of processes however;
+we'll want to have a flexible number of CPU cores and a good amount of
+memory to avoid thrashing.</p>
 <h3 id="software">Software<a class="headerlink" href="#software" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="https://github.com/actions/actions-runner-controller/blob/master/README.md">GitHub Actions Runner Controller (ARC)</a></li>
-<li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
 <li><a href="https://openzfs.org/">OpenZFS</a> filesystem and storage platform</li>
 <li><a href="https://openebs.io/">OpenEBS</a> with <a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">Local PV ZFS plugin</a></li>
 <li><a href="https://conan.io/">Conan C/C++ Package Manager</a></li>
 <li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
+<li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
 </ul>
 <h2 id="openebs-zfs-setup">OpenEBS ZFS Setup<a class="headerlink" href="#openebs-zfs-setup" title="Permanent link">#</a></h2>
-<p>We'll reuse the ZFS installation from our previous demo, but we want to
-create one toplevel dataset to clone from for our Runners and DevContainers.</p>
-<h4 id="todo"><strong><em>TODO</em></strong><a class="headerlink" href="#todo" title="Permanent link">#</a></h4>
-<h3 id="create-snapshot-and-clone-for-our-new-build-cache">Create snapshot and clone for our new build cache<a class="headerlink" href="#create-snapshot-and-clone-for-our-new-build-cache" title="Permanent link">#</a></h3>
-<h4 id="todo_1"><strong><em>TODO</em></strong><a class="headerlink" href="#todo_1" title="Permanent link">#</a></h4>
-<h2 id="github-actions-runner-controller-arc-for-ci-use">GitHub Actions Runner Controller (ARC) for CI use<a class="headerlink" href="#github-actions-runner-controller-arc-for-ci-use" title="Permanent link">#</a></h2>
-<p>GitHub Actions Runner Controller is <em>complicated</em>, and not very well
-documented.  See the References section for the most directly useful
-documentation I found in setting this up.</p>
-<p>To start with, we have a few different options we could implement to get
-our desired functionality into GitHub Actions.</p>
+<p>We'll also reuse the ZFS installation from our previous demo, including
+the toplevel dataset we populated with a toolchain build to clone our
+DevContainers from.</p>
+<p><a href="../ConanK8sDevContainerDemo/#openebs-zfs-setup">Click here for more information</a></p>
+<div class="admonition warning annotate">
+<p class="admonition-title">Warning</p>
+<p>OpenEBS does not support advanced ZFS operations such as <code>promote</code> or
+<code>rename</code>, so we'll need to look at a different approach to replace these
+parts of the workflow we used outside of Kubernetes.
+<a href="../ConanZFSDemo/#promote-the-successful-builds-clone">Conan ZFS Demo Workflow</a></p>
+</div>
+<h2 id="comparing-github-arc-configurations">Comparing GitHub ARC Configurations<a class="headerlink" href="#comparing-github-arc-configurations" title="Permanent link">#</a></h2>
+<p>GitHub Actions Runner Controller is <em>complicated</em>, and documentation is
+fairly sparse.  It ships with reasonable defaults that make ARC easy to
+get deployed and working, but customizing its behavior requires a strong
+understanding of ARC and GitHub Runners in general.  Some topics are
+documented in far more detail than others, but the community appears to
+be responsive to Issues and questions posted to their GitHub projects to
+fill in the gaps.  I've included links in the <a href="#references">References</a>
+section for the most directly applicable documentation I found in setting
+up this demo.</p>
+<p>In order to work with our ZFS Conan cache using GitHub ARC Runners, we
+first need to look at how GitHub Actions Runners behave when using GitHub
+ARC.  Out of the box, GitHub ARC's
+<a href="https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md">RunnerScaleSet</a>
+includes a
+<a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-docker-in-docker-or-kubernetes-mode-for-containers"><code>containerMode</code></a>
+configuration option which probably affects its behavior more dramatically
+than all other options.  On the workflow side, choosing to
+<a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container">run in a container</a>
+or not will affect the behavior of this solution the most.  We'll compare
+different configurations of primarily those two options in this demo.</p>
+<h3 id="containermode-kubernetes-with-containerized-workflows"><code>containerMode: kubernetes</code> with containerized workflows<a class="headerlink" href="#containermode-kubernetes-with-containerized-workflows" title="Permanent link">#</a></h3>
+<p>First we'll look at <code>containerMode: kubernetes</code> with containerized workflows.
+This mode has the distinct advantage over all other modes of waiting until
+the workflow job starts in order to snapshot and clone our ZFS Conan cache.
+This ensures that the cache is as up-to-date as it can be, while keeping
+warm standby Runner processes ready to take on new jobs.</p>
+<div class="admonition note annotate">
+<p class="admonition-title"><code>containerMode: kubernetes</code> with containerized workflows</p>
+<p><a class="glightbox" href="../img/GitHubARCRunnerK8sContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC Containerized Workflow box diagram" src="../img/GitHubARCRunnerK8sContainerized.png" /></a></p>
+</div>
+<p>Optimizing performance is beyond the scope of this demo, but keeping
+Runners on stand-by, ready to launch new jobs seems like a reasonable
+step towards minimizing response time in starting jobs.</p>
+<h4 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h4>
+<p>There's a lot going on here, but in a nutshell:</p>
+<ol>
+<li>We set the <code>ACTIONS_RUNNER_CONTAINER_HOOKS</code> in the Runner container
+   environment.  This will point to a wrapper script that the Runner will
+   use to run our workflow actions and script steps rather than running
+   then directly itself.  We'll use the hook package included in the
+   default Runner image:
+   <a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md"><code>/home/runner/k8s/index.js</code></a></li>
+<li><code>ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</code> points the <code>k8s/index.js</code>
+   hook to our workflow pod spec "extension" to connect our ZFS cache PVC
+   to the workflow <code>$job</code> container. We'll use a ConfigMap and volumeMount
+   it for this piece of the puzzle.</li>
+<li>At job start time, the <code>k8s/index.js</code> wrapper creates the workflow pod
+   and starts the <code>$job</code> container.</li>
+<li>As the <code>$job</code> container is started, our PVC volume specification causes
+   OpenEBS to snapshot and clone our ZFS Conan cache DataSet, and it'll
+   be volumeMounted as it was with our devContainers.</li>
+<li><code>Runner.Worker</code> hands off the workflow job steps to the
+   <code>k8s/index.js</code> wrapper for execution in the <code>$job</code> container.</li>
+<li>Upon job completion, the ZFS cache PVC, <code>$job</code> container, and the
+   runner and workflow jobs are all destroyed and resources freed up.</li>
+</ol>
+<p>For all of this complex functionality, the configuration involved is
+remarkably minimal (details below).  Understanding how the Runner and hook
+operate is critical to setting it up correctly and troubleshooting any
+issues with your workflows in the future.</p>
+<h4 id="issues-with-containermode-kubernetes">Issues with <code>containerMode: kubernetes</code><a class="headerlink" href="#issues-with-containermode-kubernetes" title="Permanent link">#</a></h4>
+<p>This solution satisfies our functional requirements nicely, but still has
+some couple rough spots and limitations we'll need to work around.</p>
 <ul>
-<li>Custom runner container image</li>
-<li>Runner Workflow hooks</li>
-<li>Runner Hook Extension</li>
+<li>
+<p><code>k8s/index.js</code> doesn't show its work</p>
+<p>When compared with <code>containerMode: dind</code>, or a shell runner operating
+a containerized workflow, <code>k8s/index.js</code> doesn't log much information
+unless an error is encountered. This is especially evident in the
+container orchestration done to prepare a job for running prior to
+starting it.</p>
+<p>For troubleshooting workflow issues at runtime, the GitHub Actions logs
+do not give us much information to work with.  To illustrate, check out
+the log output from the same containerized workflow using both shell and
+kubernetes runners in these screenshots:</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Example: Shell Runner "Initialize containers" workflow step</p>
+<p><a class="glightbox" href="../img/GitHubARCShellInitContainers.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Example: Shell Runner &quot;Initialize containers&quot; workflow step" src="../img/GitHubARCShellInitContainers.png" /></a></p>
+</div>
+<div class="admonition note annotate">
+<p class="admonition-title">Example: ARC K8s Runner "Initialize containers" workflow step</p>
+<p><a class="glightbox" href="../img/GitHubARCK8sInitContainers.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Example: ARC K8s Runner &quot;Initialize containers&quot; workflow step" src="../img/GitHubARCK8sInitContainers.png" /></a></p>
+</div>
+</li>
+<li>
+<p><code>k8s/index.js</code> is slow!</p>
+<p>From the screenshots above we can see a significant difference in the
+time taken by <code>k8s/index.js</code> vs orchestrating docker.  Without more
+logging and timing data it's difficult to understand where this
+additional time is spent, but we'll look into that in a follow-on
+article in this series.</p>
+</li>
+<li>
+<p>The <code>k8s/index.js</code> hook extension is limited to Workflow Pod definition
+  only</p>
+<p>The hook extention template is only able to modify or extend the
+Workflow Pod template; it is not capable of orchestrating resources
+outside of the Workflow Pod.  While this is already a plus over the
+other configurations discussed below, it is still an inconvenient
+limitation for our use case with OpenEBS ZFS.</p>
+<p>Since we cannot create a PersistentVolume within a Pod defintion,
+we can only leverage the automatic snapshot PV provisioning OpenEBS
+provides when creating a clone PVC.  This results in sub-optimal
+names for each of our snapshots, not directly associated with our
+clones.  If we were able to provision our snapshot PVs directly, we
+would be able to give them better names to match our clone PVCs.</p>
+<p>This is mostly a moot point anyhow since both the clone PVC and
+snapshot PV are cleaned up with the Workflow and Runner Pods on job
+completion.  See the discussion <a href="#limitations-and-open-issues">below</a>
+for more details.</p>
+<p>In order to work around this limitation we would have to dig deeper
+and extend the k8s hook to make additional kubernetes api calls as we
+require.  The
+<a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/prepare-job.ts">prepare-job</a>
+and
+<a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/cleanup-job.ts">cleanup-job</a>
+parts of the hook would be where to implement the additional
+functionality.</p>
+</li>
 </ul>
-<p>For this demo we'll take the simplest approach to implement, using a Runner
-Hook Extension.  This is not necessarily the simplest option in terms of
-technical implementation, but it gets us in business with the least amount
-of customization and setup effort.</p>
-<p>To accomplish this, we'll use GitHub ARC's <code>kubernetes</code> containerMode, and
-leverage the Hook Extension template.  Using the Hook Extension template we
-can attach our CONAN_HOME pvc to the job (workflow) container.</p>
-<h3 id="configure-github-arc-runnerscaleset">Configure GitHub ARC RunnerScaleSet<a class="headerlink" href="#configure-github-arc-runnerscaleset" title="Permanent link">#</a></h3>
+<div class="admonition warning annotate">
+<p class="admonition-title">Warning</p>
+<p>Take particular note of the other limitations listed in the
+<code>k8s/index.js</code>
+<a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md#limitations">documentation</a>.
+The limitations listed there did not restrict any functionality of our
+demo, but YMMV (Your Mileage May Vary) with your own workflows.</p>
+</div>
+<h3 id="containermode-dind-with-containerized-workflows"><code>containerMode: dind</code> with containerized workflows<a class="headerlink" href="#containermode-dind-with-containerized-workflows" title="Permanent link">#</a></h3>
+<div class="admonition note annotate">
+<p class="admonition-title"><code>containerMode: dind</code></p>
+<p><a class="glightbox" href="../img/GitHubARCRunnerDinDContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerDinDContainerized.png" /></a></p>
+</div>
+<p><code>containerMode: dind</code> behaves similarly to <code>containerMode: kubernetes</code>
+overall, but using a dind sidecar container to orchestrate the workflow
+$job container rather than calling the Kubernetes API.</p>
+<h4 id="issues-with-containermode-dind">Issues with <code>containerMode: dind</code><a class="headerlink" href="#issues-with-containermode-dind" title="Permanent link">#</a></h4>
+<ul>
+<li>
+<p>Docker-in-Docker offers no Kubernetes/OpenEBS integration</p>
+<p>Without a means to work with the Kubernetes API, we cannot leverage
+OpenEBS to provision snapshot PVs or clone PVCs when starting the
+$job container for the workflow.</p>
+<p>We do have access to the Runner container spec, so we can provision
+a snapshot/clone at Runner start time.  Making this clone PVC available
+to the workflow $job container is awkward at best, however.</p>
+</li>
+<li>
+<p>Docker-in-Docker security options are more limited.</p>
+<p>When using Docker-in-Docker, the workflow $job container is running
+in the same pod as the Runner container.  This means they share the
+same network and IPC namespace, potentially exposing your Runner
+infrastructure to security vulnerabilities introduced by the workflow
+and it's specified container image.</p>
+</li>
+</ul>
+<h3 id="non-containerized-workflows">Non-Containerized Workflows<a class="headerlink" href="#non-containerized-workflows" title="Permanent link">#</a></h3>
+<p>Non-containerized workflows work very similarly in either <code>containerMode</code>.
+No workflow $job container is created, and the workflows run directly in
+the Runner container.  In effect they are very similar to using the Runner
+container as a dynamically scaled shell runner.</p>
+<div class="admonition note annotate">
+<p class="admonition-title"><code>Non-Containerized Workflows</code></p>
+<p><a class="glightbox" href="../img/GitHubARCRunnerNonContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC Non-Containerized Workflow box diagram" src="../img/GitHubARCRunnerNonContainerized.png" /></a></p>
+</div>
+<h4 id="issues-with-non-containerized-workflows">Issues with Non-containerized Workflows<a class="headerlink" href="#issues-with-non-containerized-workflows" title="Permanent link">#</a></h4>
+<p>Non-Containerized Workflows with GitHub ARC are sub-optimal for a variety
+of reasons.</p>
+<ul>
+<li>
+<p>Customizing the container</p>
+<p>Customizing the Runner container requires redeploying the
+RunnerScaleSet with an updated container image, or making the
+modifications at workflow runtime.  In order to modify the Runner
+container image, the Runner software needs to be installed, along
+with any dependencies for actions or the workflows.</p>
+<div class="admonition warning annotate">
+<p class="admonition-title">Warning</p>
+<p>"Any updates released for the software, including major, minor, or
+patch releases, are considered as an available update. If you do
+not perform a software update within 30 days, the GitHub Actions
+service will not queue jobs to your runner. In addition, if a
+critical security update is required, the GitHub Actions service
+will not queue jobs to your runner until it has been updated."</p>
+<p><em><a href="https://docs.github.com/en/actions/reference/runners/self-hosted-runners#runner-software-updates-on-self-hosted-runners">GitHub Actions Reference - Self-hosted runners</a></em></p>
+</div>
+</li>
+<li>
+<p>OpenEBS ZFS snapshot and clone are provisioned at Runner start time</p>
+<p>Similar to <code>containerMode: dind</code> we can mount our OpenEBS ZFS Conan
+cache PVC to the Runner container, but this is done at Runner start
+time, not job start time.  The snapshot will be as old as each Runner
+has been idle prior to recieving a job to run.</p>
+<p>For a highly utilized RunnerScaleSet, this is probably not a big deal.
+If you have RunnerScaleSets assigned to quieter branches however, you
+may want to minimize the number of standby Runners to ensure the Conan
+cache clone is up-to-date.  This will delay job startup however.</p>
+</li>
+<li>
+<p>Security is minimal</p>
+<p>Your workflows are running with the same privilege and access as your
+Runner processes.  While Kubernetes generally provides a higher level
+of security in general to shell runners, this is still not
+recommended.</p>
+</li>
+</ul>
+<p><strong><em>For best results with our ZFS Conan cache it is recommended to fully
+disable support for non-containerized workflows.</em></strong></p>
+<h2 id="configuring-github-arc">Configuring GitHub ARC<a class="headerlink" href="#configuring-github-arc" title="Permanent link">#</a></h2>
+<p>For this demo we'll be using the <code>containerMode: kubernetes</code> with
+containerized workflows configuration.  Having the Conan Cache snapshot
+taken as late as possible (when the job starts) ensures that it is
+current with the latest component builds available.</p>
+<p>A second significant benefit to this approach is the ability to extend
+the workflow pod configuration without having to redeploy or "upgrade"
+our RunnerScaleSets, or even restart the runners.</p>
+<h3 id="runnerscaleset-helm-chart-valuesyaml">RunnerScaleSet Helm Chart values.yaml<a class="headerlink" href="#runnerscaleset-helm-chart-valuesyaml" title="Permanent link">#</a></h3>
 <p>First, we configure our RunnerScaleSet to run in <code>kubernetes</code> containerMode
-and to look for our <code>github-arc-container-hooks</code> Hook Extension:</p>
-<div class="language-yaml highlight"><span class="filename">GitHub ARC kubernetes containerMode with Hook Extension Template</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">containerMode</span><span class="p">:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
+and to look for our <code>github-arc-container-hooks</code> Hook Extension.  Click on
+the embedded annotations for more information.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">GitHub ARC kubernetes containerMode configured for Hook Extension Template</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">containerMode</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">template</span><span class="p">:</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">spec</span><span class="p">:</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/actions/actions-runner:latest</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/actions/actions-runner:latest</span><span class="w"> </span><span class="c1"># (2)!</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/home/runner/run.sh&quot;</span><span class="p p-Indicator">]</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">env</span><span class="p">:</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOKS</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOKS</span><span class="w"> </span><span class="c1"># (3)!</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/k8s/index.js</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</span><span class="w"> </span><span class="c1"># (4)!</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/pod-template/content</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER</span><span class="w"> </span><span class="c1"># (5)!</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/_work</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">container-hooks-volume</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">container-hooks-volume</span><span class="w"> </span><span class="c1"># (6)!</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/pod-template</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work</span>
@@ -758,45 +1266,113 @@ and to look for our <code>github-arc-container-hooks</code> Hook Extension:</p>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">            </span><span class="nt">resources</span><span class="p">:</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">              </span><span class="nt">requests</span><span class="p">:</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">                </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">container-hooks-volume</span><span class="w"> </span><span class="c1"># (7)!</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">      </span><span class="nt">configMap</span><span class="p">:</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-arc-container-hooks</span>
 </span></code></pre></div>
+<ol>
+<li>
+<p>Enable <code>containerMode: kubernetes</code>!</p>
+</li>
+<li>
+<p>We're using the default Runner container image maintained by GitHub</p>
+</li>
+<li>
+<p>Location where the k8s/index.js hook is installed in the Runner
+   container image</p>
+</li>
+<li>
+<p>Location where our hook extension template will be mounted</p>
+</li>
+<li>
+<p>If a job doesn't specify a container, exit with an Error:
+    <a class="glightbox" href="../img/github_arc_noncontainer_forbidden.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Error: Jobs without a job container are forbidden on this runner" src="../img/github_arc_noncontainer_forbidden.png" /></a></p>
+</li>
+<li>
+<p>Mount our hook extension volume where
+   <code>ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</code> can locate it</p>
+</li>
+<li>
+<p>Set up the volume attached to our hook extension ConfigMap</p>
+</li>
+</ol>
+<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml">full source in GitHub</a></em></p>
+</div>
 <h3 id="attach-conan_home-persistentvolumeclaim-using-hook-extension">Attach <code>$CONAN_HOME</code> PersistentVolumeClaim using Hook Extension<a class="headerlink" href="#attach-conan_home-persistentvolumeclaim-using-hook-extension" title="Permanent link">#</a></h3>
 <p>Next, we'll define our <code>$CONAN_HOME</code> PersistentVolumeClaim in a ConfigMap
 within the same namespace as the RunnerScaleSet.</p>
-<div class="language-yaml highlight"><span class="filename">GitHub ARC Hook Extension ConfigMap</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<p>Modifying this ConfigMap is the mechanism we would use to replace the
+<code>zfs promote</code> operation in our workflow.  We can simply swap out the PVC
+parent clone <code>dataSource</code> the runner pod will snapshot from at job startup
+time.  Managing the various OpenEBS ZFS datasets, snapshots, and clones
+is beyond the scope of this demo however.  We'll stick to the mechanics
+of leveraging an existing dataset.</p>
+<p>Reference: <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically">Mounted ConfigMaps are updated automatically</a></p>
+<div class="admonition note annotate">
+<p class="admonition-title">GitHub ARC Hook Extension ConfigMap</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-arc-container-hooks</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-arc-container-hooks</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">data</span><span class="p">:</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="no">metadata:</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="no">annotations:</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="no">example: &quot;extension&quot;</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="no">annotated-by: &quot;extension&quot;</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="no">labels:</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="no">labeled-by: &quot;extension&quot;</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="no">spec:</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="no">containers:</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="no">- name: $job</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">          </span><span class="no">volumeMounts:</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">            </span><span class="no">- name: conan-home</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">              </span><span class="no">mountPath: /CONAN_HOME</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">          </span><span class="no">env:</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="no">- name: CONAN_HOME</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">              </span><span class="no">value: /CONAN_HOME</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="no">volumes:</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="no">- name: conan-home</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">          </span><span class="no">ephemeral:</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">            </span><span class="no">volumeClaimTemplate:</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">              </span><span class="no">spec:</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                </span><span class="no">accessModes: [ &quot;ReadWriteOnce&quot; ]</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                </span><span class="no">storageClassName: &quot;openebs-zfspv&quot;</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                </span><span class="no">dataSource:</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                  </span><span class="no">name: gcc12-toolchain-main</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                  </span><span class="no">kind: PersistentVolumeClaim</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                </span><span class="no">resources:</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                  </span><span class="no">requests:</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                    </span><span class="no">storage: 200Gi</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\|</span><span class="w"> </span><span class="c1"># (2)!</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="nt">example</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;extension&quot;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="nt">annotated-by</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;extension&quot;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="nt">labeled-by</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;extension&quot;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$job</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">              </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONAN_HOME</span><span class="w"> </span><span class="c1"># (3)!</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">          </span><span class="nt">ephemeral</span><span class="p">:</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">            </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">              </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">&quot;ReadWriteOnce&quot;</span><span class="w"> </span><span class="p p-Indicator">]</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openebs-zfspv&quot;</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                </span><span class="nt">dataSource</span><span class="p">:</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcc12-toolchain-main</span><span class="w"> </span><span class="c1"># (4)!</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                </span><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                  </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                    </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200Gi</span><span class="w"> </span><span class="c1"># (5)!</span>
 </span></code></pre></div>
+<ol>
+<li>
+<p>The name we use to identify the <code>container-hooks-volume</code> in our
+   RunnerScaleSet <code>values.yaml</code> above</p>
+</li>
+<li>
+<p>The file will be named <code>content</code> and needs to match
+   <code>ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</code> in our RunnerScaleSet
+   <code>values.yaml</code> above.  It is technically yaml, but it's not part
+   of this ConfigMap manifest, it's copied into a separate mainfest.</p>
+<div class="admonition danger annotate">
+<p class="admonition-title">Danger</p>
+<p><em>We escape the <code>|</code> here with <code>\</code> to allow mkdocs to annotate the yaml below, it must not be escaped in the actual ConfigMap!</em></p>
+</div>
+</li>
+<li>
+<p>Let Conan know where we mount our OpenEBS ZFS Conan cache volume</p>
+</li>
+<li>
+<p>The name of our parent OpenEBS ZFS PersistentVolumeClaim to snapshot
+   and clone from</p>
+</li>
+<li>
+<p>Make sure this matches the storage requested by the parent PVC!</p>
+</li>
+</ol>
+<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml">full source in GitHub</a></em></p>
+</div>
 <h2 id="github-actions-workflow">GitHub Actions Workflow<a class="headerlink" href="#github-actions-workflow" title="Permanent link">#</a></h2>
 <p>For this demo I've implemented a simple GitHub Actions Workflow
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/ConanZFSDemo-ARC.yml">ConanZFSDemo-ARC.yml</a>.</p>
@@ -807,42 +1383,70 @@ PVC in <code>/CONAN_HOME</code>.</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">conan_toolchain</span><span class="p">:</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">conan_home</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/CONAN_HOME&quot;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">conan_home</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/CONAN_HOME&quot;</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="p p-Indicator">[</span><span class="nv">...</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
+<ol>
+<li>Our reusable workflow defines its own default <code>$CONAN_HOME</code> environment
+   variable for reliability, so we need to specify where our Runners mount
+   our cache clone. <em>(otherwise we could trust <code>$CONAN_HOME</code> provided by
+   the workflow <code>$job</code> container environment)</em></li>
+</ol>
 <h2 id="limitations-and-open-issues">Limitations and Open Issues<a class="headerlink" href="#limitations-and-open-issues" title="Permanent link">#</a></h2>
+<h3 id="the-pvc-and-zfs-clone-are-removed-at-job-completion">The PVC and ZFS clone are removed at job completion<a class="headerlink" href="#the-pvc-and-zfs-clone-are-removed-at-job-completion" title="Permanent link">#</a></h3>
+<p>When the runner pod is destroyed, our cache clone PVC and underlying ZFS
+snapshot and clone are all destroyed, regardless of build success or
+failure.</p>
 <ul>
-<li>The PVC and ZFS clone are removed at job completion (when the runner pod is destroyed).<ul>
 <li><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core</a></li>
-<li>Any builds/cache modifications that need to be kept will need to be saved outside of the runner prior to job completion.<ul>
-<li>Failed builds cannot be saved through the cache clone</li>
 </ul>
-</li>
-</ul>
-</li>
-<li>The PVC is provisioned against a fairly static clone defined in the Hook Extension ConfigMap<ul>
-<li>Organizational RunnerScaleSets will share the same cache<ul>
-<li>Multiple independent RunnerScaleSets will need to be set up to accommodate different parent clones.</li>
-</ul>
-</li>
-<li>good for efficiency and performance, but requires coordination to update the original volume</li>
-</ul>
-</li>
-</ul>
-<h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">#</a></h2>
-<h4 id="todo_2"><strong><em>TODO</em></strong><a class="headerlink" href="#todo_2" title="Permanent link">#</a></h4>
-<p>Running as non-privileged user
-- Runner container and job container need to have compatible securityContexts.
-- Runner container runs actions (including containerized Actions), so Runner container generally needs to ensure that all actions containers and job containers run as the same UID.
-It doesn't work when the actions/checkout container clones the repo as root but the workflow/build container runs non-privileged internally.</p>
+<p>If we wish to retain the build or any cache modifications made during the
+worfklow, we'll need to add additional workflow steps to save them outside
+of the Runner prior to job completion.</p>
+<p>With this mechanism failed builds cannot be saved through the cache clone
+directly.</p>
+<h3 id="the-pvc-is-provisioned-against-a-static-clone">The PVC is provisioned against a static clone<a class="headerlink" href="#the-pvc-is-provisioned-against-a-static-clone" title="Permanent link">#</a></h3>
+<p>Since we specify the clone parent in the Hook Extension ConfigMap, this
+clone is not updated dynamically like we do in our non-Kubernetes workflow
+using <code>zfs promote</code>.</p>
+<p>If our RunnerScaleSet is deployed to the Organization rather than a single
+repo, then all workflows accessing the RunnerScaleSet will share the same
+cache.  In order to accommodate distinct parent clones, independent
+RunnerScaleSets will need to be deployed.</p>
+<p>This is good for efficiency and performance, but requires coordination to
+update the original parent clone.</p>
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
-<h4 id="todo_3"><strong><em>TODO</em></strong><a class="headerlink" href="#todo_3" title="Permanent link">#</a></h4>
+<p>GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
+flexible system providing strong integration from the infrastructure to
+the workflow.</p>
+<p>There are a couple drawbacks however:</p>
+<ul>
+<li>
+<p>While it's fairly simple to maintain, it is complicated to set up.  </p>
+</li>
+<li>
+<p>While our CI snapshots and clones are neatly provisioned and cleaned up,
+  we don't get the benefit of <code>zfs promote</code>, <code>zfs rename</code>, or other more
+  complicated ZFS operations.  This requires additional management
+  automation working behind the scenes.</p>
+</li>
+<li>
+<p>Performance is clearly an issue, but there are many areas of opportunity
+  for performance improvement.  We'll explore those in our next article in
+  this series.</p>
+</li>
+</ul>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">#</a></h3>
 <p>While this solution demonstrates our ability to leverage ZFS for maximum
 Conan build performance/avoidance, there are still a few steps we can take
 to optimize GitHub ARC and Runner performance, especially in job startup
 time.</p>
+<h3 id="security-concerns">Security Concerns<a class="headerlink" href="#security-concerns" title="Permanent link">#</a></h3>
+<p>There are many security implications and configuration options with this
+solution along with the performance concerns.  We'll need to explore and
+refine our security posture end-to-end before putting this solution into
+production use.</p>
 <h3 id="cache-promotion">Cache Promotion<a class="headerlink" href="#cache-promotion" title="Permanent link">#</a></h3>
 <p>When we build updated components in our cloned cache, we're not able to
 promote the updated clone to parent for future builds to leverage.</p>
@@ -854,11 +1458,16 @@ the process of being updated!</p>
 <p>With this setup we have the advantage of having an entire Pod setup we
 can use to reproduce issues.  Not only do we have the cache clone
 available, we also have the container used for the build.</p>
-<p>We'll want to work out a mechanism that allows our Runner Pods to persist
-after job completion, but also be careful not to leave too many Runner Pods
-laying around using up our cluster resources, even if they are idle.</p>
+<p>By default these Runner and Workflow Pods are not persisted after job
+completion.  We'll want to work out a mechanism that allows those Pods to
+persist after job completion, but also be careful not to leave too many
+Runner Pods laying around using up our cluster resources, even if they are
+idle.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md">https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md</a></li>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md">https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md</a></li>
+<li><a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md">https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md</a></li>
 <li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode">https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode</a></li>
 <li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions">https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions</a></li>
 <li><a href="https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/">https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/</a></li>
@@ -888,6 +1497,44 @@ laying around using up our cluster resources, even if they are idle.</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ConanK8sDevContainerDemo/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Demo - Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Demo - Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Apache License v2.0
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
