@@ -24,7 +24,7 @@ Conan Cache in Kubernetes effectively.
 
 ### Hardware
 
-We'll be using the same hardware as our previous demos.
+We'll be using the same hardware as we did in our previous demos.
 
 - Server - AMD 8945HS/64GB/SSD
 - Workstation - AMD 9900X/32GB/SSD
@@ -53,8 +53,9 @@ memory to avoid thrashing.
 
 ## OpenEBS ZFS Setup
 
-We'll reuse the ZFS installation from our previous demo, including the
-toplevel dataset we populated to clone our DevContainers from.
+We'll also reuse the ZFS installation from our previous demo, including
+the toplevel dataset we populated with a toolchain build to clone our
+DevContainers from.
 
 [Click here for more information](ConanK8sDevContainerDemo.md#openebs-zfs-setup)
 
@@ -67,37 +68,43 @@ toplevel dataset we populated to clone our DevContainers from.
 
 ## Comparing GitHub ARC Configurations
 
-GitHub Actions Runner Controller is *complicated*, but documentation is
-fairly sparse.  Some topics are documented in far more detail than others,
-but the community appears to be responsive to Issues and questions posted
-to their GitHub projects to fill in the gaps.  I've included links in the
-[References](#references) section for the most directly applicable
-documentation I found in setting up this demo.
+GitHub Actions Runner Controller is *complicated*, and documentation is
+fairly sparse.  It ships with reasonable defaults that make ARC easy to
+get deployed and working, but customizing its behavior requires a strong
+understanding of ARC and GitHub Runners in general.  Some topics are
+documented in far more detail than others, but the community appears to
+be responsive to Issues and questions posted to their GitHub projects to
+fill in the gaps.  I've included links in the [References](#references)
+section for the most directly applicable documentation I found in setting
+up this demo.
 
 In order to work with our ZFS Conan cache using GitHub ARC Runners, we
-first need to look at how GitHub Actions Runners behave with GitHub ARC.
-There are a few fundamentally different ways to configure and work with
-GitHub ARC Runners, so we'll compare and contrast some of the basic
-configurations here.
+first need to look at how GitHub Actions Runners behave when using GitHub
+ARC.  Out of the box, GitHub ARC's
+[RunnerScaleSet](https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md)
+includes a
+[`containerMode`](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-docker-in-docker-or-kubernetes-mode-for-containers)
+configuration option which probably affects its behavior more dramatically
+than all other options.  On the workflow side, choosing to
+[run in a container](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container)
+or not will affect the behavior of this solution the most.  We'll compare
+different configurations of primarily those two options in this demo.
 
 ### `containerMode: kubernetes` with containerized workflows
 
-Out of the box, GitHub ARC
-[RunnerScaleSets](https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md)
-include a
-[containerMode](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-docker-in-docker-or-kubernetes-mode-for-containers)
-configuration option which probably affects its behavior the most
-dramatically.
-
 First we'll look at `containerMode: kubernetes` with containerized workflows.
 This mode has the distinct advantage over all other modes of waiting until
-the workflow job starts in order to snapshot and clone the ZFS Conan cache.
-This means the cache is the most up-to-date it can be, while keeping the
-Runner processes warmed up and ready to go.
+the workflow job starts in order to snapshot and clone our ZFS Conan cache.
+This ensures that the cache is as up-to-date as it can be, while keeping
+warm standby Runner processes ready to take on new jobs.
 
 !!! note annotate "`containerMode: kubernetes` with containerized workflows"
 
     ![Conan and ZFS in GitHub ARC Containerized Workflow box diagram](img/GitHubARCRunnerK8sContainerized.png)
+
+Optimizing performance is beyond the scope of this demo, but keeping
+Runners on stand-by, ready to launch new jobs seems like a reasonable
+step towards minimizing response time in starting jobs.
 
 #### How it works
 
@@ -113,7 +120,7 @@ There's a lot going on here, but in a nutshell:
    hook to our workflow pod spec "extension" to connect our ZFS cache PVC
    to the workflow `$job` container. We'll use a ConfigMap and volumeMount
    it for this piece of the puzzle.
-1. At job start time, our `k8s/index.js` wrapper creates the workflow pod
+1. At job start time, the `k8s/index.js` wrapper creates the workflow pod
    and starts the `$job` container.
 1. As the `$job` container is started, our PVC volume specification causes
    OpenEBS to snapshot and clone our ZFS Conan cache DataSet, and it'll
@@ -124,21 +131,27 @@ There's a lot going on here, but in a nutshell:
    runner and workflow jobs are all destroyed and resources freed up.
 
 For all of this complex functionality, the configuration involved is
-remarkably minimal.  Understanding how the Runner and hook operate is
-critical to setting it up correctly and troubleshooting any issues
-with your workflows in the future.
+remarkably minimal (details below).  Understanding how the Runner and hook
+operate is critical to setting it up correctly and troubleshooting any
+issues with your workflows in the future.
 
 #### Issues with `containerMode: kubernetes`
+
+This solution satisfies our functional requirements nicely, but still has
+some couple rough spots and limitations we'll need to work around.
 
 - `k8s/index.js` doesn't show its work
 
     When compared with `containerMode: dind`, or a shell runner operating
     a containerized workflow, `k8s/index.js` doesn't log much information
     unless an error is encountered. This is especially evident in the
-    container orchestration done to prepare the job prior to running.
+    container orchestration done to prepare a job for running prior to
+    starting it.
 
     For troubleshooting workflow issues at runtime, the GitHub Actions logs
-    do not give us much information to work with.
+    do not give us much information to work with.  To illustrate, check out
+    the log output from the same containerized workflow using both shell and
+    kubernetes runners in these screenshots:
 
     !!! note annotate "Example: Shell Runner "Initialize containers" workflow step"
 
@@ -147,6 +160,14 @@ with your workflows in the future.
     !!! note annotate "Example: ARC K8s Runner "Initialize containers" workflow step"
 
         ![Example: ARC K8s Runner "Initialize containers" workflow step](img/GitHubARCK8sInitContainers.png)
+
+- `k8s/index.js` is slow!
+
+    From the screenshots above we can see a significant difference in the
+    time taken by `k8s/index.js` vs orchestrating docker.  Without more
+    logging and timing data it's difficult to understand where this
+    additional time is spent, but we'll look into that in a follow-on
+    article in this series.
 
 - The `k8s/index.js` hook extension is limited to Workflow Pod definition
   only
@@ -476,30 +497,6 @@ RunnerScaleSets will need to be deployed.
 This is good for efficiency and performance, but requires coordination to
 update the original parent clone.
 
-## Security Concerns
-
-#### ***TODO***
-
-Reference: https://some-natalie.dev/blog/securing-ghactions-with-arc/
-
-- Running as non-privileged user
-- Runner container and job container need to have compatible securityContexts.
-- Runner container runs actions (including containerized Actions), so
-  Runner container generally needs to ensure that all actions containers
-  and job containers run as the same UID.
-- It doesn't work when the actions/checkout container clones the repo as
-  root but the workflow/build container runs non-privileged internally.
-- non-privileged workflow pods
-- locking container versions away from latest
-- minimal container images
-    - minimal runner
-    - minimal workflow
-- no sudo in workflow
-- custom crafted workflow containers not modifyable by workflow
-- namespace vs. cluster isolation
-- dind-rootless
-- Links to GitHub ARC documentation on security best practices
-
 ## Conclusions
 
 GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
@@ -514,6 +511,10 @@ There are a couple drawbacks however:
   we don't get the benefit of `zfs promote`, `zfs rename`, or other more
   complicated ZFS operations.  This requires additional management
   automation working behind the scenes.
+  
+- Performance is clearly an issue, but there are many areas of opportunity
+  for performance improvement.  We'll explore those in our next article in
+  this series.
 
 ## What's Next
 
@@ -524,10 +525,12 @@ Conan build performance/avoidance, there are still a few steps we can take
 to optimize GitHub ARC and Runner performance, especially in job startup
 time.
 
-### Security Optimization
+### Security Concerns
 
-We need to address our [Security Concerns](#security-concerns) before
-putting this solution into production use.
+There are many security implications and configuration options with this
+solution along with the performance concerns.  We'll need to explore and
+refine our security posture end-to-end before putting this solution into
+production use.
 
 ### Cache Promotion
 
