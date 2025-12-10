@@ -12,7 +12,7 @@ environment using GitHub Actions Runner Controller (ARC) with OpenEBS.
 
 We'll skip over most of the boilerplate and default setup and focus on
 just the special configuration details required for leveraging our ZFS
-Conan Cache in Kubernetes effectively.
+Conan Cache with GitHub Actions in Kubernetes.
 
 !!! quote annotate ""
 
@@ -53,7 +53,7 @@ memory to avoid thrashing.
 
 ## OpenEBS ZFS Setup
 
-We'll also reuse the ZFS installation from our previous demo, including
+We'll reuse the ZFS installation from our previous demo as well, including
 the toplevel dataset we populated with a toolchain build to clone our
 DevContainers from.
 
@@ -123,9 +123,9 @@ There's a lot going on here, but in a nutshell:
 1. At job start time, the `k8s/index.js` wrapper creates the workflow pod
    and starts the `$job` container.
 1. As the `$job` container is started, our PVC volume specification causes
-   OpenEBS to snapshot and clone our ZFS Conan cache DataSet, and it'll
-   be volumeMounted as it was with our devContainers.
-1. `Runner.Worker` hands off the workflow job steps to the
+   OpenEBS to snapshot and clone our ZFS Conan cache DataSet. It'll be
+   volumeMount'd just as we did with our devContainer.
+1. `Runner.Worker` hands off each workflow job step to the
    `k8s/index.js` wrapper for execution in the `$job` container.
 1. Upon job completion, the ZFS cache PVC, `$job` container, and the
    runner and workflow jobs are all destroyed and resources freed up.
@@ -138,7 +138,7 @@ issues with your workflows in the future.
 #### Issues with `containerMode: kubernetes`
 
 This solution satisfies our functional requirements nicely, but still has
-some couple rough spots and limitations we'll need to work around.
+some rough spots and limitations we'll need to work around.
 
 - `k8s/index.js` doesn't show its work
 
@@ -148,10 +148,14 @@ some couple rough spots and limitations we'll need to work around.
     container orchestration done to prepare a job for running prior to
     starting it.
 
-    For troubleshooting workflow issues at runtime, the GitHub Actions logs
-    do not give us much information to work with.  To illustrate, check out
-    the log output from the same containerized workflow using both shell and
-    kubernetes runners in these screenshots:
+    For troubleshooting workflow issues at runtime, the GitHub Actions
+    logs do not give us much information to work with.  This probably
+    benefits our security posture by not exposing as many details about
+    our infrastructure, but it also limits our diagnostic capability.
+
+    To illustrate this issue, check out the screenshots below with the log
+    output from running the same containerized workflow using shell and
+    kubernetes runners (particularly the "Initialize containers" step):
 
     !!! note annotate "Example: Shell Runner "Initialize containers" workflow step"
 
@@ -163,20 +167,19 @@ some couple rough spots and limitations we'll need to work around.
 
 - `k8s/index.js` is slow!
 
-    From the screenshots above we can see a significant difference in the
-    time taken by `k8s/index.js` vs orchestrating docker.  Without more
-    logging and timing data it's difficult to understand where this
-    additional time is spent, but we'll look into that in a follow-on
-    article in this series.
+    From those same screenshots above we can see a significant difference
+    in the time taken by `k8s/index.js` vs orchestrating docker.  Without
+    more logging and timing data it's difficult to understand where this
+    additional time is spent, but we'll look into that in the future.
 
-- The `k8s/index.js` hook extension is limited to Workflow Pod definition
-  only
+- The `k8s/index.js` hook extension is limited to the Workflow Pod
+  definition only
 
     The hook extention template is only able to modify or extend the
     Workflow Pod template; it is not capable of orchestrating resources
-    outside of the Workflow Pod.  While this is already a plus over the
-    other configurations discussed below, it is still an inconvenient
-    limitation for our use case with OpenEBS ZFS.
+    outside of provisioning the Workflow Pod.  While this is already a
+    plus over the other configurations discussed below, it is still an
+    inconvenient limitation for our use case.
 
     Since we cannot create a PersistentVolume within a Pod defintion,
     we can only leverage the automatic snapshot PV provisioning OpenEBS
@@ -185,20 +188,6 @@ some couple rough spots and limitations we'll need to work around.
     clones.  If we were able to provision our snapshot PVs directly, we
     would be able to give them better names to match our clone PVCs.
 
-    This is mostly a moot point anyhow since both the clone PVC and
-    snapshot PV are cleaned up with the Workflow and Runner Pods on job
-    completion.  See the discussion [below](#limitations-and-open-issues)
-    for more details.
-
-    In order to work around this limitation we would have to dig deeper
-    and extend the k8s hook to make additional kubernetes api calls as we
-    require.  The
-    [prepare-job](https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/prepare-job.ts)
-    and
-    [cleanup-job](https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/cleanup-job.ts)
-    parts of the hook would be where to implement the additional
-    functionality.
-  
 !!! warning annotate
 
     Take particular note of the other limitations listed in the
@@ -209,13 +198,13 @@ some couple rough spots and limitations we'll need to work around.
 
 ### `containerMode: dind` with containerized workflows
 
-!!! note annotate "`containerMode: dind`"
-
-    ![Conan and ZFS in GitHub ARC box diagram](img/GitHubARCRunnerDinDContainerized.png)
-
 `containerMode: dind` behaves similarly to `containerMode: kubernetes`
 overall, but using a dind sidecar container to orchestrate the workflow
 $job container rather than calling the Kubernetes API.
+
+!!! note annotate "`containerMode: dind`"
+
+    ![Conan and ZFS in GitHub ARC box diagram](img/GitHubARCRunnerDinDContainerized.png)
 
 #### Issues with `containerMode: dind`
 
@@ -274,10 +263,11 @@ of reasons.
 
 - OpenEBS ZFS snapshot and clone are provisioned at Runner start time
 
-    Similar to `containerMode: dind` we can mount our OpenEBS ZFS Conan
-    cache PVC to the Runner container, but this is done at Runner start
-    time, not job start time.  The snapshot will be as old as each Runner
-    has been idle prior to recieving a job to run.
+    Similar to `containerMode: dind` with containerized workflows we are
+    able to mount our OpenEBS ZFS Conan cache PVC to the Runner container,
+    but this is done at Runner start time, not job start time.  The
+    snapshot will be as old as the Runner has been idle prior to recieving
+    a job to run.
 
     For a highly utilized RunnerScaleSet, this is probably not a big deal.
     If you have RunnerScaleSets assigned to quieter branches however, you
@@ -480,7 +470,7 @@ If we wish to retain the build or any cache modifications made during the
 worfklow, we'll need to add additional workflow steps to save them outside
 of the Runner prior to job completion.
 
-With this mechanism failed builds cannot be saved through the cache clone
+With this mechanism, failed builds cannot be saved through the cache clone
 directly.
 
 ### The PVC is provisioned against a static clone
@@ -505,18 +495,23 @@ the workflow.
 
 There are a couple drawbacks however:
 
-- While it's fairly simple to maintain, it is complicated to set up.  
+- While it's fairly simple to maintain, it is complicated to set up.
 
 - While our CI snapshots and clones are neatly provisioned and cleaned up,
   we don't get the benefit of `zfs promote`, `zfs rename`, or other more
   complicated ZFS operations.  This requires additional management
   automation working behind the scenes.
-  
-- Performance is clearly an issue, but there are many areas of opportunity
-  for performance improvement.  We'll explore those in our next article in
-  this series.
 
 ## What's Next
+
+By this point our solution is pretty complete!  We've shown the direct
+build performance improvement delivered by our ZFS Conan Cache.  We've
+also shown how to provide this benefit to Developers with Kubernetes-hosted
+devContainers, and we've tied it into CI with GitHub ARC as well.
+
+For next steps we need to start looking at bringing this solution to
+production.  We need to dig in on end-to-end performance and security.
+We'll also start attacking ease-of-use for both adminstrators and users.
 
 ### Performance Optimization
 
@@ -528,9 +523,10 @@ time.
 ### Security Concerns
 
 There are many security implications and configuration options with this
-solution along with the performance concerns.  We'll need to explore and
-refine our security posture end-to-end before putting this solution into
-production use.
+solution along with the performance concerns.  While GitHub ARC ships with
+reasonable defaults for many environments, we'll need to explore and
+refine the configuration for our own environment and needs prior to
+promoting this solution for production use.
 
 ### Cache Promotion
 
@@ -556,10 +552,8 @@ idle.
 
 ## References
 
-- https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md
-- https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md
-- https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md
-- https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode
-- https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions
-- https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/
-- https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml
+- [*GitHub ARC Documentation* - About ARC](https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md)
+- [*GitHub ARC Documentation* - Autoscaling Runner Scale Sets mode](https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md)
+- [*GitHub ARC Documentation* - K8s Hooks](https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md)
+- [*GitHub ARC Documentation* - Using Kubernetes mode](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode)
+- [*GitHub ARC Documentation* - Configuring hook extensions](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions)

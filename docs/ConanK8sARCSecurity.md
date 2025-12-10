@@ -1,4 +1,4 @@
-# Demo - Securing and Performing our GitHub ARC deployment
+# Demo - Securing and Performing with our GitHub ARC deployment
 
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
@@ -41,7 +41,9 @@ any hardware optimization.
 
 ## Security
 
+- Controller and RunnerScaleSet in different namespaces
 - Running as non-privileged user
+  - securityContext
 - Runner container and job container need to have compatible securityContexts.
 - Runner container runs actions (including containerized Actions), so
   Runner container generally needs to ensure that all actions containers
@@ -65,6 +67,7 @@ any hardware optimization.
 - Workflow job container optimization
   - actions caching
   - node externals
+- kubectl in workflow pod initContainer?
 
 ## Limitations and Open Issues
 
@@ -74,4 +77,6 @@ any hardware optimization.
 
 ## References
 
-- https://some-natalie.dev/blog/securing-ghactions-with-arc/
+- Somersall, Natalie; [Securing Self-Hosted GitHub Actions with Kubernetes and Actions-Runner-Controller](https://some-natalie.dev/blog/securing-ghactions-with-arc/)
+
+- Harsh, Kumar; [Supercharge Your CI/CD: Deploy Lightning-Fast GitHub Actions Runners on UpCloud’s Managed Kubernetes: Part 2](https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/)
