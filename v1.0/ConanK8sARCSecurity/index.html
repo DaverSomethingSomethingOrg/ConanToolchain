@@ -571,6 +571,7 @@ any hardware optimization.</p>
 <ul>
 <li>Controller and RunnerScaleSet in different namespaces</li>
 <li>Running as non-privileged user</li>
+<li>securityContext</li>
 <li>Runner container and job container need to have compatible securityContexts.</li>
 <li>Runner container runs actions (including containerized Actions), so
   Runner container generally needs to ensure that all actions containers
@@ -596,13 +597,19 @@ any hardware optimization.</p>
 <li>Workflow job container optimization</li>
 <li>actions caching</li>
 <li>node externals</li>
+<li>kubectl in workflow pod initContainer?</li>
 </ul>
 <h2 id="limitations-and-open-issues">Limitations and Open Issues<a class="headerlink" href="#limitations-and-open-issues" title="Permanent link">#</a></h2>
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="https://some-natalie.dev/blog/securing-ghactions-with-arc/">https://some-natalie.dev/blog/securing-ghactions-with-arc/</a></li>
+<li>
+<p>Somersall, Natalie; <a href="https://some-natalie.dev/blog/securing-ghactions-with-arc/">Securing Self-Hosted GitHub Actions with Kubernetes and Actions-Runner-Controller</a></p>
+</li>
+<li>
+<p>Harsh, Kumar; <a href="https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/">Supercharge Your CI/CD: Deploy Lightning-Fast GitHub Actions Runners on UpCloud’s Managed Kubernetes: Part 2</a></p>
+</li>
 </ul>
 
 

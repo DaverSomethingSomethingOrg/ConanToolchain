@@ -969,7 +969,7 @@ this time we'll explore implementing a CI solution in our Kubernetes
 environment using GitHub Actions Runner Controller (ARC) with OpenEBS.</p>
 <p>We'll skip over most of the boilerplate and default setup and focus on
 just the special configuration details required for leveraging our ZFS
-Conan Cache in Kubernetes effectively.</p>
+Conan Cache with GitHub Actions in Kubernetes.</p>
 <div class="admonition quote annotate">
 <p><a class="glightbox" href="../img/GitHubARCRunnerK8sContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png" /></a></p>
 <p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
@@ -1001,7 +1001,7 @@ memory to avoid thrashing.</p>
 <li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
 </ul>
 <h2 id="openebs-zfs-setup">OpenEBS ZFS Setup<a class="headerlink" href="#openebs-zfs-setup" title="Permanent link">#</a></h2>
-<p>We'll also reuse the ZFS installation from our previous demo, including
+<p>We'll reuse the ZFS installation from our previous demo as well, including
 the toplevel dataset we populated with a toolchain build to clone our
 DevContainers from.</p>
 <p><a href="../ConanK8sDevContainerDemo/#openebs-zfs-setup">Click here for more information</a></p>
@@ -1032,7 +1032,7 @@ configuration option which probably affects its behavior more dramatically
 than all other options.  On the workflow side, choosing to
 <a href="https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container">run in a container</a>
 or not will affect the behavior of this solution the most.  We'll compare
-different configurations of primarily those two options in this demo.</p>
+different configurations of these two primary options in this demo.</p>
 <h3 id="containermode-kubernetes-with-containerized-workflows"><code>containerMode: kubernetes</code> with containerized workflows<a class="headerlink" href="#containermode-kubernetes-with-containerized-workflows" title="Permanent link">#</a></h3>
 <p>First we'll look at <code>containerMode: kubernetes</code> with containerized workflows.
 This mode has the distinct advantage over all other modes of waiting until
@@ -1062,9 +1062,9 @@ step towards minimizing response time in starting jobs.</p>
 <li>At job start time, the <code>k8s/index.js</code> wrapper creates the workflow pod
    and starts the <code>$job</code> container.</li>
 <li>As the <code>$job</code> container is started, our PVC volume specification causes
-   OpenEBS to snapshot and clone our ZFS Conan cache DataSet, and it'll
-   be volumeMounted as it was with our devContainers.</li>
-<li><code>Runner.Worker</code> hands off the workflow job steps to the
+   OpenEBS to snapshot and clone our ZFS Conan cache DataSet. It'll be
+   volumeMount'd just as we did with our devContainer.</li>
+<li><code>Runner.Worker</code> hands off each workflow job step to the
    <code>k8s/index.js</code> wrapper for execution in the <code>$job</code> container.</li>
 <li>Upon job completion, the ZFS cache PVC, <code>$job</code> container, and the
    runner and workflow jobs are all destroyed and resources freed up.</li>
@@ -1075,7 +1075,7 @@ operate is critical to setting it up correctly and troubleshooting any
 issues with your workflows in the future.</p>
 <h4 id="issues-with-containermode-kubernetes">Issues with <code>containerMode: kubernetes</code><a class="headerlink" href="#issues-with-containermode-kubernetes" title="Permanent link">#</a></h4>
 <p>This solution satisfies our functional requirements nicely, but still has
-some couple rough spots and limitations we'll need to work around.</p>
+some rough spots and limitations we'll need to work around.</p>
 <ul>
 <li>
 <p><code>k8s/index.js</code> doesn't show its work</p>
@@ -1084,10 +1084,13 @@ a containerized workflow, <code>k8s/index.js</code> doesn't log much information
 unless an error is encountered. This is especially evident in the
 container orchestration done to prepare a job for running prior to
 starting it.</p>
-<p>For troubleshooting workflow issues at runtime, the GitHub Actions logs
-do not give us much information to work with.  To illustrate, check out
-the log output from the same containerized workflow using both shell and
-kubernetes runners in these screenshots:</p>
+<p>For troubleshooting workflow issues at runtime, the GitHub Actions
+logs do not give us much information to work with.  This probably
+benefits our security posture by not exposing as many details about
+our infrastructure, but it also limits our diagnostic capability.</p>
+<p>To illustrate this issue, check out the screenshots below with the log
+output from running the same containerized workflow using shell and
+kubernetes runners (particularly the "Initialize containers" step):</p>
 <div class="admonition note annotate">
 <p class="admonition-title">Example: Shell Runner "Initialize containers" workflow step</p>
 <p><a class="glightbox" href="../img/GitHubARCShellInitContainers.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Example: Shell Runner &quot;Initialize containers&quot; workflow step" src="../img/GitHubARCShellInitContainers.png" /></a></p>
@@ -1099,38 +1102,25 @@ kubernetes runners in these screenshots:</p>
 </li>
 <li>
 <p><code>k8s/index.js</code> is slow!</p>
-<p>From the screenshots above we can see a significant difference in the
-time taken by <code>k8s/index.js</code> vs orchestrating docker.  Without more
-logging and timing data it's difficult to understand where this
-additional time is spent, but we'll look into that in a follow-on
-article in this series.</p>
+<p>From those same screenshots above we can see a significant difference
+in the time taken by <code>k8s/index.js</code> vs orchestrating docker.  Without
+more logging and timing data it's difficult to understand where this
+additional time is spent, but we'll look into that in the future.</p>
 </li>
 <li>
-<p>The <code>k8s/index.js</code> hook extension is limited to Workflow Pod definition
-  only</p>
+<p>The <code>k8s/index.js</code> hook extension is limited to the Workflow Pod
+  definition only</p>
 <p>The hook extention template is only able to modify or extend the
 Workflow Pod template; it is not capable of orchestrating resources
-outside of the Workflow Pod.  While this is already a plus over the
-other configurations discussed below, it is still an inconvenient
-limitation for our use case with OpenEBS ZFS.</p>
+outside of provisioning the Workflow Pod.  While this is already a
+plus over the other configurations discussed below, it is still an
+inconvenient limitation for our use case.</p>
 <p>Since we cannot create a PersistentVolume within a Pod defintion,
 we can only leverage the automatic snapshot PV provisioning OpenEBS
 provides when creating a clone PVC.  This results in sub-optimal
 names for each of our snapshots, not directly associated with our
 clones.  If we were able to provision our snapshot PVs directly, we
 would be able to give them better names to match our clone PVCs.</p>
-<p>This is mostly a moot point anyhow since both the clone PVC and
-snapshot PV are cleaned up with the Workflow and Runner Pods on job
-completion.  See the discussion <a href="#limitations-and-open-issues">below</a>
-for more details.</p>
-<p>In order to work around this limitation we would have to dig deeper
-and extend the k8s hook to make additional kubernetes api calls as we
-require.  The
-<a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/prepare-job.ts">prepare-job</a>
-and
-<a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/src/hooks/cleanup-job.ts">cleanup-job</a>
-parts of the hook would be where to implement the additional
-functionality.</p>
 </li>
 </ul>
 <div class="admonition warning annotate">
@@ -1142,27 +1132,27 @@ The limitations listed there did not restrict any functionality of our
 demo, but YMMV (Your Mileage May Vary) with your own workflows.</p>
 </div>
 <h3 id="containermode-dind-with-containerized-workflows"><code>containerMode: dind</code> with containerized workflows<a class="headerlink" href="#containermode-dind-with-containerized-workflows" title="Permanent link">#</a></h3>
+<p><code>containerMode: dind</code> behaves similarly to <code>containerMode: kubernetes</code>
+overall, but using a dind sidecar container to orchestrate the workflow
+<code>$job</code> container using Docker rather than calling the Kubernetes API.</p>
 <div class="admonition note annotate">
 <p class="admonition-title"><code>containerMode: dind</code></p>
 <p><a class="glightbox" href="../img/GitHubARCRunnerDinDContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerDinDContainerized.png" /></a></p>
 </div>
-<p><code>containerMode: dind</code> behaves similarly to <code>containerMode: kubernetes</code>
-overall, but using a dind sidecar container to orchestrate the workflow
-$job container rather than calling the Kubernetes API.</p>
 <h4 id="issues-with-containermode-dind">Issues with <code>containerMode: dind</code><a class="headerlink" href="#issues-with-containermode-dind" title="Permanent link">#</a></h4>
 <ul>
 <li>
 <p>Docker-in-Docker offers no Kubernetes/OpenEBS integration</p>
 <p>Without a means to work with the Kubernetes API, we cannot leverage
 OpenEBS to provision snapshot PVs or clone PVCs when starting the
-$job container for the workflow.</p>
+<code>$job</code> container for the workflow.</p>
 <p>We do have access to the Runner container spec, so we can provision
 a snapshot/clone at Runner start time.  Making this clone PVC available
-to the workflow $job container is awkward at best, however.</p>
+to the workflow <code>$job</code> container is awkward at best, however.</p>
 </li>
 <li>
 <p>Docker-in-Docker security options are more limited.</p>
-<p>When using Docker-in-Docker, the workflow $job container is running
+<p>When using Docker-in-Docker, the workflow <code>$job</code> container is running
 in the same pod as the Runner container.  This means they share the
 same network and IPC namespace, potentially exposing your Runner
 infrastructure to security vulnerabilities introduced by the workflow
@@ -1170,10 +1160,11 @@ and it's specified container image.</p>
 </li>
 </ul>
 <h3 id="non-containerized-workflows">Non-Containerized Workflows<a class="headerlink" href="#non-containerized-workflows" title="Permanent link">#</a></h3>
-<p>Non-containerized workflows work very similarly in either <code>containerMode</code>.
-No workflow $job container is created, and the workflows run directly in
-the Runner container.  In effect they are very similar to using the Runner
-container as a dynamically scaled shell runner.</p>
+<p>Non-containerized workflows generally work very similarly with either
+<code>containerMode</code>.  No workflow <code>$job</code> container will be created, and
+workflows will run directly in the Runner container.  In effect they are
+very similar to using the Runner container as a dynamically scaled shell
+runner.</p>
 <div class="admonition note annotate">
 <p class="admonition-title"><code>Non-Containerized Workflows</code></p>
 <p><a class="glightbox" href="../img/GitHubARCRunnerNonContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC Non-Containerized Workflow box diagram" src="../img/GitHubARCRunnerNonContainerized.png" /></a></p>
@@ -1202,10 +1193,11 @@ will not queue jobs to your runner until it has been updated."</p>
 </li>
 <li>
 <p>OpenEBS ZFS snapshot and clone are provisioned at Runner start time</p>
-<p>Similar to <code>containerMode: dind</code> we can mount our OpenEBS ZFS Conan
-cache PVC to the Runner container, but this is done at Runner start
-time, not job start time.  The snapshot will be as old as each Runner
-has been idle prior to recieving a job to run.</p>
+<p>Similar to <code>containerMode: dind</code> with containerized workflows we are
+able to mount our OpenEBS ZFS Conan cache PVC to the Runner container,
+but this is done at Runner start time, not job start time.  The
+snapshot will be as old as the Runner has been idle prior to recieving
+a job to run.</p>
 <p>For a highly utilized RunnerScaleSet, this is probably not a big deal.
 If you have RunnerScaleSets assigned to quieter branches however, you
 may want to minimize the number of standby Runners to ensure the Conan
@@ -1232,7 +1224,7 @@ our RunnerScaleSets, or even restart the runners.</p>
 <h3 id="runnerscaleset-helm-chart-valuesyaml">RunnerScaleSet Helm Chart values.yaml<a class="headerlink" href="#runnerscaleset-helm-chart-valuesyaml" title="Permanent link">#</a></h3>
 <p>First, we configure our RunnerScaleSet to run in <code>kubernetes</code> containerMode
 and to look for our <code>github-arc-container-hooks</code> Hook Extension.  Click on
-the embedded annotations for more information.</p>
+the embedded annotations in the snippet below for more information.</p>
 <div class="admonition note annotate">
 <p class="admonition-title">GitHub ARC kubernetes containerMode configured for Hook Extension Template</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">containerMode</span><span class="p">:</span>
@@ -1301,12 +1293,11 @@ the embedded annotations for more information.</p>
 <h3 id="attach-conan_home-persistentvolumeclaim-using-hook-extension">Attach <code>$CONAN_HOME</code> PersistentVolumeClaim using Hook Extension<a class="headerlink" href="#attach-conan_home-persistentvolumeclaim-using-hook-extension" title="Permanent link">#</a></h3>
 <p>Next, we'll define our <code>$CONAN_HOME</code> PersistentVolumeClaim in a ConfigMap
 within the same namespace as the RunnerScaleSet.</p>
-<p>Modifying this ConfigMap is the mechanism we would use to replace the
-<code>zfs promote</code> operation in our workflow.  We can simply swap out the PVC
-parent clone <code>dataSource</code> the runner pod will snapshot from at job startup
-time.  Managing the various OpenEBS ZFS datasets, snapshots, and clones
-is beyond the scope of this demo however.  We'll stick to the mechanics
-of leveraging an existing dataset.</p>
+<p>This is done using the <code>ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</code> hook
+extension functionality of the <code>k8s/index.js</code> hook.  See:
+<a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions"><em>GitHub ARC Documentation</em> - Configuring hook extensions</a>
+for more details.  This hook "extension" is specifcally intended to
+provide for customization of the <code>$job</code> workflow container Pod.</p>
 <p>Reference: <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically">Mounted ConfigMaps are updated automatically</a></p>
 <div class="admonition note annotate">
 <p class="admonition-title">GitHub ARC Hook Extension ConfigMap</p>
@@ -1403,7 +1394,7 @@ failure.</p>
 <p>If we wish to retain the build or any cache modifications made during the
 worfklow, we'll need to add additional workflow steps to save them outside
 of the Runner prior to job completion.</p>
-<p>With this mechanism failed builds cannot be saved through the cache clone
+<p>With this mechanism, failed builds cannot be saved through the cache clone
 directly.</p>
 <h3 id="the-pvc-is-provisioned-against-a-static-clone">The PVC is provisioned against a static clone<a class="headerlink" href="#the-pvc-is-provisioned-against-a-static-clone" title="Permanent link">#</a></h3>
 <p>Since we specify the clone parent in the Hook Extension ConfigMap, this
@@ -1415,6 +1406,10 @@ cache.  In order to accommodate distinct parent clones, independent
 RunnerScaleSets will need to be deployed.</p>
 <p>This is good for efficiency and performance, but requires coordination to
 update the original parent clone.</p>
+<p>Modifying the hook extension ConfigMap is a mechanism we could use to
+replace the <code>zfs promote</code> operation in our workflow.  We can simply swap
+out the PVC parent clone <code>dataSource</code> the runner pod will snapshot from at
+job startup time.</p>
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
 <p>GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
 flexible system providing strong integration from the infrastructure to
@@ -1422,7 +1417,7 @@ the workflow.</p>
 <p>There are a couple drawbacks however:</p>
 <ul>
 <li>
-<p>While it's fairly simple to maintain, it is complicated to set up.  </p>
+<p>While it's fairly simple to maintain, it is complicated to set up.</p>
 </li>
 <li>
 <p>While our CI snapshots and clones are neatly provisioned and cleaned up,
@@ -1430,13 +1425,15 @@ the workflow.</p>
   complicated ZFS operations.  This requires additional management
   automation working behind the scenes.</p>
 </li>
-<li>
-<p>Performance is clearly an issue, but there are many areas of opportunity
-  for performance improvement.  We'll explore those in our next article in
-  this series.</p>
-</li>
 </ul>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
+<p>By this point our solution is pretty complete!  We've shown the direct
+build performance improvement delivered by our ZFS Conan Cache.  We've
+also shown how to provide this benefit to Developers with Kubernetes-hosted
+devContainers, and we've tied it into CI with GitHub ARC as well.</p>
+<p>For next steps we need to start looking at bringing this solution to
+production.  We need to dig in on end-to-end performance and security.
+We'll also start attacking ease-of-use for both adminstrators and users.</p>
 <h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">#</a></h3>
 <p>While this solution demonstrates our ability to leverage ZFS for maximum
 Conan build performance/avoidance, there are still a few steps we can take
@@ -1444,9 +1441,10 @@ to optimize GitHub ARC and Runner performance, especially in job startup
 time.</p>
 <h3 id="security-concerns">Security Concerns<a class="headerlink" href="#security-concerns" title="Permanent link">#</a></h3>
 <p>There are many security implications and configuration options with this
-solution along with the performance concerns.  We'll need to explore and
-refine our security posture end-to-end before putting this solution into
-production use.</p>
+solution along with the performance concerns.  While GitHub ARC ships with
+reasonable defaults for many environments, we'll need to explore and
+refine the configuration for our own environment and needs prior to
+promoting this solution for production use.</p>
 <h3 id="cache-promotion">Cache Promotion<a class="headerlink" href="#cache-promotion" title="Permanent link">#</a></h3>
 <p>When we build updated components in our cloned cache, we're not able to
 promote the updated clone to parent for future builds to leverage.</p>
@@ -1465,13 +1463,11 @@ Runner Pods laying around using up our cluster resources, even if they are
 idle.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md">https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md</a></li>
-<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md">https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md</a></li>
-<li><a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md">https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md</a></li>
-<li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode">https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode</a></li>
-<li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions">https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions</a></li>
-<li><a href="https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/">https://upcloud.com/resources/tutorials/supercharge-your-ci-cd-deploy-lightning-fast-github-actions-runners-on-upclouds-managed-kubernetes-part-2/</a></li>
-<li><a href="https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml">https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml</a></li>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md"><em>GitHub ARC Documentation</em> - About ARC</a></li>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md"><em>GitHub ARC Documentation</em> - Autoscaling Runner Scale Sets mode</a></li>
+<li><a href="https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md"><em>GitHub ARC Documentation</em> - K8s Hooks</a></li>
+<li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-kubernetes-mode"><em>GitHub ARC Documentation</em> - Using Kubernetes mode</a></li>
+<li><a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions"><em>GitHub ARC Documentation</em> - Configuring hook extensions</a></li>
 </ul>
 
 
