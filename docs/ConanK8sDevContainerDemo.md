@@ -33,7 +33,7 @@ deployed in the same manner.
 
     ![Conan and ZFS in Remote DevContainers box diagram](img/ConanK8sDevContainerDemo%20Diagram.png)
 
-    *Thanks to [Excalidraw](https://excalidraw.com/) for their nifty diagramming tool.*
+    *Check out [Excalidraw](https://excalidraw.com/) and their nifty diagramming tool!*
 
 ### Inspiration
 
@@ -68,8 +68,10 @@ presenting here.
 - [GitHub Codespaces](https://docs.github.com/en/codespaces)
 - [Gitpod vs. Codespaces vs. Coder vs. DevPod: 2024 Comparison](https://www.loft.sh/blog/comparing-coder-vs-codespaces-vs-gitpod-vs-devpod)
 
-None of these other tools directly address the use case we're showing here;
-leveraging our copy-on-write filesystem to rapidly clone a large
+### Scope
+
+None of those other tools directly address the use case we're showing here
+though; leveraging our copy-on-write filesystem to rapidly clone a large
 build cache.  So that part is what we'll focus on in this demo.
 
 We'll set up and detail the configuration for the plumbing required to
@@ -87,8 +89,8 @@ well.
 
 We'll be using the same lan and hardware setup as our previous demos.
 
-- Server - 8945HS/64GB/SSD
-- Workstation - 9900X/32GB/SSD
+- Server - AMD 8945HS/64GB/SSD
+- Workstation - AMD 9900X/32GB/SSD
 - Notebook - Macbook Pro M4 Pro
 - Network - Ubiquiti UniFi 2.5Gb/s Switch
 
@@ -150,7 +152,7 @@ For more information,
 Now that OpenEBS is installed with Local PV ZFS, we'll create our PV and
 snapshot StorageClass definitions.  We'll need to give the PV StorageClass
 the name of our toplevel ZFS pool/dataset, and it's a good idea to specify
-our worker node in here as well as these are Local PVs.
+our worker node in here as well since these are Local PVs.
 
 Reference: [OpenEBS Local PV ZFS - Create StorageClass(s)](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass)
 
@@ -187,9 +189,9 @@ deletionPolicy: Retain
 
 ### Kubernetes Namespace
 
-When creating ZFS PV/PVCs, they all need to exist in the same namespace
-and all need to request the same size storage resource, or things will
-mysteriously not work at all.
+When creating ZFS snapshot and clone PVCs, they all need to exist in the
+same namespace and all need to request the same size storage resource, or
+things will mysteriously not work at all.
 
 For this demo we'll create a `devcontainer` namespace
 [like vxlabs](https://vxlabs.com/2021/11/21/using-kubernetes-for-development-containers/#create-and-set-namespace).
@@ -389,6 +391,20 @@ of friction to getting their job done.
 Not only does this solution avoid having our code exposed on a stolen
 or compromised endpoint, developers won't want to wait for it to download!
 
+### Native platform development
+
+When your development environments run in a similar or the same
+environment as production, your endpoint platform is less of a concern.
+In this demo the Kubernetes worker node is running Ubuntu x86_64, while
+the developer notebook is an Apple Silicon ARM-based Macbook.  With
+Docker Desktop and DevContainers it is pretty straightforward to run
+our x86_64 DevContainers, but we pay a severe performance penalty with
+all commands being wrapped by QEMU emulation.
+
+Allowing developers to work on their preferred productivity platform
+while eliminating any potential compatibility issues is a huge win for
+developer happiness.
+
 ### Remote development with optimal text input latency and response time
 
 Remote desktop display and VDI options have always been a sub-optimal
@@ -435,7 +451,7 @@ DevContainers with a compatible security model.
 ## Conclusion
 
 Modern technologies like Kubernetes and DevContainers bring a lot to the
-table for bringing the full power of scalable high-performance
+table for delivering the full power of scalable high-performance
 infrastructure right to the developer's desktop environment without
 having to sacrifice on developer experience.
 
@@ -443,9 +459,10 @@ In this demo we showed how to leverage our ZFS snapshot and clone
 functionality for Conan build optimization in the developer's sandbox.
 
 Many engineering organizations are already using NetApp storage and
-Kubernetes.  With some creativity and a few config files and integration
+Kubernetes.  With some creativity, a few config files, and integration
 scripts we can extract far more value out of the infrastructure we
-already have, making our developers significantly happier in the process.
+already have.  Improving developer happiness significantly in the
+process.
 
 ## What's Next
 

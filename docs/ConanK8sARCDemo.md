@@ -88,7 +88,7 @@ configuration option which probably affects its behavior more dramatically
 than all other options.  On the workflow side, choosing to
 [run in a container](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container)
 or not will affect the behavior of this solution the most.  We'll compare
-different configurations of primarily those two options in this demo.
+different configurations of these two primary options in this demo.
 
 ### `containerMode: kubernetes` with containerized workflows
 
@@ -200,7 +200,7 @@ some rough spots and limitations we'll need to work around.
 
 `containerMode: dind` behaves similarly to `containerMode: kubernetes`
 overall, but using a dind sidecar container to orchestrate the workflow
-$job container rather than calling the Kubernetes API.
+`$job` container using Docker rather than calling the Kubernetes API.
 
 !!! note annotate "`containerMode: dind`"
 
@@ -212,15 +212,15 @@ $job container rather than calling the Kubernetes API.
 
     Without a means to work with the Kubernetes API, we cannot leverage
     OpenEBS to provision snapshot PVs or clone PVCs when starting the
-    $job container for the workflow.
+    `$job` container for the workflow.
 
     We do have access to the Runner container spec, so we can provision
     a snapshot/clone at Runner start time.  Making this clone PVC available
-    to the workflow $job container is awkward at best, however.
+    to the workflow `$job` container is awkward at best, however.
 
 - Docker-in-Docker security options are more limited.
 
-    When using Docker-in-Docker, the workflow $job container is running
+    When using Docker-in-Docker, the workflow `$job` container is running
     in the same pod as the Runner container.  This means they share the
     same network and IPC namespace, potentially exposing your Runner
     infrastructure to security vulnerabilities introduced by the workflow
@@ -228,10 +228,11 @@ $job container rather than calling the Kubernetes API.
 
 ### Non-Containerized Workflows
 
-Non-containerized workflows work very similarly in either `containerMode`.
-No workflow $job container is created, and the workflows run directly in
-the Runner container.  In effect they are very similar to using the Runner
-container as a dynamically scaled shell runner.
+Non-containerized workflows generally work very similarly with either
+`containerMode`.  No workflow `$job` container will be created, and
+workflows will run directly in the Runner container.  In effect they are
+very similar to using the Runner container as a dynamically scaled shell
+runner.
 
 !!! note annotate "`Non-Containerized Workflows`"
 
@@ -299,7 +300,7 @@ our RunnerScaleSets, or even restart the runners.
 
 First, we configure our RunnerScaleSet to run in `kubernetes` containerMode
 and to look for our `github-arc-container-hooks` Hook Extension.  Click on
-the embedded annotations for more information.
+the embedded annotations in the snippet below for more information.
 
 !!! note annotate "GitHub ARC kubernetes containerMode configured for Hook Extension Template"
 
@@ -364,12 +365,11 @@ the embedded annotations for more information.
 Next, we'll define our `$CONAN_HOME` PersistentVolumeClaim in a ConfigMap
 within the same namespace as the RunnerScaleSet.
 
-Modifying this ConfigMap is the mechanism we would use to replace the
-`zfs promote` operation in our workflow.  We can simply swap out the PVC
-parent clone `dataSource` the runner pod will snapshot from at job startup
-time.  Managing the various OpenEBS ZFS datasets, snapshots, and clones
-is beyond the scope of this demo however.  We'll stick to the mechanics
-of leveraging an existing dataset.
+This is done using the `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` hook
+extension functionality of the `k8s/index.js` hook.  See:
+[*GitHub ARC Documentation* - Configuring hook extensions](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions)
+for more details.  This hook "extension" is specifcally intended to
+provide for customization of the `$job` workflow container Pod.
 
 Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically)
 
@@ -486,6 +486,11 @@ RunnerScaleSets will need to be deployed.
 
 This is good for efficiency and performance, but requires coordination to
 update the original parent clone.
+
+Modifying the hook extension ConfigMap is a mechanism we could use to
+replace the `zfs promote` operation in our workflow.  We can simply swap
+out the PVC parent clone `dataSource` the runner pod will snapshot from at
+job startup time.
 
 ## Conclusions
 
