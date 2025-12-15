@@ -514,9 +514,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#runnerscaleset-helm-chart-valuesyaml" class="md-nav__link">
+  <a href="#runnerscaleset-helm-chart" class="md-nav__link">
     <span class="md-ellipsis">
-      RunnerScaleSet Helm Chart values.yaml
+      RunnerScaleSet Helm Chart
     </span>
   </a>
   
@@ -579,15 +579,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conclusions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#whats-next" class="md-nav__link">
     <span class="md-ellipsis">
       What's Next
@@ -635,6 +626,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
   
 </li>
       
@@ -806,9 +806,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#runnerscaleset-helm-chart-valuesyaml" class="md-nav__link">
+  <a href="#runnerscaleset-helm-chart" class="md-nav__link">
     <span class="md-ellipsis">
-      RunnerScaleSet Helm Chart values.yaml
+      RunnerScaleSet Helm Chart
     </span>
   </a>
   
@@ -871,15 +871,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conclusions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#whats-next" class="md-nav__link">
     <span class="md-ellipsis">
       What's Next
@@ -927,6 +918,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
   
 </li>
       
@@ -1020,8 +1020,8 @@ understanding of ARC and GitHub Runners in general.  Some topics are
 documented in far more detail than others, but the community appears to
 be responsive to Issues and questions posted to their GitHub projects to
 fill in the gaps.  I've included links in the <a href="#references">References</a>
-section for the most directly applicable documentation I found in setting
-up this demo.</p>
+section below for the most directly applicable documentation I found in
+setting up this demo.</p>
 <p>In order to work with our ZFS Conan cache using GitHub ARC Runners, we
 first need to look at how GitHub Actions Runners behave when using GitHub
 ARC.  Out of the box, GitHub ARC's
@@ -1045,7 +1045,7 @@ warm standby Runner processes ready to take on new jobs.</p>
 </div>
 <p>Optimizing performance is beyond the scope of this demo, but keeping
 Runners on stand-by, ready to launch new jobs seems like a reasonable
-step towards minimizing response time in starting jobs.</p>
+step towards minimizing job startup time.</p>
 <h4 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h4>
 <p>There's a lot going on here, but in a nutshell:</p>
 <ol>
@@ -1102,20 +1102,20 @@ kubernetes runners (particularly the "Initialize containers" step):</p>
 </li>
 <li>
 <p><code>k8s/index.js</code> is slow!</p>
-<p>From those same screenshots above we can see a significant difference
-in the time taken by <code>k8s/index.js</code> vs orchestrating docker.  Without
-more logging and timing data it's difficult to understand where this
-additional time is spent, but we'll look into that in the future.</p>
+<p>From those same screenshots above we can also see a significant
+difference in the time taken by <code>k8s/index.js</code> vs. orchestrating docker.
+Without more logging and timing data it's difficult to understand where
+this additional time is spent, but we'll look into that in the future.</p>
 </li>
 <li>
 <p>The <code>k8s/index.js</code> hook extension is limited to the Workflow Pod
   definition only</p>
-<p>The hook extention template is only able to modify or extend the
+<p>The hook extension template is only able to modify or extend the
 Workflow Pod template; it is not capable of orchestrating resources
 outside of provisioning the Workflow Pod.  While this is already a
 plus over the other configurations discussed below, it is still an
 inconvenient limitation for our use case.</p>
-<p>Since we cannot create a PersistentVolume within a Pod defintion,
+<p>Since we cannot create a PersistentVolume within a Pod definition,
 we can only leverage the automatic snapshot PV provisioning OpenEBS
 provides when creating a clone PVC.  This results in sub-optimal
 names for each of our snapshots, not directly associated with our
@@ -1133,7 +1133,7 @@ demo, but YMMV (Your Mileage May Vary) with your own workflows.</p>
 </div>
 <h3 id="containermode-dind-with-containerized-workflows"><code>containerMode: dind</code> with containerized workflows<a class="headerlink" href="#containermode-dind-with-containerized-workflows" title="Permanent link">#</a></h3>
 <p><code>containerMode: dind</code> behaves similarly to <code>containerMode: kubernetes</code>
-overall, but using a dind sidecar container to orchestrate the workflow
+overall, but using a DinD sidecar container to orchestrate the workflow
 <code>$job</code> container using Docker rather than calling the Kubernetes API.</p>
 <div class="admonition note annotate">
 <p class="admonition-title"><code>containerMode: dind</code></p>
@@ -1193,10 +1193,10 @@ will not queue jobs to your runner until it has been updated."</p>
 </li>
 <li>
 <p>OpenEBS ZFS snapshot and clone are provisioned at Runner start time</p>
-<p>Similar to <code>containerMode: dind</code> with containerized workflows we are
+<p>Similar to <code>containerMode: dind</code> with containerized workflows, we are
 able to mount our OpenEBS ZFS Conan cache PVC to the Runner container,
 but this is done at Runner start time, not job start time.  The
-snapshot will be as old as the Runner has been idle prior to recieving
+snapshot will be as old as the Runner has been idle prior to receiving
 a job to run.</p>
 <p>For a highly utilized RunnerScaleSet, this is probably not a big deal.
 If you have RunnerScaleSets assigned to quieter branches however, you
@@ -1207,8 +1207,8 @@ cache clone is up-to-date.  This will delay job startup however.</p>
 <p>Security is minimal</p>
 <p>Your workflows are running with the same privilege and access as your
 Runner processes.  While Kubernetes generally provides a higher level
-of security in general to shell runners, this is still not
-recommended.</p>
+of security in general when compared to shell runners, this is still
+not recommended.</p>
 </li>
 </ul>
 <p><strong><em>For best results with our ZFS Conan cache it is recommended to fully
@@ -1221,12 +1221,12 @@ current with the latest component builds available.</p>
 <p>A second significant benefit to this approach is the ability to extend
 the workflow pod configuration without having to redeploy or "upgrade"
 our RunnerScaleSets, or even restart the runners.</p>
-<h3 id="runnerscaleset-helm-chart-valuesyaml">RunnerScaleSet Helm Chart values.yaml<a class="headerlink" href="#runnerscaleset-helm-chart-valuesyaml" title="Permanent link">#</a></h3>
+<h3 id="runnerscaleset-helm-chart">RunnerScaleSet Helm Chart<a class="headerlink" href="#runnerscaleset-helm-chart" title="Permanent link">#</a></h3>
 <p>First, we configure our RunnerScaleSet to run in <code>kubernetes</code> containerMode
-and to look for our <code>github-arc-container-hooks</code> Hook Extension.  Click on
+and to look for our <code>github-arc-container-hooks</code> hook extension.  Click on
 the embedded annotations in the snippet below for more information.</p>
 <div class="admonition note annotate">
-<p class="admonition-title">GitHub ARC kubernetes containerMode configured for Hook Extension Template</p>
+<p class="admonition-title">GitHub ARC kubernetes containerMode configured for hook extension Template</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">containerMode</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -1288,7 +1288,7 @@ the embedded annotations in the snippet below for more information.</p>
 <p>Set up the volume attached to our hook extension ConfigMap</p>
 </li>
 </ol>
-<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml">full source in GitHub</a></em></p>
+<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml">original source in GitHub</a></em></p>
 </div>
 <h3 id="attach-conan_home-persistentvolumeclaim-using-hook-extension">Attach <code>$CONAN_HOME</code> PersistentVolumeClaim using Hook Extension<a class="headerlink" href="#attach-conan_home-persistentvolumeclaim-using-hook-extension" title="Permanent link">#</a></h3>
 <p>Next, we'll define our <code>$CONAN_HOME</code> PersistentVolumeClaim in a ConfigMap
@@ -1296,7 +1296,7 @@ within the same namespace as the RunnerScaleSet.</p>
 <p>This is done using the <code>ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</code> hook
 extension functionality of the <code>k8s/index.js</code> hook.  See:
 <a href="https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions"><em>GitHub ARC Documentation</em> - Configuring hook extensions</a>
-for more details.  This hook "extension" is specifcally intended to
+for more details.  This hook "extension" is specifically intended to
 provide for customization of the <code>$job</code> workflow container Pod.</p>
 <p>Reference: <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically">Mounted ConfigMaps are updated automatically</a></p>
 <div class="admonition note annotate">
@@ -1362,14 +1362,15 @@ provide for customization of the <code>$job</code> workflow container Pod.</p>
 <p>Make sure this matches the storage requested by the parent PVC!</p>
 </li>
 </ol>
-<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml">full source in GitHub</a></em></p>
+<p><em><a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml">original source in GitHub</a></em></p>
 </div>
 <h2 id="github-actions-workflow">GitHub Actions Workflow<a class="headerlink" href="#github-actions-workflow" title="Permanent link">#</a></h2>
 <p>For this demo I've implemented a simple GitHub Actions Workflow
 <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/ConanZFSDemo-ARC.yml">ConanZFSDemo-ARC.yml</a>.</p>
 <p>Since all of the ZFS work is done by the Runner on job setup, we only need
-to configure the <code>conan-toolchain.yml</code> workflow to locate our Conan Cache
-PVC in <code>/CONAN_HOME</code>.</p>
+to configure the
+<a href="https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml"><code>conan-toolchain.yml</code></a>
+workflow to locate our Conan Cache PVC in <code>/CONAN_HOME</code>.</p>
 <div class="language-yaml highlight"><span class="filename">Configuring the conan-toolchain workflow to use our /CONAN_HOME PersistentVolumeClaim</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">jobs</span><span class="p">:</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">conan_toolchain</span><span class="p">:</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main</span>
@@ -1392,9 +1393,9 @@ failure.</p>
 <li><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core">https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core</a></li>
 </ul>
 <p>If we wish to retain the build or any cache modifications made during the
-worfklow, we'll need to add additional workflow steps to save them outside
+workflow, we'll need to add additional workflow steps to save them outside
 of the Runner prior to job completion.</p>
-<p>With this mechanism, failed builds cannot be saved through the cache clone
+<p>Using this mechanism, failed builds cannot be saved through the cache clone
 directly.</p>
 <h3 id="the-pvc-is-provisioned-against-a-static-clone">The PVC is provisioned against a static clone<a class="headerlink" href="#the-pvc-is-provisioned-against-a-static-clone" title="Permanent link">#</a></h3>
 <p>Since we specify the clone parent in the Hook Extension ConfigMap, this
@@ -1403,29 +1404,13 @@ using <code>zfs promote</code>.</p>
 <p>If our RunnerScaleSet is deployed to the Organization rather than a single
 repo, then all workflows accessing the RunnerScaleSet will share the same
 cache.  In order to accommodate distinct parent clones, independent
-RunnerScaleSets will need to be deployed.</p>
+RunnerScaleSets would be required.</p>
 <p>This is good for efficiency and performance, but requires coordination to
 update the original parent clone.</p>
 <p>Modifying the hook extension ConfigMap is a mechanism we could use to
 replace the <code>zfs promote</code> operation in our workflow.  We can simply swap
 out the PVC parent clone <code>dataSource</code> the runner pod will snapshot from at
 job startup time.</p>
-<h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
-<p>GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
-flexible system providing strong integration from the infrastructure to
-the workflow.</p>
-<p>There are a couple drawbacks however:</p>
-<ul>
-<li>
-<p>While it's fairly simple to maintain, it is complicated to set up.</p>
-</li>
-<li>
-<p>While our CI snapshots and clones are neatly provisioned and cleaned up,
-  we don't get the benefit of <code>zfs promote</code>, <code>zfs rename</code>, or other more
-  complicated ZFS operations.  This requires additional management
-  automation working behind the scenes.</p>
-</li>
-</ul>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
 <p>By this point our solution is pretty complete!  We've shown the direct
 build performance improvement delivered by our ZFS Conan Cache.  We've
@@ -1461,6 +1446,22 @@ completion.  We'll want to work out a mechanism that allows those Pods to
 persist after job completion, but also be careful not to leave too many
 Runner Pods laying around using up our cluster resources, even if they are
 idle.</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">#</a></h2>
+<p>GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
+flexible system providing a strong integration between the infrastructure
+and the workflow.</p>
+<p>There are a couple drawbacks however:</p>
+<ul>
+<li>
+<p>While it's fairly simple to maintain, it is complicated to set up.</p>
+</li>
+<li>
+<p>While our CI snapshots and clones are neatly provisioned and cleaned up,
+  we don't get the benefit of <code>zfs promote</code>, <code>zfs rename</code>, or other more
+  complicated ZFS operations.  This requires additional management
+  automation working behind the scenes.</p>
+</li>
+</ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
 <li><a href="https://github.com/actions/actions-runner-controller/blob/master/docs/about-arc.md"><em>GitHub ARC Documentation</em> - About ARC</a></li>
