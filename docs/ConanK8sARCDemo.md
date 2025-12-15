@@ -75,8 +75,8 @@ understanding of ARC and GitHub Runners in general.  Some topics are
 documented in far more detail than others, but the community appears to
 be responsive to Issues and questions posted to their GitHub projects to
 fill in the gaps.  I've included links in the [References](#references)
-section for the most directly applicable documentation I found in setting
-up this demo.
+section below for the most directly applicable documentation I found in
+setting up this demo.
 
 In order to work with our ZFS Conan cache using GitHub ARC Runners, we
 first need to look at how GitHub Actions Runners behave when using GitHub
@@ -104,7 +104,7 @@ warm standby Runner processes ready to take on new jobs.
 
 Optimizing performance is beyond the scope of this demo, but keeping
 Runners on stand-by, ready to launch new jobs seems like a reasonable
-step towards minimizing response time in starting jobs.
+step towards minimizing job startup time.
 
 #### How it works
 
@@ -167,21 +167,21 @@ some rough spots and limitations we'll need to work around.
 
 - `k8s/index.js` is slow!
 
-    From those same screenshots above we can see a significant difference
-    in the time taken by `k8s/index.js` vs orchestrating docker.  Without
-    more logging and timing data it's difficult to understand where this
-    additional time is spent, but we'll look into that in the future.
+    From those same screenshots above we can also see a significant
+    difference in the time taken by `k8s/index.js` vs. orchestrating docker.
+    Without more logging and timing data it's difficult to understand where
+    this additional time is spent, but we'll look into that in the future.
 
 - The `k8s/index.js` hook extension is limited to the Workflow Pod
   definition only
 
-    The hook extention template is only able to modify or extend the
+    The hook extension template is only able to modify or extend the
     Workflow Pod template; it is not capable of orchestrating resources
     outside of provisioning the Workflow Pod.  While this is already a
     plus over the other configurations discussed below, it is still an
     inconvenient limitation for our use case.
 
-    Since we cannot create a PersistentVolume within a Pod defintion,
+    Since we cannot create a PersistentVolume within a Pod definition,
     we can only leverage the automatic snapshot PV provisioning OpenEBS
     provides when creating a clone PVC.  This results in sub-optimal
     names for each of our snapshots, not directly associated with our
@@ -199,7 +199,7 @@ some rough spots and limitations we'll need to work around.
 ### `containerMode: dind` with containerized workflows
 
 `containerMode: dind` behaves similarly to `containerMode: kubernetes`
-overall, but using a dind sidecar container to orchestrate the workflow
+overall, but using a DinD sidecar container to orchestrate the workflow
 `$job` container using Docker rather than calling the Kubernetes API.
 
 !!! note annotate "`containerMode: dind`"
@@ -264,10 +264,10 @@ of reasons.
 
 - OpenEBS ZFS snapshot and clone are provisioned at Runner start time
 
-    Similar to `containerMode: dind` with containerized workflows we are
+    Similar to `containerMode: dind` with containerized workflows, we are
     able to mount our OpenEBS ZFS Conan cache PVC to the Runner container,
     but this is done at Runner start time, not job start time.  The
-    snapshot will be as old as the Runner has been idle prior to recieving
+    snapshot will be as old as the Runner has been idle prior to receiving
     a job to run.
 
     For a highly utilized RunnerScaleSet, this is probably not a big deal.
@@ -279,8 +279,8 @@ of reasons.
 
     Your workflows are running with the same privilege and access as your
     Runner processes.  While Kubernetes generally provides a higher level
-    of security in general to shell runners, this is still not
-    recommended.
+    of security in general when compared to shell runners, this is still
+    not recommended.
 
 ***For best results with our ZFS Conan cache it is recommended to fully
 disable support for non-containerized workflows.***
@@ -296,13 +296,13 @@ A second significant benefit to this approach is the ability to extend
 the workflow pod configuration without having to redeploy or "upgrade"
 our RunnerScaleSets, or even restart the runners.
 
-### RunnerScaleSet Helm Chart values.yaml
+### RunnerScaleSet Helm Chart
 
 First, we configure our RunnerScaleSet to run in `kubernetes` containerMode
-and to look for our `github-arc-container-hooks` Hook Extension.  Click on
+and to look for our `github-arc-container-hooks` hook extension.  Click on
 the embedded annotations in the snippet below for more information.
 
-!!! note annotate "GitHub ARC kubernetes containerMode configured for Hook Extension Template"
+!!! note annotate "GitHub ARC kubernetes containerMode configured for hook extension Template"
 
     ```yaml
     containerMode:
@@ -358,7 +358,7 @@ the embedded annotations in the snippet below for more information.
 
     1. Set up the volume attached to our hook extension ConfigMap
 
-    *[full source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml)*
+    *[original source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/clusters/values.yaml)*
 
 ### Attach `$CONAN_HOME` PersistentVolumeClaim using Hook Extension
 
@@ -368,7 +368,7 @@ within the same namespace as the RunnerScaleSet.
 This is done using the `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` hook
 extension functionality of the `k8s/index.js` hook.  See:
 [*GitHub ARC Documentation* - Configuring hook extensions](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#configuring-hook-extensions)
-for more details.  This hook "extension" is specifcally intended to
+for more details.  This hook "extension" is specifically intended to
 provide for customization of the `$job` workflow container Pod.
 
 Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#mounted-configmaps-are-updated-automatically)
@@ -431,7 +431,7 @@ Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/
 
     1. Make sure this matches the storage requested by the parent PVC!
 
-    *[full source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml)*
+    *[original source in GitHub](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/demos/ZFS-clone/GitHub-ARC/hookExtensionConfigMap.yaml)*
 
 ## GitHub Actions Workflow
 
@@ -439,8 +439,9 @@ For this demo I've implemented a simple GitHub Actions Workflow
 [ConanZFSDemo-ARC.yml](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/blob/main/.github/workflows/ConanZFSDemo-ARC.yml).
 
 Since all of the ZFS work is done by the Runner on job setup, we only need
-to configure the `conan-toolchain.yml` workflow to locate our Conan Cache
-PVC in `/CONAN_HOME`.
+to configure the
+[`conan-toolchain.yml`](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml)
+workflow to locate our Conan Cache PVC in `/CONAN_HOME`.
 
 ```yaml title="Configuring the conan-toolchain workflow to use our /CONAN_HOME PersistentVolumeClaim"
 jobs:
@@ -467,10 +468,10 @@ failure.
 - https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#ephemeralvolumesource-v1-core
 
 If we wish to retain the build or any cache modifications made during the
-worfklow, we'll need to add additional workflow steps to save them outside
+workflow, we'll need to add additional workflow steps to save them outside
 of the Runner prior to job completion.
 
-With this mechanism, failed builds cannot be saved through the cache clone
+Using this mechanism, failed builds cannot be saved through the cache clone
 directly.
 
 ### The PVC is provisioned against a static clone
@@ -482,7 +483,7 @@ using `zfs promote`.
 If our RunnerScaleSet is deployed to the Organization rather than a single
 repo, then all workflows accessing the RunnerScaleSet will share the same
 cache.  In order to accommodate distinct parent clones, independent
-RunnerScaleSets will need to be deployed.
+RunnerScaleSets would be required.
 
 This is good for efficiency and performance, but requires coordination to
 update the original parent clone.
@@ -491,21 +492,6 @@ Modifying the hook extension ConfigMap is a mechanism we could use to
 replace the `zfs promote` operation in our workflow.  We can simply swap
 out the PVC parent clone `dataSource` the runner pod will snapshot from at
 job startup time.
-
-## Conclusions
-
-GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
-flexible system providing strong integration from the infrastructure to
-the workflow.
-
-There are a couple drawbacks however:
-
-- While it's fairly simple to maintain, it is complicated to set up.
-
-- While our CI snapshots and clones are neatly provisioned and cleaned up,
-  we don't get the benefit of `zfs promote`, `zfs rename`, or other more
-  complicated ZFS operations.  This requires additional management
-  automation working behind the scenes.
 
 ## What's Next
 
@@ -554,6 +540,21 @@ completion.  We'll want to work out a mechanism that allows those Pods to
 persist after job completion, but also be careful not to leave too many
 Runner Pods laying around using up our cluster resources, even if they are
 idle.
+
+## Conclusion
+
+GitHub ARC with OpenEBS for our ZFS Conan Cache is a highly scalable and
+flexible system providing a strong integration between the infrastructure
+and the workflow.
+
+There are a couple drawbacks however:
+
+- While it's fairly simple to maintain, it is complicated to set up.
+
+- While our CI snapshots and clones are neatly provisioned and cleaned up,
+  we don't get the benefit of `zfs promote`, `zfs rename`, or other more
+  complicated ZFS operations.  This requires additional management
+  automation working behind the scenes.
 
 ## References
 
