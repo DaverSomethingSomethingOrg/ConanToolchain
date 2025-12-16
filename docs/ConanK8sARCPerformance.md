@@ -8,7 +8,7 @@
 Continuing our work with [GitHub ARC with ZFS and Conan](ConanK8sARCDemo.md).
 
 This time we'll explore optimizing the Performance and Security of our GitHub
-ARC deployment, not that our product build is optimized.
+ARC deployment, now that our product build is optimized.
 
 !!! quote annotate ""
 
@@ -38,8 +38,12 @@ any hardware optimization.
 - Docker - [ConanToolchain Docker Container Image](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md)
 - [Sonatype Nexus Community Edition](https://www.sonatype.com/products/nexus-community-edition-download)
 
-
 ## Security
+
+Security is pretty well configured out of the box, but we'll review
+common recommendations to make sure our solution still conforms, and
+to take advantage of any features we've missed or mis0configured along
+the way.
 
 - Controller and RunnerScaleSet in different namespaces
 - Running as non-privileged user
@@ -63,17 +67,37 @@ any hardware optimization.
 
 ## Performance
 
+- Areas to look at
+  - time to start new Runner
+  - time for job to arrive at Runner
+  - time to initialize workflow/$job container
+    - caching Actions themselves
+    - caching Actions externals/dependencies
+  - time to start running job
+  - time to cleanup after job
+
+- Instrumenting GitHub ARC kubernetes hook
+  - custom Runner container image
+
 - Runner container image caching for startup
+
 - Workflow job container optimization
   - actions caching
-  - node externals
+
 - kubectl in workflow pod initContainer?
+
+## Performance and Security combined
+
+- Container/Kubernetes means not needing to chown the cache files for developer end use.
+- Importance of user-agnostic behavior
+  - build is done "on behalf of" user, not executed directly by user account
+  - generic, non-privileged userids own everything, run everything
 
 ## Limitations and Open Issues
 
-## Conclusions
-
 ## What's Next
+
+## Conclusions
 
 ## References
 

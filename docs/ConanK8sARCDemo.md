@@ -71,12 +71,10 @@ DevContainers from.
 GitHub Actions Runner Controller is *complicated*, and documentation is
 fairly sparse.  It ships with reasonable defaults that make ARC easy to
 get deployed and working, but customizing its behavior requires a strong
-understanding of ARC and GitHub Runners in general.  Some topics are
-documented in far more detail than others, but the community appears to
-be responsive to Issues and questions posted to their GitHub projects to
-fill in the gaps.  I've included links in the [References](#references)
-section below for the most directly applicable documentation I found in
-setting up this demo.
+understanding of ARC and GitHub Runners in general.
+
+I've included links in the [References](#references) section below for the
+most directly applicable documentation I found in setting up this demo.
 
 In order to work with our ZFS Conan cache using GitHub ARC Runners, we
 first need to look at how GitHub Actions Runners behave when using GitHub
@@ -84,15 +82,15 @@ ARC.  Out of the box, GitHub ARC's
 [RunnerScaleSet](https://github.com/actions/actions-runner-controller/blob/master/docs/gha-runner-scale-set-controller/README.md)
 includes a
 [`containerMode`](https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/deploy-runner-scale-sets#using-docker-in-docker-or-kubernetes-mode-for-containers)
-configuration option which probably affects its behavior more dramatically
-than all other options.  On the workflow side, choosing to
+configuration option which probably affects the Runner's behavior more
+than all other options.  On the workflow side, choosing whether to
 [run in a container](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/run-jobs-in-a-container)
-or not will affect the behavior of this solution the most.  We'll compare
-different configurations of these two primary options in this demo.
+or not will affect the behavior of this solution the most.
+
+We'll compare different configurations of these two primary variables here.
 
 ### `containerMode: kubernetes` with containerized workflows
 
-First we'll look at `containerMode: kubernetes` with containerized workflows.
 This mode has the distinct advantage over all other modes of waiting until
 the workflow job starts in order to snapshot and clone our ZFS Conan cache.
 This ensures that the cache is as up-to-date as it can be, while keeping
