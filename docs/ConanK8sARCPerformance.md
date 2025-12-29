@@ -38,6 +38,103 @@ any hardware optimization.
 - Docker - [ConanToolchain Docker Container Image](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md)
 - [Sonatype Nexus Community Edition](https://www.sonatype.com/products/nexus-community-edition-download)
 
+## Enabling Debugging
+
+### GitHub ARC built-in debugging
+
+We'll start by enabling the maximum logging GitHub Actions can provide.
+We'll add two new variable definitions to the repo for GitHub Actions to use.
+
+- https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging
+
+| Variable | Value |
+| -------- | ----- |
+| `ACTIONS_RUNNER_DEBUG` | "true" (string) |
+| `ACTIONS_STEP_DEBUG` | "true" (string) |
+
+![GitHub Repo Actions Variables](img/github_repo_variables.png)
+
+## Performance
+
+### Areas to look at
+
+  - time to start new Runner
+  - time for job to arrive at Runner
+  - time to initialize workflow/$job container
+    - caching Actions themselves
+    - caching Actions externals/dependencies
+  - time to start running job
+  - time to cleanup after job
+
+### Breaking it down
+
+While GitHub doesn't provide granular timing data in its logs, we can see
+precise timestamps for each log entry by pressing `Shift + T` while on the
+job log screen.
+
+![alt text](img/github_initialize_containers.png)
+
+Breaking this down, we can see where the majority of the time is going:
+
+```text
+Tue, 23 Dec 2025 17:13:51 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-dmdc5-runner-zdjp2-workflow
+Tue, 23 Dec 2025 17:14:06 GMT ##[debug]Job pod is ready for traffic
+```
+
+For this particular job, 15s of the total 17s of the "Initialize
+containers" step is spent waiting for the created Pod to start running.
+
+### Instrumenting GitHub ARC kubernetes hook
+
+- custom Runner container image
+
+### Profiling End-to-End workflow/job runtime
+
+containerd logs
+kubectl pod logs/events
+observability setup
+
+### Runner caching for startup
+
+- container image caching
+- seeding GitHub Runner externals
+  - cp -R /home/runner/externals /home/runner/_work/externals
+  - claims that copying externals can be slow, that's not the case here...virtually instantaneous
+    - probably related to using "local" storage for everything on a fast NVMe SSD
+
+- waiting time seems to be entirely getting the pod from created/pending to running
+- seeding GitHub Runner actions downloading
+
+- backoff timing means we're sleeping longer than necessary
+  - start with a more reasonable default wait time to avoid wasting the first backoff rounds
+
+- k8s-novolume?
+  - is mounting the runner's work volume in the workflow container the problem?
+  - k8s-novolume seems to have issues right now, not working.
+    - faster in general tho...
+
+### Workflow job container optimization
+
+- actions caching
+  - /__w/_actions/action/name/version ~ /__w/_actions/action/actions/checkout/v4
+    - no .git subdir, just clean tag checkout
+
+  - confirmed that actions/checkout@v4 works fine mounted from ZFS cache, BUT...
+
+  - Runner downloads actions prior to running hook and creating workflow container?
+    - if so we need to mount the actions cache to the runner as well as the workflow pod and make sure the actions are not downloaded anyway.
+    - it can't slow down initializing the workflow container if the download is happening before the hook starts?
+  - still good idea for reliability (reduce external dependency at job runtime), general job starting, and supply chain security
+
+### kubectl in workflow pod initContainer?
+
+### Specifying resource requests vs. limits
+
+Does limiting resources start faster?
+
+- Guaranteed Scheduling
+- Custom scheduling?
+
 ## Security
 
 Security is pretty well configured out of the box, but we'll review
@@ -65,33 +162,18 @@ the way.
 - dind-rootless
 - Links to GitHub ARC documentation on security best practices
 
-## Performance
-
-- Areas to look at
-  - time to start new Runner
-  - time for job to arrive at Runner
-  - time to initialize workflow/$job container
-    - caching Actions themselves
-    - caching Actions externals/dependencies
-  - time to start running job
-  - time to cleanup after job
-
-- Instrumenting GitHub ARC kubernetes hook
-  - custom Runner container image
-
-- Runner container image caching for startup
-
-- Workflow job container optimization
-  - actions caching
-
-- kubectl in workflow pod initContainer?
-
 ## Performance and Security combined
 
 - Container/Kubernetes means not needing to chown the cache files for developer end use.
 - Importance of user-agnostic behavior
   - build is done "on behalf of" user, not executed directly by user account
   - generic, non-privileged userids own everything, run everything
+
+## Troubleshooting Broken Builds
+
+`ACTIONS_RUNNER_HOOK_JOB_COMPLETED` hook
+
+To keep a container running indefinitely for debugging purposes, one common method involves overriding its entrypoint command to something like sleep infinity or tail -f /dev/null during setup, then using docker exec to interact with it. This is a manual debugging step, not an automated workflow configuration.
 
 ## Limitations and Open Issues
 

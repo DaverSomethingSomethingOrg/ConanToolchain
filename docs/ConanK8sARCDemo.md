@@ -91,10 +91,10 @@ We'll compare different configurations of these two primary variables here.
 
 ### `containerMode: kubernetes` with containerized workflows
 
-This mode has the distinct advantage over all other modes of waiting until
-the workflow job starts in order to snapshot and clone our ZFS Conan cache.
-This ensures that the cache is as up-to-date as it can be, while keeping
-warm standby Runner processes ready to take on new jobs.
+This mode has the distinct advantage over all other modes in that it waits
+until the workflow job starts in order to snapshot and clone our ZFS Conan
+cache.  This ensures that the cache is as up-to-date as it can be, while
+keeping warm standby Runner processes ready to take on new jobs.
 
 !!! note annotate "`containerMode: kubernetes` with containerized workflows"
 
@@ -111,7 +111,7 @@ There's a lot going on here, but in a nutshell:
 1. We set the `ACTIONS_RUNNER_CONTAINER_HOOKS` in the Runner container
    environment.  This will point to a wrapper script that the Runner will
    use to run our workflow actions and script steps rather than running
-   then directly itself.  We'll use the hook package included in the
+   them directly itself.  We'll use the hook package included in the
    default Runner image:
    [`/home/runner/k8s/index.js`](https://github.com/actions/runner-container-hooks/blob/main/packages/k8s/README.md)
 1. `ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE` points the `k8s/index.js`
@@ -493,10 +493,11 @@ job startup time.
 
 ## What's Next
 
-By this point our solution is pretty complete!  We've shown the direct
-build performance improvement delivered by our ZFS Conan Cache.  We've
-also shown how to provide this benefit to Developers with Kubernetes-hosted
-devContainers, and we've tied it into CI with GitHub ARC as well.
+By this point the skeleton of our solution is pretty complete!  We've
+shown the direct build performance improvement delivered by our ZFS Conan
+Cache.  We've also shown how to provide this benefit to Developers with
+Kubernetes-hosted devContainers, and we've tied it into CI with GitHub
+ARC as well.
 
 For next steps we need to start looking at bringing this solution to
 production.  We need to dig in on end-to-end performance and security.
