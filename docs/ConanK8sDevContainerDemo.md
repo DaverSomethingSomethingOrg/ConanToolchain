@@ -110,12 +110,12 @@ We'll be using the same lan and hardware setup as our previous demos.
 
 Reference: [OpenEBS Installation](https://openebs.io/docs/quickstart-guide/installation)
 
-```bash
+```bash linenums="0"
 ❯ helm repo add openebs https://openebs.github.io/openebs
 ❯ helm repo update
 ```
 
-```bash hl_lines="4"
+```bash hl_lines="4" linenums="0"
 ❯ helm install openebs \
   --namespace openebs openebs/openebs \
   --set engines.replicated.mayastor.enabled=false \
@@ -156,7 +156,7 @@ our worker node in here as well since these are Local PVs.
 
 Reference: [OpenEBS Local PV ZFS - Create StorageClass(s)](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass)
 
-```yaml title="OpenEBS StorageClass definitions" hl_lines="11 17"
+```yaml title="OpenEBS StorageClass definitions" hl_lines="11 17" linenums="0"
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -205,7 +205,7 @@ raw ZFS operations in our previous demo.
 
 Reference: [OpenEBS Local PV ZFS - Create PersistentVolumeClaim](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-pvc)
 
-```yaml title="gcc12-toolchain-main_dataset.yaml"
+```yaml title="gcc12-toolchain-main_dataset.yaml" linenums="0"
 # Initial PVC for gcc12-toolchain main branch dataset
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -220,7 +220,7 @@ spec:
       storage: 200Gi
 ```
 
-```bash
+```bash linenums="0"
 ❯ kubectl apply -f gcc12-toolchain-main_dataset.yaml --namespace devcontainer
 persistentvolumeclaim/gcc12-toolchain-main created
 ❯ kubectl get pvc -n devcontainer
@@ -252,7 +252,7 @@ by default, we'll continue that here also for convenience.
 
 Reference: [OpenEBS Local PV ZFS - Clone](https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/advanced-operations/zfs-clone)
 
-```yaml title="devContainer-pod.yaml" hl_lines="39-40 48-50 62-63 68"
+```yaml title="devContainer-pod.yaml" hl_lines="39-40 48-50 62-63 68" linenums="0"
 apiVersion: v1
 kind: Pod
 metadata:
@@ -327,7 +327,7 @@ spec:
 
 ### Provisioning
 
-```bash
+```bash linenums="0"
 ❯ kubectl apply -f devContainer-pod.yaml --namespace devcontainer
 persistentvolumeclaim/gcc12-toolchain-main created
 ❯ kubectl get pvc --namespace devcontainer --type all
@@ -340,7 +340,7 @@ gcc12-toolchain-main-hephaestus-devcontainer   Bound    pvc-005c989b-75e4-485f-9
 We can verify the snapshot/clone linkage in ZFS.  The naming is chosen
 by OpenEBS internally.
 
-```bash
+```bash linenums="0"
 ❯ zfs list -t all |grep '\(pvc-4f9dd102\|pvc-005c989b\)'
 zpool-conancache/pvc-4f9dd102-cf04-44a2-845f-733d77138a6c                                           20.6G   161G  20.6G  legacy
 zpool-conancache/pvc-4f9dd102-cf04-44a2-845f-733d77138a6c@pvc-005c989b-75e4-485f-9a19-59877deaa3af     0B      -  20.6G  -

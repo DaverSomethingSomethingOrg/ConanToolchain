@@ -144,7 +144,7 @@ so we'll give it to ZFS and set up a pool to use it.  We don't care about
 tracking file access time in our Conan cache, so we want to make sure we turn
 that off to improve performance.
 
-```bash title="Creating the ZFS Pool"
+```bash title="Creating the ZFS Pool" linenums="0"
 zpool create zpool-conancache /dev/nvme0n1p7
 zfs set atime=off zpool-conancache
 ```
@@ -152,7 +152,7 @@ zfs set atime=off zpool-conancache
 In order to delegate management of this pool for this demo, we'll simply
 grant `sudo` access for our CI user `github-runner` to run `/usr/sbin/zfs`.
 
-```text title="/etc/sudoers entry"
+```text title="/etc/sudoers entry" linenums="0"
 github-runner    ALL=NOPASSWD: /usr/sbin/zfs
 ```
 
@@ -199,7 +199,7 @@ on the runner host to manipulate ZFS, and a Docker job to run the
 The first workflow job creates a new temporary snapshot and clone for our
 new build cache.
 
-```bash
+```bash linenums="0"
 zfs snapshot "${ZFS_BUILD_SNAPSHOT}"
 zfs clone "${ZFS_BUILD_SNAPSHOT}" "${ZFS_BUILD_CLONE}
 ```
@@ -220,7 +220,7 @@ Our clone naming represents the cache state throughout this build:
 
 Example: `zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687`
 
-```bash title="Example ZFS status with CI snapshots and clones provisioned"
+```bash title="Example ZFS status with CI snapshots and clones provisioned" linenums="0"
 $ zfs list -r -o name,used,avail,refer
 NAME                                                           USED  AVAIL  REFER
 zpool-conancache                                              7.97G   183G    24K
@@ -244,7 +244,7 @@ environment is pointed at it.
 For our CI workflow we reuse the [conan-toolchain.yml](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml)
 workflow, but in a shell script it looks something like this:
 
-```bash title="Containerized Build Startup"
+```bash title="Containerized Build Startup" linenums="0"
 DOCKER_IMAGE="nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"
 docker run -it --rm \
     --volume="/${BUILD_CLONE}:${CONTAINER_CONAN_HOME}" \
@@ -260,7 +260,7 @@ docker run -it --rm \
 retval=$?
 ```
 
-```bash title="Conan Build Script"
+```bash title="Conan Build Script" linenums="0"
 conan profile detect
 conan config install https://github.com/DaverSomethingSomethingOrg/conan-system-packaging.git
 
@@ -282,7 +282,7 @@ of renaming the old dataset clone in-place before renaming the new clone
 to the old name.  Only then can we destroy the original (now legacy) clone
 and snapshot.
 
-```bash
+```bash linenums="0"
 zfs promote "${ZFS_BUILD_CLONE}"
 zfs rename "${ZFS_BRANCH_DATASET}" "${ZFS_BRANCH_DATASET}-legacy"
 zfs rename "${ZFS_BUILD_CLONE}" "${ZFS_BRANCH_DATASET}"
@@ -300,7 +300,7 @@ as well.
 Future builds will snapshot/clone against the original branch dataset just
 as our current build did.
 
-```bash
+```bash linenums="0"
 zfs destroy "${ZFS_BUILD_CLONE}"
 zfs destroy "${ZFS_BUILD_SNAPSHOT}
 ```
@@ -312,7 +312,7 @@ state returns to its initial ready state for the branch.  No snapshots, and
 only a dataset representing a the latest good cache for the branch we're
 working on.
 
-```bash title="Example ZFS status with CI snapshots and clones provisioned"
+```bash title="Example ZFS status with CI snapshots and clones provisioned" linenums="0"
 $ zfs list -r -o name,used,avail,refer
 NAME                                                           USED  AVAIL  REFER
 zpool-conancache                       8.62G   182G    24K
@@ -356,7 +356,7 @@ the ZFS snapshot and clone for our 8.61GB dataset.
 Since it's is hard to get a precise timing on this operation in CI,
 here's the same operation from our interactive shell:
 
-```bash hl_lines="5-6"
+```bash hl_lines="5-6" linenums="0"
 ❯ time zfs snapshot zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687; \
   time zfs clone zpool-conancache/gcc12-toolchain/main@hephaestus-pre18171656687 \
                  zpool-conancache/gcc12-toolchain/main_hephaestus-18171656687

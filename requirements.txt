@@ -8,3 +8,4 @@ mkdocs-minify-plugin
 markdown-callouts
 mkdocstrings[python]
 mike
+click==8.1.3

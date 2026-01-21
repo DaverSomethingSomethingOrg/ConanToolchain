@@ -302,7 +302,7 @@ the embedded annotations in the snippet below for more information.
 
 !!! note annotate "GitHub ARC kubernetes containerMode configured for hook extension Template"
 
-    ```yaml
+    ```yaml linenums="0"
     containerMode:
       type: "kubernetes" # (1)!
 
@@ -373,7 +373,7 @@ Reference: [Mounted ConfigMaps are updated automatically](https://kubernetes.io/
 
 !!! note annotate "GitHub ARC Hook Extension ConfigMap"
 
-    ```yaml
+    ```yaml linenums="0"
     apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -441,7 +441,7 @@ to configure the
 [`conan-toolchain.yml`](https://github.com/DaverSomethingSomethingOrg/conan-github-workflows/blob/main/.github/workflows/conan-toolchain.yml)
 workflow to locate our Conan Cache PVC in `/CONAN_HOME`.
 
-```yaml title="Configuring the conan-toolchain workflow to use our /CONAN_HOME PersistentVolumeClaim"
+```yaml title="Configuring the conan-toolchain workflow to use our /CONAN_HOME PersistentVolumeClaim" linenums="0"
 jobs:
   conan_toolchain:
     uses: DaverSomethingSomethingOrg/conan-github-workflows/.github/workflows/conan-toolchain.yml@main
