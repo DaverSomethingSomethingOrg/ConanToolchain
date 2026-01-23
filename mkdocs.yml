@@ -86,4 +86,5 @@ nav:
   - 'ConanZFSDemo.md'
   - 'ConanK8sDevContainerDemo.md'
   - 'ConanK8sARCDemo.md'
+  - 'ConanK8sARCTroubleshooting.md'
   - Apache License v2.0: 'LICENSE.txt'
