@@ -19,6 +19,9 @@ OpenZFS in order to optimize our CI and Developer Sandbox build performance.
 This time we'll explore optimizing the Performance and Security of our GitHub
 ARC deployment, now that our product build is optimized.
 
+We'll also need to look at how it scales, and how it breaks.  How does cache
+corruption spread though our clone structure?
+
 ## Environment
 
 ### Hardware
@@ -155,9 +158,25 @@ To keep a container running indefinitely for debugging purposes, one common meth
 
 ## What's Next
 
-- Use NetApp instead of OpenZFS and OpenEBS?
-- Deploy solution for Bazel build cache
-- Supply Chain - Dependency Track
+### Deploy solution for Bazel build cache
+
+### Supply Chain - Dependency Track
+
+### Switch to NetApp instead of OpenZFS and OpenEBS?
+
+OpenZFS is great for prototyping and use on developer workstations, but
+practically speaking it seems more likely that development environments
+needing this level of build optimization probably have enterprise-grade
+storage options available.
+
+NetApp ONTAP with FlexClone is a more likely to be available in an
+enterprise software development environment than OpenZFS.  It's also a
+natural fit for this solution with it's patented snapshot and clone
+technologies.
+
+We should evaluate how well FlexClone fits into this solution.  Up until
+this point we have been focusing on leveraging "free"/open technologies.
+
 
 ## Conclusions
 

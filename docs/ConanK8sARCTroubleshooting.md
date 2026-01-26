@@ -1,4 +1,4 @@
-# Troubleshooting GitHub ARC Container Initialization slowness
+# Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
 
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
@@ -7,8 +7,11 @@
 
 Continuing our work with [GitHub ARC with ZFS and Conan](ConanK8sARCDemo.md).
 
-We've deployed GitHub Actions Runner Controller (ARC) along with OpenEBS and
-OpenZFS in order to optimize our CI and Developer Sandbox build performance.
+I've laid out here the step-by-step process I followed for troubleshooting an
+issue I'm seeing in our GitHub Actions Runner Controller (ARC) deployment
+along with OpenEBS and OpenZFS in order to optimize our CI and Developer
+Sandbox build performance.  I've left out some of the trial & error tedium,
+but not all of the misdirection and bad guesses as they were part of the fun.
 
 !!! note annotate "GitHub ARC with ZFS and Conan"
 
@@ -442,7 +445,7 @@ With the `FailedMount` warning there are a couple experiments to try.
 2. Diff our DevContainer Pod manifest against the manifest that GitHub ARC
     hook applies, there has to be something significant there.
 
-## Experiment 1: Remove test GitHub ARC without `conan-home` PVC
+## Experiment 1: Evaluate GitHub ARC performance without `conan-home` PVC
 
 Probably the easiest and fastest experiment to test is simply modifying
 the [GitHub ARC Hook Extension ConfigMap](https://daversomethingsomethingorg.github.io/ConanToolchain/latest/ConanK8sARCDemo/#attach-conan_home-persistentvolumeclaim-using-hook-extension)
@@ -747,8 +750,12 @@ allowedTopologies:
 
 ## Best Guess
 
-Mixing use of `allowedTopologies` and `nodeName` scheduling constraints is
-probably the source of the issue.
+We don't have anything conclusive yet, but we do have a solid lead to chase.
+
+My best guess at this point is that mixing use of `allowedTopologies` and
+`nodeName` in scheduling constraints is probably the source of the issue.
+Even when the node specified is the same one used by both OpenEBS and
+GitHub ARC.  Even when there's only one node in the cluster.
 
 Some searching turns up OpenEBS - Issue 3667.
 
@@ -791,102 +798,236 @@ hook.
        }
     ```
 
-### Eureka!
+Running a test job we see:
 
-![alt text](img/github_initialize_containers_fixed.png)
-
-```text linenums="0" hl_lines="13-14"
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Evaluating condition for step: 'Initialize containers'
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Evaluating: success()
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Evaluating success:
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]=> true
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Result: true
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Starting: Initialize containers
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]Register post job cleanup for stopping/deleting containers.
-Fri, 23 Jan 2026 17:25:12 GMT Run '/home/runner/k8s/index.js'
-Fri, 23 Jan 2026 17:25:12 GMT ##[debug]/home/runner/externals/node20/bin/node /home/runner/k8s/index.js
-Fri, 23 Jan 2026 17:25:14 GMT ##[debug]Using image 'nexus.homelab/conan-build-almalinux:x86_64-latest' for job image
-Fri, 23 Jan 2026 17:25:14 GMT ##[debug]Creating workflow pod using spec: 
-[...]
+```text linenums="0"
 Fri, 23 Jan 2026 17:25:14 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-d4n2f-workflow
 Fri, 23 Jan 2026 17:25:17 GMT ##[debug]Job pod is ready for traffic
-Fri, 23 Jan 2026 17:25:17 GMT ##[debug]{"message":"command terminated with non-zero exit code: error executing command [sh -c [ $(cat /etc/*release* | grep -i -e \"^ID=*alpine*\" -c) != 0 ] || exit 1], exit code 1","details":{"causes":[{"reason":"ExitCode","message":"1"}]}}
-Fri, 23 Jan 2026 17:25:17 GMT ##[debug]Setting isAlpine to false
-Fri, 23 Jan 2026 17:25:17 GMT ##[debug]Finishing: Initialize containers
 ```
 
-`Initialize containers` is only taking 5s now, with only 3s spent waiting
-on our Pod starting up.
+It worked!  Performance was restored to ~3s on workflow pod startup.
 
-With the change to remove `nodeName` from the workflow pod spec, the
-slowness is gone!  This news is a mixed blessing however.  Our solution
-is working as intended/expected, but we had to fork some 3rdParty code
-in the process.
+## Eureka!
 
-## Production Options
+It worked... but.  While we were so busy patching that code in the ARC k8s
+Hook, we time to think more about the code than our particular problem, and
+found something else! ...hiding directly in plain sight.
 
-For production use we have to decide how to proceed from here.  We have a
-few options to consider.
+That code we patched...
 
-### Continue using our modified runner container image
+```typescript linenums="98" hl_lines="5"
+const nodeName = await getCurrentNodeName()
+if (useKubeScheduler()) {
+  appPod.spec.affinity = await getPodAffinity(nodeName)
+} else {
+  appPod.spec.nodeName = nodeName
+}
+```
 
-Congratulations, we now own a fork of the
-[GitHub Actions Runner container image](https://github.com/actions/runner/tree/main).
-With every future release of GitHub's Actions Runner, we'll need to rebuild
-our customized fork within 30 days or Actions may stop working entirely!
+### What's a `useKubeScheduler()`?
 
-We forked an older version of the code however.  This is a permanent
-commitment!  We won't be able to merge our change to avoid having to
-maintain our fork, and we'll always have Runner upgrades hanging over
-head waiting to break our solution when we don't rebuild fast enough
-some day.
+Since we're seeing the warnings regarding the `default-scheduler` for our
+devContainer that we're not seeing with ARC, this option to potentially
+change ARC's scheduling behavior and not set `nodeName` seems like a great
+option to test.
 
-### Reconfigure OpenEBS to be compatible with GitHub ARC k8s Hook 0.7.0
+Using `appPod.spec.affinity` instead of `appPod.spec.nodeName` sounds more
+comaptible with our use of `allowedTopologies` in OpenEBS, but we'll have
+to see what `getPodAffinity(nodeName)` returns.
 
-Perhaps the most unlikely option.. can we reconfigure OpenEBS / ZFS Local
-PV to use `nodeName` instead of node affinity?  This seems unlikely because
-ZFS is intended to be used locally the way we're employing it.
+We can test it in parallel though if we can enable `useKubeScheduler()`.
 
-We have a couple practically aligned but technically conflicting constraints
-here.
+Well, here it is...
 
-- Our use of local ZFS means our PVCs have to be provisioned on the same
-    node the conan cache ZFS clone was populated.
-- The older GitHub ARC branch (v0.7.0) requires the workflow $job pod to
-    be provisioned on the same node as the runner (for sharing access to
-    local volumes for externals and work).
+!!! github-reference annotate "[actions/runner-container-hooks/packages/k8s/src/k8s/utils.ts](https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/k8s/utils.ts)"
 
-Can we switch to using `nodeName` with our OpenEBS storageclasses?
+    ```typescript linenums="277"
+    export function useKubeScheduler(): boolean {
+      return process.env[ENV_USE_KUBE_SCHEDULER] === 'true'
+    }
+    ```
 
-### Migrate to GitHub ARC k8s Hook v0.8.0+
+    ```typescript linenums="16"
+    export const ENV_USE_KUBE_SCHEDULER = 'ACTIONS_RUNNER_USE_KUBE_SCHEDULER'
+    }
+    ```
 
-The updated hook (v0.8.0+ aka k8s-novolume) works differently. but does
-not use `nodeName` in the Pod spec, intending to allow workflow
-containers to run on nodes other than the runner.
+Like so many other features of GitHub ARC, it turns out triggering this
+behavior is not very well documented, but some quick searching turned
+up the `ACTIONS_RUNNER_USE_KUBE_SCHEDULER` environment setting.
 
-A brief attempt to use `k8s-novolume` failed with our current setup, so
-upgrading will take some additional effort.
+I can't find much documentation on it beyond it's original pull request
+[**runner-container-hooks PR#111**](https://github.com/actions/runner-container-hooks/pull/111).
+The community seems to be aware of it enough to try and use it, though.
+Some of the reported issues around it were similar to our use case and
+educational in general.
 
-### Switch to NetApp instead of OpenZFS and OpenEBS?
+We'll add this environment variable to our RunnerScaleSet's `values.yaml`.
 
-OpenZFS is great for prototyping and use on developer workstations, but
-practically speaking it seems more likely that development environments
-needing this level of build optimization probably have enterprise-grade
-storage options available.
+```yaml linenums="0" hl_lines="5-6"
+template:
+  spec:
+    containers:
+    - name: runner
+      env:
+        - name: ACTIONS_RUNNER_USE_KUBE_SCHEDULER
+          value: "true"
+```
 
-NetApp ONTAP with FlexClone is a more likely to be available in an
-enterprise software development environment than OpenZFS.  It's also a
-natural fit for this solution with it's patented snapshot and clone
-technologies.
+??? example annotate "Expand for full RunnerScaleSet template spec"
 
-We should evaluate how well FlexClone fits into this solution.  Up until
-this point we have been focusing on leveraging "free"/open technologies.
+    ```yaml linenums="0" hl_lines="11-12"
+    template:
+      spec:
+        containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:latest
+          imagePullPolicy: Always
+          command: ["/home/runner/run.sh"]
+          env:
+            - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+              value: /home/runner/k8s/index.js
+            - name: ACTIONS_RUNNER_USE_KUBE_SCHEDULER
+              value: "true"
+            - name: ACTIONS_RUNNER_IMAGE
+              value: ghcr.io/actions/actions-runner:latest # should match the runnerimage
+            - name: ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE
+              value: /home/runner/pod-template/content
+            - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+              value: "true"
+            - name: ACTIONS_RUNNER_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: container-hooks-volume
+              mountPath: /home/runner/pod-template
+        volumes:
+        - name: work
+          ephemeral:
+            volumeClaimTemplate:
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                storageClassName: "local-path"
+                resources:
+                  requests:
+                    storage: 1Gi
+        - name: container-hooks-volume
+          configMap:
+            name: github-arc-container-hooks
+    ```
+
+Running another test job we see:
+
+```text linenums="0"
+Sat, 24 Jan 2026 19:32:21 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-nx2ns-runner-5ln6x-workflow
+Sat, 24 Jan 2026 19:32:24 GMT ##[debug]Job pod is ready for traffic
+```
+
+Looks good!  Same ~3s performance on workflow pod startup.
+
+Reading the mainfest on the newly running workflow pod we can see what
+`getPodAffinity(nodeName)` contributed to the spec:
+
+```yaml linenums="0"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - hephaestus.homelab
+```
+
+Which looks compatible with the OpenEBS constraint we showed earlier:
+
+```yaml linenums="0"
+allowedTopologies:
+- matchLabelExpressions:
+  - key: kubernetes.io/hostname
+    values:
+      - hephaestus.homelab
+```
+
+Both are using `kubernetes.io/hostname: hephaestus.homelab` and with the
+same scheduler.
+
+## Are We There Yet?
+
+Running on the default runner image with a clean working values.yaml
+for our RunnerScaleSet, and a clean hook extension connecting our
+`conan-home` ZFS clone.  Awesome.
+
+One more thing...
+
+While troubleshooting this issue we found that the default `k8s` hook is
+old (v0.7.0).  It's not clear why the newer hook release (v0.8.0) has a
+new name (`k8s-novolume`) and does not(?) appear to be the recommended
+version at this point.
+
+Let try "just one more" experiment to get the `k8s-novolume` hook working
+as well to make sure our solution is ready for future runner changes.
+
+## Experiment 4: GitHub ARC `containerMode: k8s-novolume`
+
+For this test we only had to modify our `RunnerScaleSet` `values.yaml`.
+
+```diff linenums="0"
+  containerMode:
+-   type: "kubernetes"
++   type: "kubernetes-novolume"
+
+  [...]
+
+  template:
+    spec:
+      containers:
+      - name: runner
+        env:
+          - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+-           value: /home/runner/k8s/index.js
++           value: /home/runner/k8s-novolume/index.js
+```
+
+It appears that v0.8.0 of the k8s hook has removed all of the node affinity
+requirements and implementation.  Rather than relying on volumes local to
+the runner, the updated k8s hook will copy files around the cluster as
+necessary.
+
+![GitHub ARC k8s-novolume Initialize containers](img/GitHubARCK8sNoVolumeInitContainers.png)
+
+The unfortunate downside of this is that it slows down our workflow
+container initialization significantly.  We've traded the node affinity
+issue for a data transfer issue.
+
+```text
+Mon, 26 Jan 2026 16:57:34 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-dtm9h-runner-jqjvt-workflow
+Mon, 26 Jan 2026 16:57:49 GMT ##[debug]Job pod is ready for traffic
+```
+
+It's only 15s in this case, but some basic debugging has shown this delay
+appears to be in the `initContainers` runtime rather than another Kubernetes
+scheduling issue.
+
+We can table this until a future point when we're ready to look at
+optimization of the `externals` and other data transfers that the runner
+applies to the workflow job container.
+
+While we are well-equipped to continue tackling performance issues like
+this, we need to move on.  The default version we're using (v0.7.0) is
+working very well and is apparently stable given that it's no longer
+maintained.
 
 ## What's Next
 
 We need to continue testing and optimizing this solution before we can go
 to production with it.  Functionality is proven to be working and correct,
-and the major performance issues are now isolated and understood.  
+and the major performance issue is now resolved.  There's still many
+things we need to look at however.
 
 For our next steps, we'll continue looking at performance optimization and
 security hardening.  We'll also need to circle back on saving broken builds
