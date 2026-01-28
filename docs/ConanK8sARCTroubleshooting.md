@@ -5,13 +5,7 @@
 
 ## Introduction
 
-Continuing our work with [GitHub ARC with ZFS and Conan](ConanK8sARCDemo.md).
-
-I've laid out here the step-by-step process I followed for troubleshooting an
-issue I'm seeing in our GitHub Actions Runner Controller (ARC) deployment
-along with OpenEBS and OpenZFS in order to optimize our CI and Developer
-Sandbox build performance.  I've left out some of the trial & error tedium,
-but not all of the misdirection and bad guesses as they were part of the fun.
+Continuing our work with [GitHub ARC with ZFS and Conan](ConanK8sARCDemo.md)...
 
 !!! note annotate "GitHub ARC with ZFS and Conan"
 
@@ -21,22 +15,30 @@ but not all of the misdirection and bad guesses as they were part of the fun.
 
 When we left off, we were seeing that our GitHub ARC workflows were taking a
 significant amount of time to start when using `containerMode: kubernetes` as
-opposed to `containerMode: dind`.  We'll start with troubleshooting that issue
-here.
+opposed to `containerMode: dind`.
 
 !!! note annotate "Example: ARC K8s Runner "Initialize containers" workflow step"
 
     ![Example: ARC K8s Runner "Initialize containers" workflow step](img/GitHubARCK8sInitContainers.png)
 
-This step normally takes no more than 1-3seconds, but is taking 30+ seconds
-in our environment.  In this small-scale example, that delay even takes
-more time than our ZFS caching solution saves us compared to downloading
-our build dependencies from artifact management.
+This step normally takes no more than 1-3seconds, but is consistently taking
+30+ seconds in our current setup.  In our small-scale example, that delay
+is even longer than the time our ZFS caching solution saves us! *(When
+compared to downloading our dependencies from artifact management.)*
 
-Since we did not experience anything odd or unexpected related to performance
-in our [devContainer](ConanK8sDevContainerDemo.md) demo, this new
-development is concerning.  This issue is crtical to resolve for the success
-of this project!
+We did not experience anything odd or unexpected related to performance in
+our [devContainer](ConanK8sDevContainerDemo.md) demo, so this new development
+is concerning.  This issue is crtical to resolve for the success of this
+project!
+
+Since I've already been documenting each step of setting up this solution,
+this was a prime opportuinity to document the process of troubleshooting
+a performance issue.  Hopefully gaining some more insight into how the
+infrastructure is working in the process as well as I try to explain it here.
+
+I've left out much of the drudgery and trial & error involved, but tried to
+share some of the more interesting misdirections and bad guesses.  They're
+just part of the fun.
 
 ### Environment
 
@@ -76,9 +78,10 @@ We'll add two new variable definitions to the repo for GitHub Actions to use.
 
 ## Breaking it down
 
-While GitHub doesn't provide granular timing data in its log files, we can
-see precise timestamps for each log entry by pressing `Shift + T` while on
-the job log screen.
+While GitHub doesn't provide granular timing data in its log files, it can
+show us precise timestamps for each log entry in the web UI by pressing
+`Shift + T` while on the job log screen.  Combined with enabling debug
+logging this gives us something to work with at least.
 
 ![alt text](img/github_initialize_containers.png)
 
@@ -91,6 +94,8 @@ Tue, 23 Dec 2025 17:14:06 GMT ##[debug]Job pod is ready for traffic
 
 For this particular job, 15s of the total 17s of the "Initialize
 containers" step is spent waiting for the created Pod to start running.
+Looking at the source code we can locate the debug messages to see
+what's going on in between the log messages.
 
 !!! github-reference annotate "[actions/runner-container-hooks/packages/k8s/src/hooks/prepare-job.ts](https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/hooks/prepare-job.ts#L90)"
 
@@ -116,10 +121,10 @@ containers" step is spent waiting for the created Pod to start running.
 
 ## `waitForPodPhases()`
 
-While `waitForPodPhases()` is not going to be the source of our slowness,
-it's not providing much insight into what's happening either.
+While `waitForPodPhases()` is probably not going to be the source of our
+slowness, it's not providing much insight into what's happening either.
 
-Let's take a look at what it does.
+Let's take a look at the source to see what it does.
 
 !!! github-reference annotate "[actions/runner-container-hooks/packages/k8s/src/k8s/index.ts](https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/k8s/index.ts#L371)"
 
@@ -181,24 +186,25 @@ Let's take a look at what it does.
     ```
 
 `waitForPodPhases()` uses a typical binary exponential backoff to poll
-kubernetes for our workflow container to Running or Pending state.  This
-is not ideal but it does have a max delay interval and a maxmium wait
-time, so we're not going to worry about it.
+kubernetes for our workflow container to **`Running`** or **`Pending`**
+state.  This is not ideal but it does have a max delay interval and a
+maxmium wait time set, so we're not going to worry about it.
 
 ### Conclusion
 
 `waitForPodPhases()` is not the source of our delay, but the exponential
-backoff may be making the problem appear worse than it is.  We are still
-15s slower than Docker doing the equivalent work.  For some reason
+backoff may be making the problem appear worse than it is.  For some reason
 Kubernetes is delaying our pod startup with ARC but not with our
-DevContainer.
+devContainer.
 
 We need to go look at the Kubernetes logs for our next clues.
 
 ## Kubernetes Pod startup troubleshooting
 
 Now that we're focused specifically on Kubernetes, we can directly compare
-our DevContainer pod startup to our GitHub ARC Workflow pod startup.
+our devContainer pod startup to our GitHub ARC Workflow pod startup.
+
+### Monitoring devContainer startup
 
 The first step we'll take is to start one of each of our workflow and
 devContainer pods, watching the timing on our devContainer to verify
@@ -206,12 +212,13 @@ that our startup delay doesn't occur.
 
 We'll use the following manifest to test our devContainer pod startup.
 We've changed it a bit since our devContainer demo to use the same
-volume syntax as our GitHub ARC hook extension.  Previously we created
-the `conan-home` PersistentVolumeClaim separately from the pod and then
-mounted it.  We'll switch to including the `conan-home` PVC as an ephemeral
-volume defined using a volumeClaimTemplate.  We're not expecting this to
-be the cause of our startup delay, but we do want to elimintate it as a
-variable before going further.
+volume syntax as our GitHub ARC hook extension.
+
+Previously we created the `conan-home` PersistentVolumeClaim separately
+from the pod and then mounted it.  We'll switch to including the
+`conan-home` PVC as an ephemeral volume defined using a `volumeClaimTemplate`.
+We're not expecting this to be the cause of our startup delay, but we
+do want to elimintate it as a variable before going further.
 
 ??? example annotate "DevContainer Pod manifest with `conan-home` PVC"
 
@@ -325,7 +332,7 @@ reaches "Running" status.
     time timingLoop
     ```
 
-```bash linenums="0"
+```bash linenums="0" hl_lines="8"
 ❯ ./timeStartup.sh devcontainer-pod-test.yaml
 pod/devcontainer-pod-test created
 [0s] Status: Pending.  Looping...
@@ -367,6 +374,10 @@ The pod status entries confirm the lack of delay as well:
 status:
   conditions:
   - lastProbeTime: null
+    lastTransitionTime: "2026-01-19T17:38:31Z"
+    status: "True"
+    type: PodScheduled
+  - lastProbeTime: null
     lastTransitionTime: "2026-01-19T17:38:32Z"
     status: "True"
     type: PodReadyToStartContainers
@@ -377,17 +388,15 @@ status:
   - lastProbeTime: null
     lastTransitionTime: "2026-01-19T17:38:33Z"
     status: "True"
-    type: Ready
+    type: ContainersReady
   - lastProbeTime: null
     lastTransitionTime: "2026-01-19T17:38:33Z"
     status: "True"
-    type: ContainersReady
-  - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T17:38:31Z"
-    status: "True"
-    type: PodScheduled
+    type: Ready
 [...]
 ```
+
+### Comparing to GitHub ARC workflow pod startup
 
 Checking the same logs for our GitHub ARC workflow pod we can clearly see
 a difference, but it's not quite clear why yet.
@@ -404,9 +413,7 @@ Events:
   Normal   Started      91s   kubelet  Started container job
 ```
 
-There is a noticeable jump from -91s to -106s after that `FailedMount` event.
-
-```bash linenums="0" title="DevContainer Pod Status Changes"
+```bash linenums="0" title="GitHub ARC Workflow Pod Status Changes"
 ❯ kubectl get pod linux-x86-64-st6ng-runner-pvzp6-workflow -n devcontainer -o yaml
 [...]
 status:
@@ -432,6 +439,15 @@ status:
     status: "True"
     type: Ready
 ```
+
+A few observations here:
+
+- There is a noticeable jump from -91s to -106s after that `FailedMount` event.
+- The devContainer pod shows a series of `FailedScheduling` warnings from
+    `default-scheduler`.  We see no events from `default-scheduler` for the
+    GitHub ARC pod at all.
+- The GitHub ARC pod shows a `FailedMount` message that the devContainer pod
+    does not.
 
 We have confirmed the issue is within the Kubernetes realm, and it appears
 to be happening after `Initialized` but before `PodReadyToStartContainers`.
@@ -459,7 +475,7 @@ make sure the PVC provisioning and mount are the only changes.
 This configuration should build cleanly, but will not benefit from
 the ZFS cloned Conan cache at all.
 
-!!! note annotate "GitHub ARC Hook Extension ConfigMap without `conan-home`"
+!!! note annotate "GitHub ARC Hook Extension ConfigMap without `conan-home` PVC"
 
     ```yaml linenums="0"
     apiVersion: v1
@@ -483,9 +499,10 @@ the ZFS cloned Conan cache at all.
     ```
 
 Once the ConfigMap change is applied, the GitHub ARC Runners will pick up
-the change *automatically* within whatever synchronization delay is in place.
-We can verify that our runners have picked up the change before running our
-test job.
+the change *automatically* once the cluster nodes have a chance to resync
+their state.  We can verify that our runners have picked up the change
+before running our test job by connecting to the runner container and
+checking the file we install our hook extension as.
 
 ```bash linenums="0"
 runner@linux-x86-64-st6ng-runner-5dskd:~$ cat pod-template/content
@@ -496,7 +513,6 @@ metadata:
   labels:
     labeled-by: "extension"
 spec:
-  #nodeName: hephaestus.homelab
   containers:
     - name: $job
       imagePullPolicy: IfNotPresent
@@ -506,7 +522,8 @@ spec:
 runner@linux-x86-64-st6ng-runner-5dskd:~$
 ```
 
-The delay is no longer present.
+When we run a test job with this updated hook extension, the delay is no
+longer present.
 
 #### BEFORE
 
@@ -522,25 +539,25 @@ Wed, 21 Jan 2026 17:08:58 GMT ##[debug]Job pod created, waiting for it to come o
 Wed, 21 Jan 2026 17:08:59 GMT ##[debug]Job pod is ready for traffic
 ```
 
-The delay appears to be a compatibility issue betweeen our GitHub ARC
-and OpenEBS ZFS configurations.  Examining the Pod mainfests further should
-expose the issue.
+The delay appears to be a conflict or compatibility issue betweeen our
+GitHub ARC configuration and our OpenEBS ZFS configuration.  Examining
+the Pod mainfests further should expose the issue.
 
 ## Experiment 2: DevContainer and ARC Pod Manifest differences
 
 In order to understand why this difference is occuring, we need to look at the
 YAML specs for the pods.  In addition to our hook extension, the `k8s` hook
-includes other environment settings and volume mounts to the workflow pod.
+adds other environment settings and volume mounts to the workflow pod.
 
-In order to examine the Pod mainfest applied by GitHub ARC, we'll need to add
-some additional debugging to the GitHub ARC Kubernetes Hook.  We'll dump the
-spec to the debug log.
+In order to examine the Pod mainfest applied by GitHub ARC, we'll add some
+additional debugging to the GitHub ARC Kubernetes Hook.  We'll start with
+dumping the workflow pod spec template to the debug log.
 
 !!! warning annotate "Deprecated?"
 
     The default GitHub ARC k8s hook in the default GitHub Actions Runner
-    container we're using is an older version, **0.7.0**.  We need to be
-    careful to make sure the changes we make are to that version!
+    container we're using is an older version, **v0.7.0**.  We need to be
+    careful to make sure the changes we make are to the correct version!
 
     Snippets from the Runner container image [Dockerfile](https://github.com/actions/runner/blob/main/images/Dockerfile#L7)
 
@@ -556,7 +573,7 @@ spec to the debug log.
 
 The change we'll make is simple, just send the pod spec to the debug log.
 
-```diff linenums="0"
+```diff linenums="0" title="Dumping the workflow pod spec to the debug log"
 root@1ab970f2f7fb:/workspaces/runner-container-hooks/packages/k8s/src# git diff -U3 k8s/index.ts
 diff --git a/packages/k8s/src/k8s/index.ts b/packages/k8s/src/k8s/index.ts
 index 021b383..cf8c794 100644
@@ -585,16 +602,16 @@ We'll build a custom container image for our runners to use our modified
 `k8s` hook.  It's as simple as replacing `/home/runner/k8s/index.js` with
 our custom build.
 
-```docker linenums="0"
+```docker linenums="0" title="Forked Runner Dockerfile with enhanced debugging"
 FROM ghcr.io/actions/actions-runner:latest
 
 COPY --chown=runner:docker index.js /home/runner/k8s/index.js
 ```
 
-With our updated runner container image we see the following in our
+With our updated runner container image we now see the following in our
 "Initialize containers" workflow step log:
 
-```text linenums="0"
+```text linenums="0" title="Initialize containers log with debugging patch applied"
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Using image 'nexus.homelab/conan-build-almalinux:x86_64-latest' for job image
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Creating workflow pod using spec:
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]containers:
@@ -645,12 +662,12 @@ Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          storageClassName: openebs-zfspv
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          volumeMode: Filesystem
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          dataSource:
 Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            name: gcc12-toolchain-main
-Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            kind: PersistentVolumeClaim Mon, 19 Jan 2026 19:10:47 GMT
-##[debug]          resources: Mon, 19 Jan 2026 19:10:47 GMT
-##[debug]            requests: Mon, 19 Jan 2026 19:10:47 GMT
-##[debug]              storage: 200Gi Mon, 19 Jan 2026 19:10:47 GMT
-##[debug] Mon, 19 Jan 2026 19:10:47 GMT
-##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-mh2j6-workflow
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            kind: PersistentVolumeClaim
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          resources:
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            requests:
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]              storage: 200Gi
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]
+Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-mh2j6-workflow
 ```
 
 Next we'll take that spec, remove the `##[debug]` line prefixes, and diff it
@@ -658,8 +675,7 @@ against our devContainer spec using `yq`/`jq`.
 
 - https://stackoverflow.com/questions/31930041/using-jq-or-alternative-command-line-tools-to-compare-json-files
 
-After editing out the initContainer differences we are reduced to the
-following differences:
+After ignoring the initContainer differences we are reduced to the following diff:
 
 ??? example annotate "diff -U1 devcontainer-pod-test_spec.yaml linux-x86-64-st6ng-runner-mh2j6-workflow_spec.yaml"
 
@@ -748,9 +764,12 @@ allowedTopologies:
       - hephaestus.homelab
 ```
 
-## Best Guess
+We also noticed the `default-scheduler` warnings with our devContainer, so
+the delay we're seeing could easily be related to scheduling.
 
 We don't have anything conclusive yet, but we do have a solid lead to chase.
+
+## Best Guess
 
 My best guess at this point is that mixing use of `allowedTopologies` and
 `nodeName` in scheduling constraints is probably the source of the issue.
@@ -759,17 +778,20 @@ GitHub ARC.  Even when there's only one node in the cluster.
 
 Some searching turns up OpenEBS - Issue 3667.
 
-!!! github-reference annotate "[OpenEBS - Issue 3667](https://github.com/openebs/openebs/issues/3667)"
+!!! github-reference annotate "[openebs/openebs - Issue #3667](https://github.com/openebs/openebs/issues/3667)"
 
     PVC is not bound when using spec.nodeName - Issue #3667 - openebs/openebs
 
 It's not 100% conclusive that this is the same issue, but there is a fair
-likelyhood of being related.  We have some questions we have that issue
+likelyhood of it being related.  We have some questions we have that issue
 doesn't answer however:
 
-- Issue is reported against `localpv-hostpath`, we are using ZFS Local PV.
-- Issue seems to indicate the Pod should fail to start up, ours is just slow.
-- Why does ours successfully start with our `conan-home` volume mounted after `FailedMount`?
+- Issue #3667 is reported against `localpv-hostpath`, we are using ZFS
+    Local PV.
+- Issue #3667 seems to indicate the Pod should fail to start up, ours is
+    just slow.
+- Why does ours successfully start with our `conan-home` volume mounted
+    after `FailedMount`?
     - Does it try again differently somehow?
     - Why is ours just slow?
 
@@ -861,6 +883,10 @@ I can't find much documentation on it beyond it's original pull request
 The community seems to be aware of it enough to try and use it, though.
 Some of the reported issues around it were similar to our use case and
 educational in general.
+
+!!! github-reference annotate "[actions/runner-container-hooks - Pull Request #111](https://github.com/actions/runner-container-hooks/pull/111)"
+
+    Add option to use the kubernetes scheduler for workflow pods - Pull Request #111 - actions/runner-container-hooks
 
 We'll add this environment variable to our RunnerScaleSet's `values.yaml`.
 
@@ -966,11 +992,12 @@ One more thing...
 
 While troubleshooting this issue we found that the default `k8s` hook is
 old (v0.7.0).  It's not clear why the newer hook release (v0.8.0) has a
-new name (`k8s-novolume`) and does not(?) appear to be the recommended
+new name (`k8s-novolume`) and does not(?) appear to be the default
 version at this point.
 
-Let try "just one more" experiment to get the `k8s-novolume` hook working
-as well to make sure our solution is ready for future runner changes.
+Let try "just one more" experiment to try the `k8s-novolume` hook and see
+how well it works with our `conan-home` OpenEBS PVC.  It may be feasible
+to switch directly to v0.8.0 if it handles our data volumes better.
 
 ## Experiment 4: GitHub ARC `containerMode: k8s-novolume`
 
@@ -994,9 +1021,9 @@ For this test we only had to modify our `RunnerScaleSet` `values.yaml`.
 ```
 
 It appears that v0.8.0 of the k8s hook has removed all of the node affinity
-requirements and implementation.  Rather than relying on volumes local to
-the runner, the updated k8s hook will copy files around the cluster as
-necessary.
+requirements and implementation.  Rather than relying on volumes shared
+between the runner pod and the workflow pod, the updated k8s hook will copy
+files around the cluster as necessary.
 
 ![GitHub ARC k8s-novolume Initialize containers](img/GitHubARCK8sNoVolumeInitContainers.png)
 
@@ -1010,24 +1037,27 @@ Mon, 26 Jan 2026 16:57:49 GMT ##[debug]Job pod is ready for traffic
 ```
 
 It's only 15s in this case, but some basic debugging has shown this delay
-appears to be in the `initContainers` runtime rather than another Kubernetes
-scheduling issue.
+appears to be in the `initContainers` moving data around at runtime rather
+than more Kubernetes scheduling issues.
 
-We can table this until a future point when we're ready to look at
+We will table this until a future point when we're ready to look at
 optimization of the `externals` and other data transfers that the runner
 applies to the workflow job container.
 
 While we are well-equipped to continue tackling performance issues like
 this, we need to move on.  The default version we're using (v0.7.0) is
 working very well and is apparently stable given that it's no longer
-maintained.
+maintained.  v0.7.0 also seems like a closer fit to our use case since it
+requires the same sort of node affinity for data volumes.  We don't
+escape without any tech debt at all.. :smile:
 
 ## What's Next
 
 We need to continue testing and optimizing this solution before we can go
 to production with it.  Functionality is proven to be working and correct,
-and the major performance issue is now resolved.  There's still many
-things we need to look at however.
+and the single major performance issue we found is now resolved.  There
+are still many things we need to look at regarding security, performance,
+and ease-of-use.
 
 For our next steps, we'll continue looking at performance optimization and
 security hardening.  We'll also need to circle back on saving broken builds
