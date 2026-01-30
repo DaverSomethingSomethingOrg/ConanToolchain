@@ -1,7 +1,4 @@
-
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
+<!DOCTYPE html><html lang="en" class="no-js"><head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,6 +8,10 @@
         <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCPerformance/">
       
       
+        <link rel="prev" href="../ConanK8sARCTroubleshooting/">
+      
+      
+        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -36,7 +37,7 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
@@ -50,16 +51,17 @@
     
     
     
-   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
-    html.glightbox-open { overflow: initial; height: 100%; }
-    .gslide-title { margin-top: 0px; user-select: text; }
-    .gslide-desc { color: #666; user-select: text; }
-    .gslide-image img { background: white; }
-    .gscrollbar-fixer { padding-right: 15px; }
-    .gdesc-inner { font-size: 0.75rem; }
-    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
-    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
   
   
     <body dir="ltr">
@@ -94,12 +96,12 @@
     <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -128,7 +130,7 @@
         <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -152,7 +154,7 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -164,7 +166,7 @@
     <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 
     </a>
     Toolchain Build System using Conan
@@ -174,7 +176,7 @@
       <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -380,6 +382,296 @@
   
   
     <li class="md-nav__item">
+      <a href="../ConanK8sARCTroubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Demo - Securing and Performing with our GitHub ARC deployment
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Securing and Performing with our GitHub ARC deployment
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profiling-end-to-end-workflowjob-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling End-to-End workflow/job runtime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrumenting-the-github-arc-kubernetes-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrumenting the GitHub ARC kubernetes hook
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runner-caching-for-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Runner caching for startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-job-container-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow job container optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubectl-in-workflow-pod-initcontainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      kubectl in workflow pod initContainer?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-resource-requests-vs-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specifying resource requests vs. limits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-and-security-combined" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance and Security combined
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-broken-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting Broken Builds
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-open-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Open Issues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What's Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-solution-for-bazel-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy solution for Bazel build cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supply-chain-dependency-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supply Chain - Dependency Track
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switch-to-netapp-instead-of-openzfs-and-openebs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switch to NetApp instead of OpenZFS and OpenEBS?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -402,7 +694,7 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -463,6 +755,75 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#general-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profiling-end-to-end-workflowjob-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling End-to-End workflow/job runtime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instrumenting-the-github-arc-kubernetes-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instrumenting the GitHub ARC kubernetes hook
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runner-caching-for-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Runner caching for startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-job-container-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow job container optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubectl-in-workflow-pod-initcontainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      kubectl in workflow pod initContainer?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-resource-requests-vs-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specifying resource requests vs. limits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security" class="md-nav__link">
     <span class="md-ellipsis">
       Security
@@ -472,18 +833,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
+  <a href="#performance-and-security-combined" class="md-nav__link">
     <span class="md-ellipsis">
-      Performance
+      Performance and Security combined
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-and-security-combined" class="md-nav__link">
+  <a href="#troubleshooting-broken-builds" class="md-nav__link">
     <span class="md-ellipsis">
-      Performance and Security combined
+      Troubleshooting Broken Builds
     </span>
   </a>
   
@@ -504,6 +865,39 @@
       What's Next
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="What's Next">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-solution-for-bazel-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy solution for Bazel build cache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supply-chain-dependency-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supply Chain - Dependency Track
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switch-to-netapp-instead-of-openzfs-and-openebs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switch to NetApp instead of OpenZFS and OpenEBS?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -550,12 +944,17 @@
 
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>Continuing our work with <a href="../ConanK8sARCDemo/">GitHub ARC with ZFS and Conan</a>.</p>
-<p>This time we'll explore optimizing the Performance and Security of our GitHub
-ARC deployment, now that our product build is optimized.</p>
-<div class="admonition quote annotate">
-<p><a class="glightbox" href="../img/GitHubARCRunnerK8sContainerized.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png" /></a></p>
+<p>We've deployed GitHub Actions Runner Controller (ARC) along with OpenEBS and
+OpenZFS in order to optimize our CI and Developer Sandbox build performance.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">GitHub ARC with ZFS and Conan</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/GitHubARCRunnerK8sContainerized.png" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png"></a></p>
 <p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
 </div>
+<p>This time we'll explore optimizing the Performance and Security of our GitHub
+ARC deployment, now that our product build is optimized.</p>
+<p>We'll also need to look at how it scales, and how it breaks.  How does cache
+corruption spread though our clone structure?</p>
 <h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h2>
 <h3 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h3>
 <p>We'll be using the same hardware as our previous demos.  All performance
@@ -575,6 +974,93 @@ any hardware optimization.</p>
 <li><a href="https://conan.io/">Conan C/C++ Package Manager</a></li>
 <li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
 <li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
+</ul>
+<h2 id="general-performance">General Performance<a class="headerlink" href="#general-performance" title="Permanent link">#</a></h2>
+<p>We want to look into other areas where we can improve performance of
+our solution.  Performance is the primary goal of this project after all.</p>
+<p>We'll look at the following areas for improvements:</p>
+<ul>
+<li>time to start new Runner</li>
+<li>time for job to arrive at Runner</li>
+<li>time to initialize workflow/$job container<ul>
+<li>caching Actions themselves</li>
+<li>caching Actions externals/dependencies</li>
+</ul>
+</li>
+<li>time to start running job</li>
+<li>time to cleanup after job</li>
+</ul>
+<h3 id="profiling-end-to-end-workflowjob-runtime">Profiling End-to-End workflow/job runtime<a class="headerlink" href="#profiling-end-to-end-workflowjob-runtime" title="Permanent link">#</a></h3>
+<p>containerd logs
+kubectl pod logs/events
+observability setup</p>
+<h3 id="instrumenting-the-github-arc-kubernetes-hook">Instrumenting the GitHub ARC kubernetes hook<a class="headerlink" href="#instrumenting-the-github-arc-kubernetes-hook" title="Permanent link">#</a></h3>
+<ul>
+<li>custom Runner container image for customized k8s hook</li>
+<li>enhanced debugging</li>
+<li>modified backoff schedule wastes less time sleeping</li>
+<li>issues resolved</li>
+</ul>
+<h3 id="runner-caching-for-startup">Runner caching for startup<a class="headerlink" href="#runner-caching-for-startup" title="Permanent link">#</a></h3>
+<ul>
+<li>container image caching</li>
+<li>seeding GitHub Runner externals</li>
+<li>cp -R /home/runner/externals /home/runner/_work/externals</li>
+<li>
+<p>claims that copying externals can be slow, that's not the case here...virtually instantaneous</p>
+<ul>
+<li>probably related to using "local" storage for everything on a fast NVMe SSD</li>
+</ul>
+</li>
+<li>
+<p>waiting time seems to be entirely getting the pod from created/pending to running</p>
+</li>
+<li>
+<p>seeding GitHub Runner actions downloading</p>
+</li>
+<li>
+<p>backoff aggressive timing means we're sleeping longer than necessary</p>
+</li>
+<li>start with a more reasonable default wait time to avoid wasting the first backoff rounds</li>
+<li>
+<p>reduce backoff wait ratio from 2x to 1.25x</p>
+</li>
+<li>
+<p>k8s-novolume?</p>
+</li>
+<li>is mounting the runner's work volume in the workflow container the problem?</li>
+<li>k8s-novolume seems to have issues right now, not working.<ul>
+<li>faster in general tho...</li>
+</ul>
+</li>
+</ul>
+<h3 id="workflow-job-container-optimization">Workflow job container optimization<a class="headerlink" href="#workflow-job-container-optimization" title="Permanent link">#</a></h3>
+<ul>
+<li>actions caching</li>
+<li>
+<p>/__w/_actions/action/name/version ~ /__w/_actions/action/actions/checkout/v4</p>
+<ul>
+<li>no .git subdir, just clean tag checkout</li>
+</ul>
+</li>
+<li>
+<p>confirmed that actions/checkout@v4 works fine mounted from ZFS cache, BUT...</p>
+</li>
+<li>
+<p>Runner downloads actions prior to running hook and creating workflow container?</p>
+<ul>
+<li>if so we need to mount the actions cache to the runner as well as the workflow pod and make sure the actions are not downloaded anyway.</li>
+<li>it can't slow down initializing the workflow container if the download is happening before the hook starts?</li>
+</ul>
+</li>
+<li>still good idea for reliability (reduce external dependency at job runtime), general job starting, and supply chain security</li>
+</ul>
+<h3 id="kubectl-in-workflow-pod-initcontainer">kubectl in workflow pod initContainer?<a class="headerlink" href="#kubectl-in-workflow-pod-initcontainer" title="Permanent link">#</a></h3>
+<h3 id="specifying-resource-requests-vs-limits">Specifying resource requests vs. limits<a class="headerlink" href="#specifying-resource-requests-vs-limits" title="Permanent link">#</a></h3>
+<p>Does limiting resources start faster?</p>
+<ul>
+<li>Guaranteed Scheduling</li>
+<li>Custom scheduling?</li>
 </ul>
 <h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">#</a></h2>
 <p>Security is pretty well configured out of the box, but we'll review
@@ -604,39 +1090,6 @@ the way.</p>
 <li>dind-rootless</li>
 <li>Links to GitHub ARC documentation on security best practices</li>
 </ul>
-<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">#</a></h2>
-<ul>
-<li>Areas to look at</li>
-<li>time to start new Runner</li>
-<li>time for job to arrive at Runner</li>
-<li>time to initialize workflow/$job container<ul>
-<li>caching Actions themselves</li>
-<li>caching Actions externals/dependencies</li>
-</ul>
-</li>
-<li>time to start running job</li>
-<li>
-<p>time to cleanup after job</p>
-</li>
-<li>
-<p>Instrumenting GitHub ARC kubernetes hook</p>
-</li>
-<li>
-<p>custom Runner container image</p>
-</li>
-<li>
-<p>Runner container image caching for startup</p>
-</li>
-<li>
-<p>Workflow job container optimization</p>
-</li>
-<li>
-<p>actions caching</p>
-</li>
-<li>
-<p>kubectl in workflow pod initContainer?</p>
-</li>
-</ul>
 <h2 id="performance-and-security-combined">Performance and Security combined<a class="headerlink" href="#performance-and-security-combined" title="Permanent link">#</a></h2>
 <ul>
 <li>Container/Kubernetes means not needing to chown the cache files for developer end use.</li>
@@ -644,8 +1097,24 @@ the way.</p>
 <li>build is done "on behalf of" user, not executed directly by user account</li>
 <li>generic, non-privileged userids own everything, run everything</li>
 </ul>
+<h2 id="troubleshooting-broken-builds">Troubleshooting Broken Builds<a class="headerlink" href="#troubleshooting-broken-builds" title="Permanent link">#</a></h2>
+<p><code>ACTIONS_RUNNER_HOOK_JOB_COMPLETED</code> hook</p>
+<p>To keep a container running indefinitely for debugging purposes, one common method involves overriding its entrypoint command to something like sleep infinity or tail -f /dev/null during setup, then using docker exec to interact with it. This is a manual debugging step, not an automated workflow configuration.</p>
 <h2 id="limitations-and-open-issues">Limitations and Open Issues<a class="headerlink" href="#limitations-and-open-issues" title="Permanent link">#</a></h2>
 <h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
+<h3 id="deploy-solution-for-bazel-build-cache">Deploy solution for Bazel build cache<a class="headerlink" href="#deploy-solution-for-bazel-build-cache" title="Permanent link">#</a></h3>
+<h3 id="supply-chain-dependency-track">Supply Chain - Dependency Track<a class="headerlink" href="#supply-chain-dependency-track" title="Permanent link">#</a></h3>
+<h3 id="switch-to-netapp-instead-of-openzfs-and-openebs">Switch to NetApp instead of OpenZFS and OpenEBS?<a class="headerlink" href="#switch-to-netapp-instead-of-openzfs-and-openebs" title="Permanent link">#</a></h3>
+<p>OpenZFS is great for prototyping and use on developer workstations, but
+practically speaking it seems more likely that development environments
+needing this level of build optimization probably have enterprise-grade
+storage options available.</p>
+<p>NetApp ONTAP with FlexClone is a more likely to be available in an
+enterprise software development environment than OpenZFS.  It's also a
+natural fit for this solution with it's patented snapshot and clone
+technologies.</p>
+<p>We should evaluate how well FlexClone fits into this solution.  Up until
+this point we have been focusing on leveraging "free"/open technologies.</p>
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">#</a></h2>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
 <ul>
@@ -681,6 +1150,44 @@ the way.</p>
         <footer class="md-footer">
   
     
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../ConanK8sARCTroubleshooting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Apache License v2.0
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -714,7 +1221,7 @@ the way.</p>
       <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
-  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
-document$.subscribe(() => { lightbox.reload() });
-</script></body>
-</html>
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

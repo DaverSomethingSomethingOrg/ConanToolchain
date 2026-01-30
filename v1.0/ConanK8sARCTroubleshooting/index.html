@@ -1,0 +1,2116 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCTroubleshooting/">
+      
+      
+        <link rel="prev" href="../ConanK8sARCDemo/">
+      
+      
+        <link rel="next" href="../ConanK8sARCPerformance/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+    
+    
+      
+        <title>Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness - Toolchain Build System using Conan</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#troubleshooting-conan-zfs-github-arc-container-initialization-slowness" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Toolchain Build System using Conan" class="md-header__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Toolchain Build System using Conan
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Toolchain Build System using Conan" class="md-nav__button md-logo" aria-label="Toolchain Build System using Conan" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Toolchain Build System using Conan
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DaverSomethingSomethingOrg/ConanToolchain" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ButWhy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    But Why?
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SampleUsage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Usage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanRecipePreReqs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conan Setup and Recipe Pre-requisites
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CIWorkflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI Workflows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DemoGcc12MultiPhase/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - MultiPhase GCC12 Compiler Bootstrap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanZFSDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Optimizing C/C++ Build Performance using Conan and OpenZFS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanK8sDevContainerDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Optimizing the Inner Loop with Conan and ZFS in Remote DevContainers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanK8sARCDemo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Conan and ZFS and Kubernetes CI (Oh my!)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-arc-built-in-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub ARC built-in debugging
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breaking-it-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breaking it down
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#waitforpodphases" class="md-nav__link">
+    <span class="md-ellipsis">
+      waitForPodPhases()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="waitForPodPhases()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-pod-startup-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Pod startup troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Pod startup troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-devcontainer-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring devContainer startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-to-github-arc-workflow-pod-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing to GitHub ARC workflow pod startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#digging-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digging Deeper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-1-evaluate-github-arc-performance-without-conan-home-pvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 1: Evaluate GitHub ARC performance without conan-home PVC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-devcontainer-and-arc-pod-manifest-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 2: DevContainer and ARC Pod Manifest differences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-guess" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Guess
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-3-arc-pod-manifest-without-nodename" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 3: ARC Pod Manifest without nodeName
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eureka" class="md-nav__link">
+    <span class="md-ellipsis">
+      Eureka!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Eureka!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-a-usekubescheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's a useKubeScheduler()?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#are-we-there-yet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are We There Yet?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-4-github-arc-containermode-k8s-novolume" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 4: GitHub ARC containerMode: k8s-novolume
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ConanK8sARCPerformance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Demo - Securing and Performing with our GitHub ARC deployment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE.txt" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apache License v2.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-arc-built-in-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub ARC built-in debugging
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breaking-it-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breaking it down
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#waitforpodphases" class="md-nav__link">
+    <span class="md-ellipsis">
+      waitForPodPhases()
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="waitForPodPhases()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-pod-startup-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Pod startup troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Pod startup troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-devcontainer-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring devContainer startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-to-github-arc-workflow-pod-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing to GitHub ARC workflow pod startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#digging-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digging Deeper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-1-evaluate-github-arc-performance-without-conan-home-pvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 1: Evaluate GitHub ARC performance without conan-home PVC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-devcontainer-and-arc-pod-manifest-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 2: DevContainer and ARC Pod Manifest differences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-guess" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Guess
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-3-arc-pod-manifest-without-nodename" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 3: ARC Pod Manifest without nodeName
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eureka" class="md-nav__link">
+    <span class="md-ellipsis">
+      Eureka!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Eureka!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-a-usekubescheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's a useKubeScheduler()?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#are-we-there-yet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are We There Yet?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-4-github-arc-containermode-k8s-novolume" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 4: GitHub ARC containerMode: k8s-novolume
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Next
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="troubleshooting-conan-zfs-github-arc-container-initialization-slowness">Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness<a class="headerlink" href="#troubleshooting-conan-zfs-github-arc-container-initialization-slowness" title="Permanent link">#</a></h1>
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD034 -->
+
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>Continuing our work with <a href="../ConanK8sARCDemo/">GitHub ARC with ZFS and Conan</a>...</p>
+<div class="admonition note annotate">
+<p class="admonition-title">GitHub ARC with ZFS and Conan</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/GitHubARCRunnerK8sContainerized.png" data-desc-position="bottom"><img alt="Conan and ZFS in GitHub ARC box diagram" src="../img/GitHubARCRunnerK8sContainerized.png"></a></p>
+<p><em>Check out <a href="https://excalidraw.com/">Excalidraw</a> and their nifty diagramming tool!</em></p>
+</div>
+<p>When we left off, we were seeing that our GitHub ARC workflows were taking a
+significant amount of time to start when using <code>containerMode: kubernetes</code> as
+opposed to <code>containerMode: dind</code>.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">Example: ARC K8s Runner "Initialize containers" workflow step</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/GitHubARCK8sInitContainers.png" data-desc-position="bottom"><img alt="Example: ARC K8s Runner &quot;Initialize containers&quot; workflow step" src="../img/GitHubARCK8sInitContainers.png"></a></p>
+</div>
+<p>This step normally takes no more than 1-3seconds, but is consistently taking
+30+ seconds in our current setup.  In our small-scale example, that delay
+is even longer than the time our ZFS caching solution saves us! <em>(When
+compared to downloading our dependencies from artifact management.)</em></p>
+<p>We did not experience anything odd or unexpected related to performance in
+our <a href="../ConanK8sDevContainerDemo/">devContainer</a> demo, so this new development
+is concerning.  This issue is critical to resolve for the success of this
+project!</p>
+<p>Since I've already been documenting each step of setting up this solution,
+this was a prime opportunity to document the process of troubleshooting
+a performance issue.  Hopefully gaining some more insight into how the
+infrastructure is working in the process as well as I try to explain it here.</p>
+<p>I've left out much of the drudgery and trial &amp; error involved, but tried to
+share some of the more interesting misdirections and bad guesses.  They're
+just part of the fun.</p>
+<h3 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h3>
+<h4 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h4>
+<p>We'll be using the same hardware as our previous demos.  All performance
+optimizations in this demo are done in the configuration, we're not doing
+any hardware optimization.</p>
+<ul>
+<li>Server - AMD 8945HS/64GB/SSD</li>
+<li>Workstation - AMD 9900X/32GB/SSD</li>
+<li>Notebook - Macbook Pro M4 Pro</li>
+<li>Network - Ubiquiti UniFi 2.5Gb/s Switch</li>
+</ul>
+<h4 id="software">Software<a class="headerlink" href="#software" title="Permanent link">#</a></h4>
+<ul>
+<li><a href="https://github.com/actions/actions-runner-controller/blob/master/README.md">GitHub Actions Runner Controller (ARC)</a></li>
+<li><a href="https://openzfs.org/">OpenZFS</a> filesystem and storage platform</li>
+<li><a href="https://openebs.io/">OpenEBS</a> with <a href="https://github.com/openebs/zfs-localpv/blob/develop/README.md">Local PV ZFS plugin</a></li>
+<li><a href="https://conan.io/">Conan C/C++ Package Manager</a></li>
+<li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
+<li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
+</ul>
+<h2 id="github-arc-built-in-debugging">GitHub ARC built-in debugging<a class="headerlink" href="#github-arc-built-in-debugging" title="Permanent link">#</a></h2>
+<p>We'll start by enabling the maximum logging GitHub Actions can provide.
+We'll add two new variable definitions to the repo for GitHub Actions to use.</p>
+<ul>
+<li><a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging">https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTIONS_RUNNER_DEBUG</code></td>
+<td>"true" (string)</td>
+</tr>
+<tr>
+<td><code>ACTIONS_STEP_DEBUG</code></td>
+<td>"true" (string)</td>
+</tr>
+</tbody>
+</table>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/github_repo_variables.png" data-desc-position="bottom"><img alt="GitHub Repo Actions Variables" src="../img/github_repo_variables.png"></a></p>
+<h2 id="breaking-it-down">Breaking it down<a class="headerlink" href="#breaking-it-down" title="Permanent link">#</a></h2>
+<p>While GitHub does not provide granular timing data in its log files, it
+can show us precise timestamps for each log entry in the web UI by pressing
+<code>Shift + T</code> while on the job log screen.  Combined with enabling debug
+logging this gives us something to work with at least.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/github_initialize_containers.png" data-desc-position="bottom"><img alt="alt text" src="../img/github_initialize_containers.png"></a></p>
+<p>Breaking this down, we can see where the majority of the time is going:</p>
+<div class="language-text highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a>Fri, 30 Jan 2026 00:09:53 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-5fgk8-runner-8299r-workflow
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a>Fri, 30 Jan 2026 00:10:25 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div></td></tr></tbody></table></div>
+<p>For this particular job, 32s of the total 33s of the "Initialize
+containers" step is spent waiting for the created Pod to start running.
+Looking at the source code we can locate the debug messages to see
+what's going on in between the log messages.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/hooks/prepare-job.ts#L90">actions/runner-container-hooks/packages/k8s/src/hooks/prepare-job.ts</a></p>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-1-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-1-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-1-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-1-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-1-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-1-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-1-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-1-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-1-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-1-100">100</a></span>
+<span class="normal"><a href="#__codelineno-1-101">101</a></span>
+<span class="normal"><a href="#__codelineno-1-102">102</a></span>
+<span class="normal"><a href="#__codelineno-1-103">103</a></span>
+<span class="normal"><a href="#__codelineno-1-104">104</a></span>
+<span class="normal"><a href="#__codelineno-1-105">105</a></span>
+<span class="normal"><a href="#__codelineno-1-106">106</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90"></a><span class="w">  </span><span class="nx">core</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span>
+</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91"></a><span class="hll"><span class="w">    </span><span class="sb">`Job pod created, waiting for it to come online </span><span class="si">${</span><span class="nx">createdPod</span><span class="o">?</span><span class="p">.</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span>
+</span></span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92"></a><span class="w">  </span><span class="p">)</span>
+</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93"></a>
+</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">waitForPodPhases</span><span class="p">(</span>
+</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96"></a><span class="w">      </span><span class="nx">createdPod</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">([</span><span class="nx">PodPhase</span><span class="p">.</span><span class="nx">RUNNING</span><span class="p">]),</span>
+</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">([</span><span class="nx">PodPhase</span><span class="p">.</span><span class="nx">PENDING</span><span class="p">]),</span>
+</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99"></a><span class="w">      </span><span class="nx">getPrepareJobTimeoutSeconds</span><span class="p">()</span>
+</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prunePods</span><span class="p">()</span>
+</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`pod failed to come online with error: </span><span class="si">${</span><span class="nx">err</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+</span><span id="__span-1-104"><a id="__codelineno-1-104" name="__codelineno-1-104"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-105"><a id="__codelineno-1-105" name="__codelineno-1-105"></a>
+</span><span id="__span-1-106"><a id="__codelineno-1-106" name="__codelineno-1-106"></a><span class="hll"><span class="w">  </span><span class="nx">core</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="s1">'Job pod is ready for traffic'</span><span class="p">)</span>
+</span></span></code></pre></div></td></tr></tbody></table></div>
+</div>
+<h2 id="waitforpodphases"><code>waitForPodPhases()</code><a class="headerlink" href="#waitforpodphases" title="Permanent link">#</a></h2>
+<p>While <code>waitForPodPhases()</code> is probably not going to be the source of our
+slowness, it's not providing much insight into what's happening either.</p>
+<p>Let's take a look at the source to see what it does.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/k8s/index.ts#L371">actions/runner-container-hooks/packages/k8s/src/k8s/index.ts</a></p>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-371">371</a></span>
+<span class="normal"><a href="#__codelineno-2-372">372</a></span>
+<span class="normal"><a href="#__codelineno-2-373">373</a></span>
+<span class="normal"><a href="#__codelineno-2-374">374</a></span>
+<span class="normal"><a href="#__codelineno-2-375">375</a></span>
+<span class="normal"><a href="#__codelineno-2-376">376</a></span>
+<span class="normal"><a href="#__codelineno-2-377">377</a></span>
+<span class="normal"><a href="#__codelineno-2-378">378</a></span>
+<span class="normal"><a href="#__codelineno-2-379">379</a></span>
+<span class="normal"><a href="#__codelineno-2-380">380</a></span>
+<span class="normal"><a href="#__codelineno-2-381">381</a></span>
+<span class="normal"><a href="#__codelineno-2-382">382</a></span>
+<span class="normal"><a href="#__codelineno-2-383">383</a></span>
+<span class="normal"><a href="#__codelineno-2-384">384</a></span>
+<span class="normal"><a href="#__codelineno-2-385">385</a></span>
+<span class="normal"><a href="#__codelineno-2-386">386</a></span>
+<span class="normal"><a href="#__codelineno-2-387">387</a></span>
+<span class="normal"><a href="#__codelineno-2-388">388</a></span>
+<span class="normal"><a href="#__codelineno-2-389">389</a></span>
+<span class="normal"><a href="#__codelineno-2-390">390</a></span>
+<span class="normal"><a href="#__codelineno-2-391">391</a></span>
+<span class="normal"><a href="#__codelineno-2-392">392</a></span>
+<span class="normal"><a href="#__codelineno-2-393">393</a></span>
+<span class="normal"><a href="#__codelineno-2-394">394</a></span>
+<span class="normal"><a href="#__codelineno-2-395">395</a></span>
+<span class="normal"><a href="#__codelineno-2-396">396</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-371"><a id="__codelineno-2-371" name="__codelineno-2-371"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">waitForPodPhases</span><span class="p">(</span>
+</span><span id="__span-2-372"><a id="__codelineno-2-372" name="__codelineno-2-372"></a><span class="w">  </span><span class="nx">podName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+</span><span id="__span-2-373"><a id="__codelineno-2-373" name="__codelineno-2-373"></a><span class="w">  </span><span class="nx">awaitingPhases</span><span class="o">:</span><span class="w"> </span><span class="kt">Set</span><span class="o">&lt;</span><span class="nx">PodPhase</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-2-374"><a id="__codelineno-2-374" name="__codelineno-2-374"></a><span class="w">  </span><span class="nx">backOffPhases</span><span class="o">:</span><span class="w"> </span><span class="kt">Set</span><span class="o">&lt;</span><span class="nx">PodPhase</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-2-375"><a id="__codelineno-2-375" name="__codelineno-2-375"></a><span class="hll"><span class="w">  </span><span class="nx">maxTimeSeconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">DEFAULT_WAIT_FOR_POD_TIME_SECONDS</span>
+</span></span><span id="__span-2-376"><a id="__codelineno-2-376" name="__codelineno-2-376"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-377"><a id="__codelineno-2-377" name="__codelineno-2-377"></a><span class="hll"><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">backOffManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">BackOffManager</span><span class="p">(</span><span class="nx">maxTimeSeconds</span><span class="p">)</span>
+</span></span><span id="__span-2-378"><a id="__codelineno-2-378" name="__codelineno-2-378"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">phase</span><span class="o">:</span><span class="w"> </span><span class="kt">PodPhase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PodPhase</span><span class="p">.</span><span class="nx">UNKNOWN</span>
+</span><span id="__span-2-379"><a id="__codelineno-2-379" name="__codelineno-2-379"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-380"><a id="__codelineno-2-380" name="__codelineno-2-380"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-381"><a id="__codelineno-2-381" name="__codelineno-2-381"></a><span class="w">      </span><span class="nx">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getPodPhase</span><span class="p">(</span><span class="nx">podName</span><span class="p">)</span>
+</span><span id="__span-2-382"><a id="__codelineno-2-382" name="__codelineno-2-382"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">awaitingPhases</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">phase</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-383"><a id="__codelineno-2-383" name="__codelineno-2-383"></a><span class="w">        </span><span class="k">return</span>
+</span><span id="__span-2-384"><a id="__codelineno-2-384" name="__codelineno-2-384"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-2-385"><a id="__codelineno-2-385" name="__codelineno-2-385"></a>
+</span><span id="__span-2-386"><a id="__codelineno-2-386" name="__codelineno-2-386"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">backOffPhases</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">phase</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-387"><a id="__codelineno-2-387" name="__codelineno-2-387"></a><span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span>
+</span><span id="__span-2-388"><a id="__codelineno-2-388" name="__codelineno-2-388"></a><span class="w">           </span><span class="sb">`Pod </span><span class="si">${</span><span class="nx">podName</span><span class="si">}</span><span class="sb"> is unhealthy with phase status </span><span class="si">${</span><span class="nx">phase</span><span class="si">}</span><span class="sb">`</span>
+</span><span id="__span-2-389"><a id="__codelineno-2-389" name="__codelineno-2-389"></a><span class="w">         </span><span class="p">)</span>
+</span><span id="__span-2-390"><a id="__codelineno-2-390" name="__codelineno-2-390"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-2-391"><a id="__codelineno-2-391" name="__codelineno-2-391"></a><span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">backOffManager</span><span class="p">.</span><span class="nx">backOff</span><span class="p">()</span>
+</span><span id="__span-2-392"><a id="__codelineno-2-392" name="__codelineno-2-392"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-393"><a id="__codelineno-2-393" name="__codelineno-2-393"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-394"><a id="__codelineno-2-394" name="__codelineno-2-394"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Pod </span><span class="si">${</span><span class="nx">podName</span><span class="si">}</span><span class="sb"> is unhealthy with phase status </span><span class="si">${</span><span class="nx">phase</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+</span><span id="__span-2-395"><a id="__codelineno-2-395" name="__codelineno-2-395"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-396"><a id="__codelineno-2-396" name="__codelineno-2-396"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-581">581</a></span>
+<span class="normal"><a href="#__codelineno-3-582">582</a></span>
+<span class="normal"><a href="#__codelineno-3-583">583</a></span>
+<span class="normal"><a href="#__codelineno-3-584">584</a></span>
+<span class="normal"><a href="#__codelineno-3-585">585</a></span>
+<span class="normal"><a href="#__codelineno-3-586">586</a></span>
+<span class="normal"><a href="#__codelineno-3-587">587</a></span>
+<span class="normal"><a href="#__codelineno-3-588">588</a></span>
+<span class="normal"><a href="#__codelineno-3-589">589</a></span>
+<span class="normal"><a href="#__codelineno-3-590">590</a></span>
+<span class="normal"><a href="#__codelineno-3-591">591</a></span>
+<span class="normal"><a href="#__codelineno-3-592">592</a></span>
+<span class="normal"><a href="#__codelineno-3-593">593</a></span>
+<span class="normal"><a href="#__codelineno-3-594">594</a></span>
+<span class="normal"><a href="#__codelineno-3-595">595</a></span>
+<span class="normal"><a href="#__codelineno-3-596">596</a></span>
+<span class="normal"><a href="#__codelineno-3-597">597</a></span>
+<span class="normal"><a href="#__codelineno-3-598">598</a></span>
+<span class="normal"><a href="#__codelineno-3-599">599</a></span>
+<span class="normal"><a href="#__codelineno-3-600">600</a></span>
+<span class="normal"><a href="#__codelineno-3-601">601</a></span>
+<span class="normal"><a href="#__codelineno-3-602">602</a></span>
+<span class="normal"><a href="#__codelineno-3-603">603</a></span>
+<span class="normal"><a href="#__codelineno-3-604">604</a></span>
+<span class="normal"><a href="#__codelineno-3-605">605</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-581"><a id="__codelineno-3-581" name="__codelineno-3-581"></a><span class="kd">class</span><span class="w"> </span><span class="nx">BackOffManager</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-582"><a id="__codelineno-3-582" name="__codelineno-3-582"></a><span class="hll"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
+</span></span><span id="__span-3-583"><a id="__codelineno-3-583" name="__codelineno-3-583"></a><span class="w">  </span><span class="nx">totalTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
+</span><span id="__span-3-584"><a id="__codelineno-3-584" name="__codelineno-3-584"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="k">private</span><span class="w"> </span><span class="nx">throwAfterSeconds?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-585"><a id="__codelineno-3-585" name="__codelineno-3-585"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">throwAfterSeconds</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">throwAfterSeconds</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-586"><a id="__codelineno-3-586" name="__codelineno-3-586"></a><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">throwAfterSeconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span>
+</span><span id="__span-3-587"><a id="__codelineno-3-587" name="__codelineno-3-587"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-588"><a id="__codelineno-3-588" name="__codelineno-3-588"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-589"><a id="__codelineno-3-589" name="__codelineno-3-589"></a>
+</span><span id="__span-3-590"><a id="__codelineno-3-590" name="__codelineno-3-590"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">backOff</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-591"><a id="__codelineno-3-591" name="__codelineno-3-591"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span><span class="w"> </span><span class="p">=&gt;</span>
+</span><span id="__span-3-592"><a id="__codelineno-3-592" name="__codelineno-3-592"></a><span class="w">      </span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
+</span><span id="__span-3-593"><a id="__codelineno-3-593" name="__codelineno-3-593"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-3-594"><a id="__codelineno-3-594" name="__codelineno-3-594"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">totalTime</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span>
+</span><span id="__span-3-595"><a id="__codelineno-3-595" name="__codelineno-3-595"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">throwAfterSeconds</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">throwAfterSeconds</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">totalTime</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-596"><a id="__codelineno-3-596" name="__codelineno-3-596"></a><span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'backoff timeout'</span><span class="p">)</span>
+</span><span id="__span-3-597"><a id="__codelineno-3-597" name="__codelineno-3-597"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-598"><a id="__codelineno-3-598" name="__codelineno-3-598"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-599"><a id="__codelineno-3-599" name="__codelineno-3-599"></a><span class="hll"><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mf">2</span>
+</span></span><span id="__span-3-600"><a id="__codelineno-3-600" name="__codelineno-3-600"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-601"><a id="__codelineno-3-601" name="__codelineno-3-601"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-602"><a id="__codelineno-3-602" name="__codelineno-3-602"></a><span class="hll"><span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">backOffSeconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20</span>
+</span></span><span id="__span-3-603"><a id="__codelineno-3-603" name="__codelineno-3-603"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-604"><a id="__codelineno-3-604" name="__codelineno-3-604"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-605"><a id="__codelineno-3-605" name="__codelineno-3-605"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+</div>
+<p><code>waitForPodPhases()</code> uses a typical binary exponential backoff to poll
+kubernetes for our workflow container to <strong><code>Running</code></strong> or <strong><code>Pending</code></strong>
+state.  This is not ideal but it does have a max delay interval and a
+maxmium wait time set, so we're not going to worry about it.</p>
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">#</a></h3>
+<p><code>waitForPodPhases()</code> is not the source of our delay, but the exponential
+backoff may be making the problem appear worse than it is.  For some reason
+Kubernetes is delaying our pod startup with ARC but not with our
+devContainer.</p>
+<p>We'll need to go look at the Kubernetes logs for our next clues.</p>
+<h2 id="kubernetes-pod-startup-troubleshooting">Kubernetes Pod startup troubleshooting<a class="headerlink" href="#kubernetes-pod-startup-troubleshooting" title="Permanent link">#</a></h2>
+<p>Now that we're focused specifically on Kubernetes, we can directly compare
+our devContainer pod startup to our GitHub ARC Workflow pod startup.</p>
+<h3 id="monitoring-devcontainer-startup">Monitoring devContainer startup<a class="headerlink" href="#monitoring-devcontainer-startup" title="Permanent link">#</a></h3>
+<p>The first step we'll take is to start one of each of our workflow and
+devContainer pods, watching the timing on our devContainer to verify
+that our startup delay doesn't occur.</p>
+<p>We'll use the below manifest to test our devContainer pod startup.
+We've changed it a bit since our devContainer demo to use the same
+volume syntax as our GitHub ARC hook extension.</p>
+<p>Previously we created the <code>conan-home</code> PersistentVolumeClaim separately
+from the pod and then mounted it.  We'll switch to including the
+<code>conan-home</code> PVC as an ephemeral volume defined using a <code>volumeClaimTemplate</code>.
+We're not expecting this to be the cause of our startup delay, but we
+do want to elimintate it as a variable before going further.</p>
+<details class="example annotate">
+<summary>DevContainer Pod manifest with <code>conan-home</code> PVC</summary>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">devcontainer-pod-test</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">devcontainer</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcc12-toolchain-main</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">initContainers</span><span class="p">:</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-init</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"/bin/sh"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"git</span><span class="nv"> </span><span class="s">clone</span><span class="nv"> </span><span class="s">https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo.git</span><span class="nv"> </span><span class="s">/workspace/conan-toolchain-demo"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/workspace</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-volume</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-container</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">      </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">      </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CS_DISABLE_FILE_DOWNLOADS</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONAN_HOME</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">    </span><span class="nt">workingDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/workspace/conan-toolchain-demo</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"/bin/sh"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"while</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">1000;</span><span class="nv"> </span><span class="s">do</span><span class="nv"> </span><span class="s">:;</span><span class="nv"> </span><span class="s">done"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">    </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/workspace</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-volume</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/vscode/.cache</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache-volume</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code-volume</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cache-volume</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">    </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conan-home</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">    </span><span class="nt">ephemeral</span><span class="p">:</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">      </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="w">        </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">          </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">"ReadWriteOncePod"</span><span class="w"> </span><span class="p p-Indicator">]</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">          </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="s">"openebs-zfspv"</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">          </span><span class="nt">dataSource</span><span class="p">:</span>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcc12-toolchain-main</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">            </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">             </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200Gi</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">          </span><span class="nt">volumeMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Filesystem</span>
+</span></code></pre></div>
+</details>
+<p>We'll use a simple bash script to time the pod startup until the pod
+reaches "Running" status.</p>
+<details class="example annotate">
+<summary>timeStartup.sh source</summary>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">FILENAME</span><span class="o">=</span><span class="nv">$1</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">SCRIPTNAME</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$0</span><span class="k">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="c1">#echo "Usage: ${SCRIPTNAME} &lt;file name&gt; &lt;pod name&gt; &lt;namespace&gt;" 1&gt;&amp;2</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Usage: </span><span class="si">${</span><span class="nv">SCRIPTNAME</span><span class="si">}</span><span class="s2"> &lt;file name&gt;"</span><span class="w"> </span><span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">fi</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"File not found: </span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="k">fi</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nv">PODNAME</span><span class="o">=</span><span class="k">$(</span>yq<span class="w"> </span>--raw-output<span class="w"> </span><span class="s2">".metadata.name"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nv">NAMESPACE</span><span class="o">=</span><span class="k">$(</span>yq<span class="w"> </span>--raw-output<span class="w"> </span><span class="s2">".metadata.namespace"</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>timingLoop<span class="o">(){</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">FILENAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">        </span><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>-o<span class="w"> </span>template<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">PODNAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>--template<span class="o">={{</span>.status.phase<span class="o">}}</span><span class="k">)</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"[</span><span class="si">${</span><span class="nv">SECONDS</span><span class="si">}</span><span class="s2">s] Status: </span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">."</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Running"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">            </span><span class="k">break</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">        </span><span class="k">fi</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">        </span>sleep<span class="w"> </span><span class="m">1</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"  Looping..."</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="k">done</span>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="o">}</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="nv">SECONDS</span><span class="o">=</span><span class="m">0</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="nb">time</span><span class="w"> </span>timingLoop
+</span></code></pre></div>
+</details>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>❯<span class="w"> </span>./timeStartup.sh<span class="w"> </span>devcontainer-pod-test.yaml
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pod/devcontainer-pod-test<span class="w"> </span>created
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="o">[</span>0s<span class="o">]</span><span class="w"> </span>Status:<span class="w"> </span>Pending.<span class="w">  </span>Looping...
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="o">[</span>1s<span class="o">]</span><span class="w"> </span>Status:<span class="w"> </span>Pending.<span class="w">  </span>Looping...
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">[</span>2s<span class="o">]</span><span class="w"> </span>Status:<span class="w"> </span>Pending.<span class="w">  </span>Looping...
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="o">[</span>3s<span class="o">]</span><span class="w"> </span>Status:<span class="w"> </span>Pending.<span class="w">  </span>Looping...
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="o">[</span>4s<span class="o">]</span><span class="w"> </span>Status:<span class="w"> </span>Running.
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="hll">real<span class="w">    </span>0m4.417s
+</span></span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>user<span class="w">    </span>0m0.473s
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>sys<span class="w">     </span>0m0.208s
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>dave@hephaestus<span class="w"> </span>~/projects/K3sDevContainer/devContainer<span class="w">                                                                                                         </span><span class="m">09</span>:38:34
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>❯
+</span></code></pre></div>
+<div class="language-bash highlight"><span class="filename">DevContainer Pod Events</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>devcontainer-pod-test<span class="w"> </span>-n<span class="w"> </span>devcontainer
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="o">[</span>...<span class="o">]</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Events:
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>Type<span class="w">     </span>Reason<span class="w">            </span>Age<span class="w">                    </span>From<span class="w">               </span>Message
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>----<span class="w">     </span>------<span class="w">            </span>----<span class="w">                   </span>----<span class="w">               </span>-------
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>Warning<span class="w">  </span>FailedScheduling<span class="w">  </span>2m19s<span class="w">                  </span>default-scheduler<span class="w">  </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span>waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>ephemeral<span class="w"> </span>volume<span class="w"> </span>controller<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>persistentvolumeclaim<span class="w"> </span><span class="s2">"devcontainer-pod-test-conan-home"</span>.<span class="w"> </span>preemption:<span class="w"> </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span><span class="m">1</span><span class="w"> </span>Preemption<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>helpful<span class="w"> </span><span class="k">for</span><span class="w"> </span>scheduling.
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>Warning<span class="w">  </span>FailedScheduling<span class="w">  </span>2m19s<span class="w"> </span><span class="o">(</span>x2<span class="w"> </span>over<span class="w"> </span>2m19s<span class="o">)</span><span class="w">  </span>default-scheduler<span class="w">  </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span>pod<span class="w"> </span>has<span class="w"> </span>unbound<span class="w"> </span>immediate<span class="w"> </span>PersistentVolumeClaims.<span class="w"> </span>preemption:<span class="w"> </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span><span class="m">1</span><span class="w"> </span>Preemption<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>helpful<span class="w"> </span><span class="k">for</span><span class="w"> </span>scheduling.
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>Warning<span class="w">  </span>FailedScheduling<span class="w">  </span>2m18s<span class="w"> </span><span class="o">(</span>x2<span class="w"> </span>over<span class="w"> </span>2m18s<span class="o">)</span><span class="w">  </span>default-scheduler<span class="w">  </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span>pod<span class="w"> </span>has<span class="w"> </span>unbound<span class="w"> </span>immediate<span class="w"> </span>PersistentVolumeClaims.<span class="w"> </span>preemption:<span class="w"> </span><span class="m">0</span>/1<span class="w"> </span>nodes<span class="w"> </span>are<span class="w"> </span>available:<span class="w"> </span><span class="m">1</span><span class="w"> </span>Preemption<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>helpful<span class="w"> </span><span class="k">for</span><span class="w"> </span>scheduling.
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>Normal<span class="w">   </span>Scheduled<span class="w">         </span>2m18s<span class="w">                  </span>default-scheduler<span class="w">  </span>Successfully<span class="w"> </span>assigned<span class="w"> </span>devcontainer/devcontainer-pod-test<span class="w"> </span>to<span class="w"> </span>hephaestus.homelab
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>Normal<span class="w">   </span>Pulled<span class="w">            </span>2m18s<span class="w">                  </span>kubelet<span class="w">            </span>Container<span class="w"> </span>image<span class="w"> </span><span class="s2">"nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"</span><span class="w"> </span>already<span class="w"> </span>present<span class="w"> </span>on<span class="w"> </span>machine
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>Normal<span class="w">   </span>Created<span class="w">           </span>2m18s<span class="w">                  </span>kubelet<span class="w">            </span>Created<span class="w"> </span>container:<span class="w"> </span>code-init
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>Normal<span class="w">   </span>Started<span class="w">           </span>2m18s<span class="w">                  </span>kubelet<span class="w">            </span>Started<span class="w"> </span>container<span class="w"> </span>code-init
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>Normal<span class="w">   </span>Pulled<span class="w">            </span>2m17s<span class="w">                  </span>kubelet<span class="w">            </span>Container<span class="w"> </span>image<span class="w"> </span><span class="s2">"nexus.homelab/conan-docker-build-ubuntu:x86_64-latest"</span><span class="w"> </span>already<span class="w"> </span>present<span class="w"> </span>on<span class="w"> </span>machine
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>Normal<span class="w">   </span>Created<span class="w">           </span>2m17s<span class="w">                  </span>kubelet<span class="w">            </span>Created<span class="w"> </span>container:<span class="w"> </span>conan-container
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>Normal<span class="w">   </span>Started<span class="w">           </span>2m17s<span class="w">                  </span>kubelet<span class="w">            </span>Started<span class="w"> </span>container<span class="w"> </span>conan-container
+</span></code></pre></div>
+<p>The pod status entries confirm the lack of delay as well:</p>
+<div class="language-bash highlight"><span class="filename">DevContainer Pod Status Changes</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>devcontainer-pod-test<span class="w"> </span>-n<span class="w"> </span>devcontainer<span class="w"> </span>-o<span class="w"> </span>yaml
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="o">[</span>...<span class="o">]</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>status:
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>conditions:
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-19T17:38:31Z"</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span>type:<span class="w"> </span>PodScheduled
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-19T17:38:32Z"</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>type:<span class="w"> </span>PodReadyToStartContainers
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-19T17:38:32Z"</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span>type:<span class="w"> </span>Initialized
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-19T17:38:33Z"</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>type:<span class="w"> </span>ContainersReady
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-19T17:38:33Z"</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span>type:<span class="w"> </span>Ready
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="o">[</span>...<span class="o">]</span>
+</span></code></pre></div>
+<h3 id="comparing-to-github-arc-workflow-pod-startup">Comparing to GitHub ARC workflow pod startup<a class="headerlink" href="#comparing-to-github-arc-workflow-pod-startup" title="Permanent link">#</a></h3>
+<p>Checking the same logs for our GitHub ARC workflow pod we can clearly see
+a difference, but it's not quite clear why yet.</p>
+<div class="language-bash highlight"><span class="filename">GitHub ARC Workflow Pod Events</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>linux-x86-64-5fgk8-runner-v84xb-workflow<span class="w"> </span>-n<span class="w"> </span>devcontainer
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="o">[</span>...<span class="o">]</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Events:
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>Type<span class="w">     </span>Reason<span class="w">       </span>Age<span class="w">   </span>From<span class="w">     </span>Message
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>----<span class="w">     </span>------<span class="w">       </span>----<span class="w">  </span>----<span class="w">     </span>-------
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>Warning<span class="w">  </span>FailedMount<span class="w">  </span>107s<span class="w">  </span>kubelet<span class="w">  </span>Unable<span class="w"> </span>to<span class="w"> </span>attach<span class="w"> </span>or<span class="w"> </span>mount<span class="w"> </span>volumes:<span class="w"> </span>unmounted<span class="w"> </span><span class="nv">volumes</span><span class="o">=[</span>conan-home<span class="o">]</span>,<span class="w"> </span>unattached<span class="w"> </span><span class="nv">volumes</span><span class="o">=[]</span>,<span class="w"> </span>failed<span class="w"> </span>to<span class="w"> </span>process<span class="w"> </span><span class="nv">volumes</span><span class="o">=[</span>conan-home<span class="o">]</span>:<span class="w"> </span>error<span class="w"> </span>processing<span class="w"> </span>PVC<span class="w"> </span>devcontainer/linux-x86-64-5fgk8-runner-v84xb-workflow-conan-home:<span class="w"> </span>PVC<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>bound
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>Normal<span class="w">   </span>Pulled<span class="w">       </span>91s<span class="w">   </span>kubelet<span class="w">  </span>Container<span class="w"> </span>image<span class="w"> </span><span class="s2">"nexus.homelab/conan-build-almalinux:x86_64-latest"</span><span class="w"> </span>already<span class="w"> </span>present<span class="w"> </span>on<span class="w"> </span>machine
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>Normal<span class="w">   </span>Created<span class="w">      </span>91s<span class="w">   </span>kubelet<span class="w">  </span>Created<span class="w"> </span>container:<span class="w"> </span>job
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>Normal<span class="w">   </span>Started<span class="w">      </span>91s<span class="w">   </span>kubelet<span class="w">  </span>Started<span class="w"> </span>container<span class="w"> </span>job
+</span></code></pre></div>
+<div class="language-bash highlight"><span class="filename">GitHub ARC Workflow Pod Status Changes</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>❯<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>linux-x86-64-5fgk8-runner-v84xb-workflow<span class="w"> </span>-n<span class="w"> </span>devcontainer<span class="w"> </span>-o<span class="w"> </span>yaml
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="o">[</span>...<span class="o">]</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>status:
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>conditions:
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-30T00:17:15Z"</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>type:<span class="w"> </span>PodScheduled
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-30T00:17:15Z"</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span>type:<span class="w"> </span>Initialized
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-30T00:17:32Z"</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span>type:<span class="w"> </span>PodReadyToStartContainers
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-30T00:17:32Z"</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">    </span>type:<span class="w"> </span>ContainersReady
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">  </span>-<span class="w"> </span>lastProbeTime:<span class="w"> </span>null
+</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">    </span>lastTransitionTime:<span class="w"> </span><span class="s2">"2026-01-30T00:17:32Z"</span>
+</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">    </span>status:<span class="w"> </span><span class="s2">"True"</span>
+</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">    </span>type:<span class="w"> </span>Ready
+</span></code></pre></div>
+<p>A few observations here:</p>
+<ul>
+<li>There is a noticeable jump from -91s to -107s after that <code>FailedMount</code>
+    event.</li>
+<li>The devContainer pod shows a series of <code>FailedScheduling</code> warnings from
+    <code>default-scheduler</code>.  We see no events from <code>default-scheduler</code> for the
+    GitHub ARC pod at all.</li>
+<li>The GitHub ARC pod shows a <code>FailedMount</code> message that the devContainer pod
+    does not.</li>
+</ul>
+<p>We have confirmed the issue is within the Kubernetes realm, and it appears
+to be happening after <code>Initialized</code> but before <code>PodReadyToStartContainers</code>.</p>
+<div class="admonition example annotate">
+<p class="admonition-title">Duct tape and bailing wire</p>
+<p>Did you notice that the pod only took 16s to get to <code>Ready</code> status?
+Why was GitHub Actions waiting 30s+?</p>
+<p>It looks like we're not very lucky in the <code>waitForPodPhases()</code> cycle.
+Since it uses a binary exponential backoff cycle from 1s, the series
+of <code>backOff()</code> sleeps looks like:</p>
+<p>1s + 2s + 4s + 8s + 16s = <strong>31s</strong></p>
+<p>If we're not able to resolve the root cause of our performance issue,
+it looks like we can tune <code>backOff()</code> to punish us less.  It would not
+be a comprehensive fix, and it would likely work with varying levels
+of success in other environments.</p>
+<p>We could probably reclaim the majority of the last 16s sleep, cutting
+the delay in half.  It would still be significantly slower than the
+1-3s timing we're looking for howeveri, only slightly faster than
+downloading from artifact management.</p>
+</div>
+<h3 id="digging-deeper">Digging Deeper<a class="headerlink" href="#digging-deeper" title="Permanent link">#</a></h3>
+<p>With the <code>FailedMount</code> warning there are a couple experiments for us to try.</p>
+<ol>
+<li>Modify GitHub ARC hook extension to remove the <code>conan-home</code> PVC only,
+    isolate our OpenEBS ZFS volume from GitHub ARC.</li>
+<li>Diff our DevContainer Pod manifest against the manifest that GitHub ARC
+    hook applies, there has to be something significant there.</li>
+</ol>
+<h2 id="experiment-1-evaluate-github-arc-performance-without-conan-home-pvc">Experiment 1: Evaluate GitHub ARC performance without <code>conan-home</code> PVC<a class="headerlink" href="#experiment-1-evaluate-github-arc-performance-without-conan-home-pvc" title="Permanent link">#</a></h2>
+<p>Probably the easiest and fastest experiment to test is simply modifying
+the <a href="https://daversomethingsomethingorg.github.io/ConanToolchain/latest/ConanK8sARCDemo/#attach-conan_home-persistentvolumeclaim-using-hook-extension">GitHub ARC Hook Extension ConfigMap</a>
+that we set up.</p>
+<p>Since mounting our <code>conan-home</code> PVC is essentially the only thing our
+hook extension does, there isn't much left.  Rather than remove the
+ConfigMap, we'll leave a single debugging environment setting to
+make sure the PVC provisioning and mount are the only changes.</p>
+<p>This configuration should build cleanly, but will not benefit from
+the ZFS cloned Conan cache at all.</p>
+<div class="admonition note annotate">
+<p class="admonition-title">GitHub ARC Hook Extension ConfigMap without <code>conan-home</code> PVC</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-arc-container-hooks</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nt">data</span><span class="p">:</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\|</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="nt">example</span><span class="p">:</span><span class="w"> </span><span class="s">"extension"</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">        </span><span class="nt">annotated-by</span><span class="p">:</span><span class="w"> </span><span class="s">"extension"</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">        </span><span class="nt">labeled-by</span><span class="p">:</span><span class="w"> </span><span class="s">"extension"</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="w w-Error">  </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$job</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG_CONAN_HOME</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/CONAN_HOME</span>
+</span></code></pre></div>
+</div>
+<p>Once the ConfigMap change is applied, the GitHub ARC Runners will pick up
+the change <em>automatically</em> once the cluster nodes have a chance to resync
+their state.  We can verify that our runners have picked up the change
+before running our test job by connecting to the runner container and
+checking the file where we chose install our hook extension.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>runner@linux-x86-64-st6ng-runner-5dskd:~$<span class="w"> </span>cat<span class="w"> </span>pod-template/content
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>metadata:
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>annotations:
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span>example:<span class="w"> </span><span class="s2">"extension"</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span>annotated-by:<span class="w"> </span><span class="s2">"extension"</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>labels:
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span>labeled-by:<span class="w"> </span><span class="s2">"extension"</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>spec:
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>containers:
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span>-<span class="w"> </span>name:<span class="w"> </span><span class="nv">$job</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">      </span>imagePullPolicy:<span class="w"> </span>IfNotPresent
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">      </span>env:
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">        </span>-<span class="w"> </span>name:<span class="w"> </span>DEBUG_CONAN_HOME
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">          </span>value:<span class="w"> </span>/CONAN_HOME
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>runner@linux-x86-64-st6ng-runner-5dskd:~$
+</span></code></pre></div>
+<p>When we run a test job with this updated hook extension, the delay is no
+longer present.</p>
+<h4 id="before">BEFORE<a class="headerlink" href="#before" title="Permanent link">#</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Tue, 23 Dec 2025 17:13:51 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-dmdc5-runner-zdjp2-workflow
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Tue, 23 Dec 2025 17:14:06 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div>
+<h4 id="after">AFTER<a class="headerlink" href="#after" title="Permanent link">#</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Wed, 21 Jan 2026 17:08:58 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-ql7f4-workflow
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Wed, 21 Jan 2026 17:08:59 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div>
+<p>The delay appears to be a conflict or compatibility issue betweeen our
+GitHub ARC configuration and our OpenEBS ZFS configuration.  Examining
+the Pod mainfests further should expose the issue.</p>
+<h2 id="experiment-2-devcontainer-and-arc-pod-manifest-differences">Experiment 2: DevContainer and ARC Pod Manifest differences<a class="headerlink" href="#experiment-2-devcontainer-and-arc-pod-manifest-differences" title="Permanent link">#</a></h2>
+<p>In order to understand why this difference is occurring, we need to look
+at the YAML specs for the pods.  In addition to our hook extension, the
+<code>k8s</code> hook adds other environment settings and volume mounts to the
+workflow pod.</p>
+<p>In order to examine the Pod mainfest applied by GitHub ARC, we'll add some
+additional debugging to the GitHub ARC Kubernetes Hook.  We'll start with
+dumping the workflow pod spec template to the debug log.</p>
+<div class="admonition warning annotate">
+<p class="admonition-title">Deprecated?</p>
+<p>The default GitHub ARC k8s hook in the default GitHub Actions Runner
+container we're using is an older version, <strong>v0.7.0</strong>.  We need to be
+careful to make sure the changes we make are to the correct version!</p>
+<p>Snippets from the Runner container image <a href="https://github.com/actions/runner/blob/main/images/Dockerfile#L7">Dockerfile</a></p>
+<div class="language-docker highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="k">ARG</span><span class="w"> </span><span class="nv">RUNNER_CONTAINER_HOOKS_VERSION</span><span class="o">=</span><span class="m">0</span>.7.0
+</span></code></pre></div></td></tr></tbody></table></div>
+<div class="language-docker highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-20">20</a></span>
+<span class="normal"><a href="#__codelineno-16-21">21</a></span>
+<span class="normal"><a href="#__codelineno-16-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20"></a><span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>runner-container-hooks.zip<span class="w"> </span>https://github.com/actions/runner-container-hooks/releases/download/v<span class="si">${</span><span class="nv">RUNNER_CONTAINER_HOOKS_VERSION</span><span class="si">}</span>/actions-runner-hooks-k8s-<span class="si">${</span><span class="nv">RUNNER_CONTAINER_HOOKS_VERSION</span><span class="si">}</span>.zip<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>unzip<span class="w"> </span>./runner-container-hooks.zip<span class="w"> </span>-d<span class="w"> </span>./k8s<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-22"><a id="__codelineno-16-22" name="__codelineno-16-22"></a><span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>runner-container-hooks.zip
+</span></code></pre></div></td></tr></tbody></table></div>
+</div>
+<p>The change we'll make is simple, just send the pod spec to the debug log.</p>
+<div class="language-diff highlight"><span class="filename">Dumping the workflow pod spec to the debug log</span><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>root@1ab970f2f7fb:/workspaces/runner-container-hooks/packages/k8s/src# git diff -U3 k8s/index.ts
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="gh">diff --git a/packages/k8s/src/k8s/index.ts b/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="gh">index 021b383..cf8c794 100644</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="gd">--- a/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="gi">+++ b/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="gu">@@ -17,6 +17,7 @@ import {</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w"> </span>  useKubeScheduler,
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w"> </span>  fixArgs
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w"> </span>} from './utils'
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="gi">+import * as yaml from 'yaml'</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w"> </span>const kc = new k8s.KubeConfig()
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="gu">@@ -127,6 +129,8 @@ export async function createPod(</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w"> </span>    mergePodSpecWithOptions(appPod.spec, extension.spec)
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w"> </span>  }
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="gi">+  core.debug(`Creating workflow pod using spec: \n${yaml.stringify(appPod.spec)}`)</span>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="gi">+</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w"> </span>  const { body } = await k8sApi.createNamespacedPod(namespace(), appPod)
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w"> </span>  return body
+</span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w"> </span>}
+</span></code></pre></div>
+<p>We'll build a custom container image for our runners to use our modified
+<code>k8s</code> hook.  It's as simple as replacing <code>/home/runner/k8s/index.js</code> with
+our custom build.</p>
+<div class="language-docker highlight"><span class="filename">Forked Runner Dockerfile with enhanced debugging</span><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">ghcr.io/actions/actions-runner:latest</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>runner:docker<span class="w"> </span>index.js<span class="w"> </span>/home/runner/k8s/index.js
+</span></code></pre></div>
+<p>With our updated runner container image we now see the following in our
+"Initialize containers" workflow step log:</p>
+<div class="language-text highlight"><span class="filename">Initialize containers log with debugging patch applied</span><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Using image 'nexus.homelab/conan-build-almalinux:x86_64-latest' for job image
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Creating workflow pod using spec:
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]containers:
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]  - name: job
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    image: nexus.homelab/conan-build-almalinux:x86_64-latest
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    ports: []
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    workingDir: /__w/test-actions-dev/test-actions-dev
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    command:
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - tail
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    args:
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - -f
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - /dev/null
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    env:
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: GITHUB_ACTIONS
+</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        value: "true"
+</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: CI
+</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        value: "true"
+</span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: CONAN_HOME
+</span><span id="__span-19-19"><a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        value: /CONAN_HOME
+</span><span id="__span-19-20"><a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    volumeMounts:
+</span><span id="__span-19-21"><a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: work
+</span><span id="__span-19-22"><a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        mountPath: /__w
+</span><span id="__span-19-23"><a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: work
+</span><span id="__span-19-24"><a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        mountPath: /__e
+</span><span id="__span-19-25"><a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        subPath: externals
+</span><span id="__span-19-26"><a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: work
+</span><span id="__span-19-27"><a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        mountPath: /github/home
+</span><span id="__span-19-28"><a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        subPath: _temp/_github_home
+</span><span id="__span-19-29"><a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: work
+</span><span id="__span-19-30"><a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        mountPath: /github/workflow
+</span><span id="__span-19-31"><a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        subPath: _temp/_github_workflow
+</span><span id="__span-19-32"><a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      - name: conan-home
+</span><span id="__span-19-33"><a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        mountPath: /CONAN_HOME
+</span><span id="__span-19-34"><a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    imagePullPolicy: IfNotPresent
+</span><span id="__span-19-35"><a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]restartPolicy: Never
+</span><span id="__span-19-36"><a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]nodeName: hephaestus.homelab
+</span><span id="__span-19-37"><a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]volumes:
+</span><span id="__span-19-38"><a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]  - name: work
+</span><span id="__span-19-39"><a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    persistentVolumeClaim:
+</span><span id="__span-19-40"><a id="__codelineno-19-40" name="__codelineno-19-40" href="#__codelineno-19-40"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      claimName: linux-x86-64-st6ng-runner-mh2j6-work
+</span><span id="__span-19-41"><a id="__codelineno-19-41" name="__codelineno-19-41" href="#__codelineno-19-41"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]  - name: conan-home
+</span><span id="__span-19-42"><a id="__codelineno-19-42" name="__codelineno-19-42" href="#__codelineno-19-42"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]    ephemeral:
+</span><span id="__span-19-43"><a id="__codelineno-19-43" name="__codelineno-19-43" href="#__codelineno-19-43"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]      volumeClaimTemplate:
+</span><span id="__span-19-44"><a id="__codelineno-19-44" name="__codelineno-19-44" href="#__codelineno-19-44"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]        spec:
+</span><span id="__span-19-45"><a id="__codelineno-19-45" name="__codelineno-19-45" href="#__codelineno-19-45"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          accessModes:
+</span><span id="__span-19-46"><a id="__codelineno-19-46" name="__codelineno-19-46" href="#__codelineno-19-46"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            - ReadWriteOncePod
+</span><span id="__span-19-47"><a id="__codelineno-19-47" name="__codelineno-19-47" href="#__codelineno-19-47"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          storageClassName: openebs-zfspv
+</span><span id="__span-19-48"><a id="__codelineno-19-48" name="__codelineno-19-48" href="#__codelineno-19-48"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          volumeMode: Filesystem
+</span><span id="__span-19-49"><a id="__codelineno-19-49" name="__codelineno-19-49" href="#__codelineno-19-49"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          dataSource:
+</span><span id="__span-19-50"><a id="__codelineno-19-50" name="__codelineno-19-50" href="#__codelineno-19-50"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            name: gcc12-toolchain-main
+</span><span id="__span-19-51"><a id="__codelineno-19-51" name="__codelineno-19-51" href="#__codelineno-19-51"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            kind: PersistentVolumeClaim
+</span><span id="__span-19-52"><a id="__codelineno-19-52" name="__codelineno-19-52" href="#__codelineno-19-52"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]          resources:
+</span><span id="__span-19-53"><a id="__codelineno-19-53" name="__codelineno-19-53" href="#__codelineno-19-53"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]            requests:
+</span><span id="__span-19-54"><a id="__codelineno-19-54" name="__codelineno-19-54" href="#__codelineno-19-54"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]              storage: 200Gi
+</span><span id="__span-19-55"><a id="__codelineno-19-55" name="__codelineno-19-55" href="#__codelineno-19-55"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]
+</span><span id="__span-19-56"><a id="__codelineno-19-56" name="__codelineno-19-56" href="#__codelineno-19-56"></a>Mon, 19 Jan 2026 19:10:47 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-mh2j6-workflow
+</span></code></pre></div>
+<p>Next we'll take that spec, remove the <code>##[debug]</code> line prefixes, and diff it
+against our devContainer spec using <code>yq</code>/<code>jq</code>.</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/31930041/using-jq-or-alternative-command-line-tools-to-compare-json-files">https://stackoverflow.com/questions/31930041/using-jq-or-alternative-command-line-tools-to-compare-json-files</a></li>
+</ul>
+<p>After ignoring the initContainer differences we are reduced to the following diff:</p>
+<details class="example annotate">
+<summary>diff -U1 devcontainer-pod-test_spec.yaml linux-x86-64-st6ng-runner-mh2j6-workflow_spec.yaml</summary>
+<div class="language-diff highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-20-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-20-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-20-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-20-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-20-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-20-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-20-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-20-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-20-10">10</a></span>
+<span class="normal"><a href="#__codelineno-20-11">11</a></span>
+<span class="normal"><a href="#__codelineno-20-12">12</a></span>
+<span class="normal"><a href="#__codelineno-20-13">13</a></span>
+<span class="normal"><a href="#__codelineno-20-14">14</a></span>
+<span class="normal"><a href="#__codelineno-20-15">15</a></span>
+<span class="normal"><a href="#__codelineno-20-16">16</a></span>
+<span class="normal"><a href="#__codelineno-20-17">17</a></span>
+<span class="normal"><a href="#__codelineno-20-18">18</a></span>
+<span class="normal"><a href="#__codelineno-20-19">19</a></span>
+<span class="normal"><a href="#__codelineno-20-20">20</a></span>
+<span class="normal"><a href="#__codelineno-20-21">21</a></span>
+<span class="normal"><a href="#__codelineno-20-22">22</a></span>
+<span class="normal"><a href="#__codelineno-20-23">23</a></span>
+<span class="normal"><a href="#__codelineno-20-24">24</a></span>
+<span class="normal"><a href="#__codelineno-20-25">25</a></span>
+<span class="normal"><a href="#__codelineno-20-26">26</a></span>
+<span class="normal"><a href="#__codelineno-20-27">27</a></span>
+<span class="normal"><a href="#__codelineno-20-28">28</a></span>
+<span class="normal"><a href="#__codelineno-20-29">29</a></span>
+<span class="normal"><a href="#__codelineno-20-30">30</a></span>
+<span class="normal"><a href="#__codelineno-20-31">31</a></span>
+<span class="normal"><a href="#__codelineno-20-32">32</a></span>
+<span class="normal"><a href="#__codelineno-20-33">33</a></span>
+<span class="normal"><a href="#__codelineno-20-34">34</a></span>
+<span class="normal"><a href="#__codelineno-20-35">35</a></span>
+<span class="normal"><a href="#__codelineno-20-36">36</a></span>
+<span class="normal"><a href="#__codelineno-20-37">37</a></span>
+<span class="normal"><a href="#__codelineno-20-38">38</a></span>
+<span class="normal"><a href="#__codelineno-20-39">39</a></span>
+<span class="normal"><a href="#__codelineno-20-40">40</a></span>
+<span class="normal"><a href="#__codelineno-20-41">41</a></span>
+<span class="normal"><a href="#__codelineno-20-42">42</a></span>
+<span class="normal"><a href="#__codelineno-20-43">43</a></span>
+<span class="normal"><a href="#__codelineno-20-44">44</a></span>
+<span class="normal"><a href="#__codelineno-20-45">45</a></span>
+<span class="normal"><a href="#__codelineno-20-46">46</a></span>
+<span class="normal"><a href="#__codelineno-20-47">47</a></span>
+<span class="normal"><a href="#__codelineno-20-48">48</a></span>
+<span class="normal"><a href="#__codelineno-20-49">49</a></span>
+<span class="normal"><a href="#__codelineno-20-50">50</a></span>
+<span class="normal"><a href="#__codelineno-20-51">51</a></span>
+<span class="normal"><a href="#__codelineno-20-52">52</a></span>
+<span class="normal"><a href="#__codelineno-20-53">53</a></span>
+<span class="normal"><a href="#__codelineno-20-54">54</a></span>
+<span class="normal"><a href="#__codelineno-20-55">55</a></span>
+<span class="normal"><a href="#__codelineno-20-56">56</a></span>
+<span class="normal"><a href="#__codelineno-20-57">57</a></span>
+<span class="normal"><a href="#__codelineno-20-58">58</a></span>
+<span class="normal"><a href="#__codelineno-20-59">59</a></span>
+<span class="normal"><a href="#__codelineno-20-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="gd">--- devcontainer-pod-test_spec.yaml 2026-01-19 11:16:24.559445960 -0800</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="gi">+++ linux-x86-64-st6ng-runner-mh2j6-workflow_spec.yaml   2026-01-19 11:12:52.071686552 -0800</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="gu">@@ -41,32 +28,38 @@</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="w"> </span>      ],
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="gd">-      "workingDir": "/workspace/conan-toolchain-demo",</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="gd">-      "command": [</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7"></a><span class="gd">-        "/bin/sh",</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8"></a><span class="gd">-        "-c",</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9"></a><span class="gd">-        "while sleep 1000; do :; done"</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10"></a><span class="gd">-      ],</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="w"> </span>      "volumeMounts": [
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12"></a><span class="w"> </span>        {
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13"></a><span class="gd">-          "mountPath": "/workspace",</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14"></a><span class="gd">-          "name": "code-volume"</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15"></a><span class="gi">+          "name": "work",</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16"></a><span class="gi">+          "mountPath": "/__w"</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17"></a><span class="gi">+        },</span>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18"></a><span class="gi">+        {</span>
+</span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19"></a><span class="gi">+          "name": "work",</span>
+</span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20"></a><span class="gi">+          "mountPath": "/__e",</span>
+</span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21"></a><span class="gi">+          "subPath": "externals"</span>
+</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22"></a><span class="gi">+        },</span>
+</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23"></a><span class="gi">+        {</span>
+</span><span id="__span-20-24"><a id="__codelineno-20-24" name="__codelineno-20-24"></a><span class="gi">+          "name": "work",</span>
+</span><span id="__span-20-25"><a id="__codelineno-20-25" name="__codelineno-20-25"></a><span class="gi">+          "mountPath": "/github/home",</span>
+</span><span id="__span-20-26"><a id="__codelineno-20-26" name="__codelineno-20-26"></a><span class="gi">+          "subPath": "_temp/_github_home"</span>
+</span><span id="__span-20-27"><a id="__codelineno-20-27" name="__codelineno-20-27"></a><span class="w"> </span>        },
+</span><span id="__span-20-28"><a id="__codelineno-20-28" name="__codelineno-20-28"></a><span class="w"> </span>        {
+</span><span id="__span-20-29"><a id="__codelineno-20-29" name="__codelineno-20-29"></a><span class="gd">-          "mountPath": "/home/vscode/.cache",</span>
+</span><span id="__span-20-30"><a id="__codelineno-20-30" name="__codelineno-20-30"></a><span class="gd">-          "name": "cache-volume"</span>
+</span><span id="__span-20-31"><a id="__codelineno-20-31" name="__codelineno-20-31"></a><span class="gi">+          "name": "work",</span>
+</span><span id="__span-20-32"><a id="__codelineno-20-32" name="__codelineno-20-32"></a><span class="gi">+          "mountPath": "/github/workflow",</span>
+</span><span id="__span-20-33"><a id="__codelineno-20-33" name="__codelineno-20-33"></a><span class="gi">+          "subPath": "_temp/_github_workflow"</span>
+</span><span id="__span-20-34"><a id="__codelineno-20-34" name="__codelineno-20-34"></a><span class="w"> </span>        },
+</span><span id="__span-20-35"><a id="__codelineno-20-35" name="__codelineno-20-35"></a><span class="w"> </span>        {
+</span><span id="__span-20-36"><a id="__codelineno-20-36" name="__codelineno-20-36"></a><span class="gd">-          "mountPath": "/CONAN_HOME",</span>
+</span><span id="__span-20-37"><a id="__codelineno-20-37" name="__codelineno-20-37"></a><span class="gd">-          "name": "conan-home"</span>
+</span><span id="__span-20-38"><a id="__codelineno-20-38" name="__codelineno-20-38"></a><span class="gi">+          "name": "conan-home",</span>
+</span><span id="__span-20-39"><a id="__codelineno-20-39" name="__codelineno-20-39"></a><span class="gi">+          "mountPath": "/CONAN_HOME"</span>
+</span><span id="__span-20-40"><a id="__codelineno-20-40" name="__codelineno-20-40"></a><span class="w"> </span>        }
+</span><span id="__span-20-41"><a id="__codelineno-20-41" name="__codelineno-20-41"></a><span class="gd">-      ]</span>
+</span><span id="__span-20-42"><a id="__codelineno-20-42" name="__codelineno-20-42"></a><span class="gi">+      ],</span>
+</span><span id="__span-20-43"><a id="__codelineno-20-43" name="__codelineno-20-43"></a><span class="gi">+      "imagePullPolicy": "IfNotPresent"</span>
+</span><span id="__span-20-44"><a id="__codelineno-20-44" name="__codelineno-20-44"></a><span class="w"> </span>    }
+</span><span id="__span-20-45"><a id="__codelineno-20-45" name="__codelineno-20-45"></a><span class="w"> </span>  ],
+</span><span id="__span-20-46"><a id="__codelineno-20-46" name="__codelineno-20-46"></a><span class="gi">+  "restartPolicy": "Never",</span>
+</span><span id="__span-20-47"><a id="__codelineno-20-47" name="__codelineno-20-47"></a><span class="gi">+  "nodeName": "hephaestus.homelab",</span>
+</span><span id="__span-20-48"><a id="__codelineno-20-48" name="__codelineno-20-48"></a><span class="w"> </span>  "volumes": [
+</span><span id="__span-20-49"><a id="__codelineno-20-49" name="__codelineno-20-49"></a><span class="w"> </span>    {
+</span><span id="__span-20-50"><a id="__codelineno-20-50" name="__codelineno-20-50"></a><span class="gd">-      "name": "code-volume",</span>
+</span><span id="__span-20-51"><a id="__codelineno-20-51" name="__codelineno-20-51"></a><span class="gd">-      "emptyDir": {}</span>
+</span><span id="__span-20-52"><a id="__codelineno-20-52" name="__codelineno-20-52"></a><span class="gd">-    },</span>
+</span><span id="__span-20-53"><a id="__codelineno-20-53" name="__codelineno-20-53"></a><span class="gd">-    {</span>
+</span><span id="__span-20-54"><a id="__codelineno-20-54" name="__codelineno-20-54"></a><span class="gd">-      "name": "cache-volume",</span>
+</span><span id="__span-20-55"><a id="__codelineno-20-55" name="__codelineno-20-55"></a><span class="gd">-      "emptyDir": {}</span>
+</span><span id="__span-20-56"><a id="__codelineno-20-56" name="__codelineno-20-56"></a><span class="gi">+      "name": "work",</span>
+</span><span id="__span-20-57"><a id="__codelineno-20-57" name="__codelineno-20-57"></a><span class="gi">+      "persistentVolumeClaim": {</span>
+</span><span id="__span-20-58"><a id="__codelineno-20-58" name="__codelineno-20-58"></a><span class="gi">+        "claimName": "linux-x86-64-st6ng-runner-mh2j6-work"</span>
+</span><span id="__span-20-59"><a id="__codelineno-20-59" name="__codelineno-20-59"></a><span class="gi">+      }</span>
+</span><span id="__span-20-60"><a id="__codelineno-20-60" name="__codelineno-20-60"></a><span class="w"> </span>    },
+</span></code></pre></div></td></tr></tbody></table></div>
+</details>
+<p>Ignoring the standard GitHub ARC volumes/mounts that are not showing
+any issues when used without <code>conan-home</code>, the only remaining part
+of the diff that's significant is this:</p>
+<div class="language-diff highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-46">46</a></span>
+<span class="normal"><a href="#__codelineno-21-47">47</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-21-46"><a id="__codelineno-21-46" name="__codelineno-21-46"></a><span class="gi">+  "restartPolicy": "Never",</span>
+</span><span id="__span-21-47"><a id="__codelineno-21-47" name="__codelineno-21-47"></a><span class="gi">+  "nodeName": "hephaestus.homelab",</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+<p>This stands out particularly because we originally configured node affinity
+for our OpenEBS storage classes.</p>
+<ul>
+<li><a href="https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass#zfs-pool-availability">https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass#zfs-pool-availability</a></li>
+</ul>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">allowedTopologies</span><span class="p">:</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchLabelExpressions</span><span class="p">:</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/hostname</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hephaestus.homelab</span>
+</span></code></pre></div>
+<p>We also noticed the <code>default-scheduler</code> warnings with our devContainer, so
+the delay we're seeing could easily be related to scheduling.</p>
+<p>We don't have anything conclusive yet, but we do have a solid lead to chase.</p>
+<h2 id="best-guess">Best Guess<a class="headerlink" href="#best-guess" title="Permanent link">#</a></h2>
+<p>My best guess at this point is that mixing use of <code>allowedTopologies</code> and
+<code>nodeName</code> in Kubernetes scheduling constraints is probably the source of
+the issue.  Even when the node specified is the same one used by both
+OpenEBS and GitHub ARC.  Even when there's only one node in the cluster.</p>
+<p>Some searching turns up OpenEBS - Issue 3667.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/openebs/openebs/issues/3667">openebs/openebs - Issue #3667</a></p>
+<p>PVC is not bound when using spec.nodeName - Issue #3667 - openebs/openebs</p>
+</div>
+<p>It's not 100% conclusive that this is the same issue, but there is a fair
+likelyhood of it being related.  We have some questions we have that issue
+doesn't answer however:</p>
+<ul>
+<li>Issue #3667 is reported against <code>localpv-hostpath</code>, we are using ZFS
+    Local PV.</li>
+<li>Issue #3667 seems to indicate the Pod should fail to start up, ours is
+    just slow.</li>
+<li>Why does ours successfully start with our <code>conan-home</code> volume mounted
+    after <code>FailedMount</code>?<ul>
+<li>Does it try again differently somehow?</li>
+<li>Why is ours just slow?</li>
+</ul>
+</li>
+</ul>
+<p>Rather than relentlessly pursue the answers, we can simply try one more
+experiment to see if we can implement a workaround.</p>
+<h2 id="experiment-3-arc-pod-manifest-without-nodename">Experiment 3: ARC Pod Manifest without <code>nodeName</code><a class="headerlink" href="#experiment-3-arc-pod-manifest-without-nodename" title="Permanent link">#</a></h2>
+<p>Our next experiment is to simply remove <code>nodeName</code> constraint from the pod
+spec manifest that the GitHub ARC <code>k8s</code> hook applies.</p>
+<p>We'll need to rebuild our runner container image once more for this modified
+hook.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/k8s/index.ts#L98">actions/runner-container-hooks/packages/k8s/src/k8s/index.ts</a></p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="gh">diff --git a/packages/k8s/src/k8s/index.ts b/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="gh">index 021b383..08e81ee 100644</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="gd">--- a/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="gi">+++ b/packages/k8s/src/k8s/index.ts</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="gu">@@ -101,3 +102,4 @@ export async function createPod(</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w"> </span>  } else {
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="gd">-    appPod.spec.nodeName = nodeName</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="gi">+    //appPod.spec.nodeName = nodeName</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w"> </span>  }
+</span></code></pre></div>
+</div>
+<p>Running a test job we see:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Fri, 23 Jan 2026 17:25:14 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-st6ng-runner-d4n2f-workflow
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Fri, 23 Jan 2026 17:25:17 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div>
+<p>It worked!  Performance was restored to ~3s on workflow pod startup.</p>
+<h2 id="eureka">Eureka!<a class="headerlink" href="#eureka" title="Permanent link">#</a></h2>
+<p>It worked... but.  While we were so busy patching that code in the ARC k8s
+Hook, we time to think more about the code than our particular problem, and
+found something else! ...hiding directly in plain sight.</p>
+<p>That code we patched...</p>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-25-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-25-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-25-100">100</a></span>
+<span class="normal"><a href="#__codelineno-25-101">101</a></span>
+<span class="normal"><a href="#__codelineno-25-102">102</a></span>
+<span class="normal"><a href="#__codelineno-25-103">103</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-25-98"><a id="__codelineno-25-98" name="__codelineno-25-98"></a><span class="kd">const</span><span class="w"> </span><span class="nx">nodeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getCurrentNodeName</span><span class="p">()</span>
+</span><span id="__span-25-99"><a id="__codelineno-25-99" name="__codelineno-25-99"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">useKubeScheduler</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-25-100"><a id="__codelineno-25-100" name="__codelineno-25-100"></a><span class="w">  </span><span class="nx">appPod</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">affinity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getPodAffinity</span><span class="p">(</span><span class="nx">nodeName</span><span class="p">)</span>
+</span><span id="__span-25-101"><a id="__codelineno-25-101" name="__codelineno-25-101"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-25-102"><a id="__codelineno-25-102" name="__codelineno-25-102"></a><span class="hll"><span class="w">  </span><span class="nx">appPod</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">nodeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nodeName</span>
+</span></span><span id="__span-25-103"><a id="__codelineno-25-103" name="__codelineno-25-103"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+<h3 id="whats-a-usekubescheduler">What's a <code>useKubeScheduler()</code>?<a class="headerlink" href="#whats-a-usekubescheduler" title="Permanent link">#</a></h3>
+<p>Since we're seeing the warnings regarding the <code>default-scheduler</code> for our
+devContainer that we're not seeing with ARC, this option to potentially
+change ARC's scheduling behavior and not set <code>nodeName</code> seems like a great
+option to test.</p>
+<p>Using <code>appPod.spec.affinity</code> instead of <code>appPod.spec.nodeName</code> sounds more
+compatible with our use of <code>allowedTopologies</code> in OpenEBS, but we'll have
+to see what <code>getPodAffinity(nodeName)</code> returns.</p>
+<p>We can test it in parallel though if we can enable <code>useKubeScheduler()</code>.</p>
+<p>Well, here it is...</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/k8s/utils.ts">actions/runner-container-hooks/packages/k8s/src/k8s/utils.ts</a></p>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-277">277</a></span>
+<span class="normal"><a href="#__codelineno-26-278">278</a></span>
+<span class="normal"><a href="#__codelineno-26-279">279</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-26-277"><a id="__codelineno-26-277" name="__codelineno-26-277"></a><span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">useKubeScheduler</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-26-278"><a id="__codelineno-26-278" name="__codelineno-26-278"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">ENV_USE_KUBE_SCHEDULER</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'true'</span>
+</span><span id="__span-26-279"><a id="__codelineno-26-279" name="__codelineno-26-279"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+<div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-27-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-27-16"><a id="__codelineno-27-16" name="__codelineno-27-16"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">ENV_USE_KUBE_SCHEDULER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'ACTIONS_RUNNER_USE_KUBE_SCHEDULER'</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+</div>
+<p>Like so many other features of GitHub ARC, it turns out triggering this
+behavior is not very well documented, but some quick searching turned
+up the <code>ACTIONS_RUNNER_USE_KUBE_SCHEDULER</code> environment setting.</p>
+<p>I can't find much documentation on it beyond it's original pull request
+<a href="https://github.com/actions/runner-container-hooks/pull/111"><strong>runner-container-hooks PR#111</strong></a>.
+The community seems to be aware of it enough to try and use it, though.
+Some of the reported issues around it were similar to our use case and
+educational in general.</p>
+<div class="admonition github-reference annotate">
+<p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/pull/111">actions/runner-container-hooks - Pull Request #111</a></p>
+<p>Add option to use the kubernetes scheduler for workflow pods - Pull Request #111 - actions/runner-container-hooks</p>
+</div>
+<p>We'll add this environment variable to our RunnerScaleSet's <code>values.yaml</code>.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="hll"><span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+</span></span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="hll"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_USE_KUBE_SCHEDULER</span>
+</span></span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</span></code></pre></div>
+<details class="example annotate">
+<summary>Expand for full RunnerScaleSet template spec</summary>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nt">template</span><span class="p">:</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">      </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/actions/actions-runner:latest</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">      </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"/home/runner/run.sh"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOKS</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/k8s/index.js</span>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="hll"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_USE_KUBE_SCHEDULER</span>
+</span></span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="hll"><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</span></span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_IMAGE</span>
+</span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/actions/actions-runner:latest</span><span class="w"> </span><span class="c1"># should match the runnerimage</span>
+</span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_CONTAINER_HOOK_TEMPLATE</span>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/pod-template/content</span>
+</span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER</span>
+</span><span id="__span-29-18"><a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_POD_NAME</span>
+</span><span id="__span-29-20"><a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a><span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+</span><span id="__span-29-21"><a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a><span class="w">            </span><span class="nt">fieldRef</span><span class="p">:</span>
+</span><span id="__span-29-22"><a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a><span class="w">              </span><span class="nt">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metadata.name</span>
+</span><span id="__span-29-23"><a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a><span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span>
+</span><span id="__span-29-24"><a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work</span>
+</span><span id="__span-29-25"><a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/_work</span>
+</span><span id="__span-29-26"><a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">container-hooks-volume</span>
+</span><span id="__span-29-27"><a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a><span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/runner/pod-template</span>
+</span><span id="__span-29-28"><a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-29-29"><a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work</span>
+</span><span id="__span-29-30"><a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a><span class="w">      </span><span class="nt">ephemeral</span><span class="p">:</span>
+</span><span id="__span-29-31"><a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a><span class="w">        </span><span class="nt">volumeClaimTemplate</span><span class="p">:</span>
+</span><span id="__span-29-32"><a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a><span class="w">          </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-29-33"><a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a><span class="w">            </span><span class="nt">accessModes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="s">"ReadWriteOnce"</span><span class="w"> </span><span class="p p-Indicator">]</span>
+</span><span id="__span-29-34"><a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a><span class="w">            </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="s">"local-path"</span>
+</span><span id="__span-29-35"><a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a><span class="w">            </span><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-29-36"><a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a><span class="w">              </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-29-37"><a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a><span class="w">                </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+</span><span id="__span-29-38"><a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">container-hooks-volume</span>
+</span><span id="__span-29-39"><a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a><span class="w">      </span><span class="nt">configMap</span><span class="p">:</span>
+</span><span id="__span-29-40"><a id="__codelineno-29-40" name="__codelineno-29-40" href="#__codelineno-29-40"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-arc-container-hooks</span>
+</span></code></pre></div>
+</details>
+<p>Running another test job we see:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Sat, 24 Jan 2026 19:32:21 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-nx2ns-runner-5ln6x-workflow
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Sat, 24 Jan 2026 19:32:24 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div>
+<p>Looks good!  Same ~3s performance on workflow pod startup.</p>
+<p>Reading the mainfest on the newly running workflow pod we can see what
+<code>getPodAffinity(nodeName)</code> contributed to the spec:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nt">affinity</span><span class="p">:</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">nodeAffinity</span><span class="p">:</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">    </span><span class="nt">requiredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">      </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchExpressions</span><span class="p">:</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/hostname</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="w">              </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="w">              </span><span class="nt">values</span><span class="p">:</span>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hephaestus.homelab</span>
+</span></code></pre></div>
+<p>Which looks compatible with the OpenEBS constraint we showed earlier:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nt">allowedTopologies</span><span class="p">:</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchLabelExpressions</span><span class="p">:</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/hostname</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hephaestus.homelab</span>
+</span></code></pre></div>
+<p>Both are using <code>kubernetes.io/hostname: hephaestus.homelab</code> and with the
+same scheduler.</p>
+<h2 id="are-we-there-yet">Are We There Yet?<a class="headerlink" href="#are-we-there-yet" title="Permanent link">#</a></h2>
+<p>Running on the default runner image with a clean working values.yaml
+for our RunnerScaleSet, and a clean hook extension connecting our
+<code>conan-home</code> ZFS clone.  Awesome.</p>
+<p>One more thing...</p>
+<p>While troubleshooting this issue we found that the default <code>k8s</code> hook is
+old (v0.7.0).  It's not clear why the newer hook release (v0.8.0) has a
+new name (<code>k8s-novolume</code>) and does not(?) appear to be the default
+version at this point.</p>
+<p>Let try "just one more" experiment to try the <code>k8s-novolume</code> hook and see
+how well it works with our <code>conan-home</code> OpenEBS PVC.  It may be feasible
+to switch directly to v0.8.0 if it handles our data volumes better than
+v0.7.0 does.</p>
+<h2 id="experiment-4-github-arc-containermode-k8s-novolume">Experiment 4: GitHub ARC <code>containerMode: k8s-novolume</code><a class="headerlink" href="#experiment-4-github-arc-containermode-k8s-novolume" title="Permanent link">#</a></h2>
+<p>For this test we only had to modify our <code>RunnerScaleSet</code> <code>values.yaml</code>.</p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="w"> </span> containerMode:
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="gd">-   type: "kubernetes"</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="gi">+   type: "kubernetes-novolume"</span>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w"> </span> [...]
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>
+</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w"> </span> template:
+</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w"> </span>   spec:
+</span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="w"> </span>     containers:
+</span><span id="__span-33-10"><a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="w"> </span>     - name: runner
+</span><span id="__span-33-11"><a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a><span class="w"> </span>       env:
+</span><span id="__span-33-12"><a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="w"> </span>         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+</span><span id="__span-33-13"><a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="gd">-           value: /home/runner/k8s/index.js</span>
+</span><span id="__span-33-14"><a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a><span class="gi">+           value: /home/runner/k8s-novolume/index.js</span>
+</span></code></pre></div>
+<p>It appears that v0.8.0 of the k8s hook has removed all of the node affinity
+requirements and implementation.  Rather than relying on volumes shared
+between the runner pod and the workflow pod, the updated k8s hook will copy
+files around the cluster as necessary.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/GitHubARCK8sNoVolumeInitContainers.png" data-desc-position="bottom"><img alt="GitHub ARC k8s-novolume Initialize containers" src="../img/GitHubARCK8sNoVolumeInitContainers.png"></a></p>
+<p>The unfortunate downside of this is that it slows down our workflow
+container initialization significantly.  We've traded the node affinity
+issue for a data transfer issue.</p>
+<div class="language-text highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-34-1">1</a></span>
+<span class="normal"><a href="#__codelineno-34-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1"></a>Mon, 26 Jan 2026 16:57:34 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-dtm9h-runner-jqjvt-workflow
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2"></a>Mon, 26 Jan 2026 16:57:49 GMT ##[debug]Job pod is ready for traffic
+</span></code></pre></div></td></tr></tbody></table></div>
+<p>It's only 15s in this case, but some basic debugging has shown this delay
+appears to be in the <code>initContainers</code> moving data around at runtime rather
+than more Kubernetes scheduling issues.</p>
+<p>We will table this until a future point when we're ready to look at
+optimization of the <code>externals</code> and other data transfers that the runner
+applies to the workflow job container.</p>
+<p>While we are well-equipped to continue tackling performance issues like
+this, we need to move on.  The default version we're using (v0.7.0) is
+working very well and is apparently stable given that it's no longer
+maintained.  v0.7.0 also seems like a closer fit to our use case since it
+requires the same sort of node affinity for data volumes.  We won't
+escape without any tech debt at all.. <img alt="😄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f604.svg" title=":smile:"></p>
+<h2 id="whats-next">What's Next<a class="headerlink" href="#whats-next" title="Permanent link">#</a></h2>
+<p>We need to continue testing and optimizing this solution before we can go
+to production with it.  Functionality is proven to be working and correct,
+and the single major performance issue we found is now resolved.  There
+are still many things we need to look at regarding security, performance,
+and ease-of-use.</p>
+<p>For our next steps, we'll continue looking at performance optimization and
+security hardening.  We'll also need to circle back on saving broken builds
+and promoting our updated cache on successful build.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging">GitHub Actions - Enable debug logging</a></li>
+<li><a href="https://github.com/actions/runner/blob/main/images/Dockerfile#L7">GitHub Actions - Runner container image</a></li>
+<li><a href="https://openebs.io/docs/user-guides/local-storage-user-guide/local-pv-zfs/configuration/zfs-create-storageclass#zfs-pool-availability">OpenEBS - Local PV ZFS - Configuration</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../ConanK8sARCDemo/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Demo - Conan and ZFS and Kubernetes CI (Oh my!)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Demo - Conan and ZFS and Kubernetes CI (Oh my!)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ConanK8sARCPerformance/" class="md-footer__link md-footer__link--next" aria-label="Next: Demo - Securing and Performing with our GitHub ARC deployment">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Demo - Securing and Performing with our GitHub ARC deployment
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2025, David L. Armstrong.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
