@@ -28,11 +28,11 @@ compared to downloading our dependencies from artifact management.)*
 
 We did not experience anything odd or unexpected related to performance in
 our [devContainer](ConanK8sDevContainerDemo.md) demo, so this new development
-is concerning.  This issue is crtical to resolve for the success of this
+is concerning.  This issue is critical to resolve for the success of this
 project!
 
 Since I've already been documenting each step of setting up this solution,
-this was a prime opportuinity to document the process of troubleshooting
+this was a prime opportunity to document the process of troubleshooting
 a performance issue.  Hopefully gaining some more insight into how the
 infrastructure is working in the process as well as I try to explain it here.
 
@@ -78,8 +78,8 @@ We'll add two new variable definitions to the repo for GitHub Actions to use.
 
 ## Breaking it down
 
-While GitHub doesn't provide granular timing data in its log files, it can
-show us precise timestamps for each log entry in the web UI by pressing
+While GitHub does not provide granular timing data in its log files, it
+can show us precise timestamps for each log entry in the web UI by pressing
 `Shift + T` while on the job log screen.  Combined with enabling debug
 logging this gives us something to work with at least.
 
@@ -88,11 +88,11 @@ logging this gives us something to work with at least.
 Breaking this down, we can see where the majority of the time is going:
 
 ```text linenums="12"
-Tue, 23 Dec 2025 17:13:51 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-dmdc5-runner-zdjp2-workflow
-Tue, 23 Dec 2025 17:14:06 GMT ##[debug]Job pod is ready for traffic
+Fri, 30 Jan 2026 00:09:53 GMT ##[debug]Job pod created, waiting for it to come online linux-x86-64-5fgk8-runner-8299r-workflow
+Fri, 30 Jan 2026 00:10:25 GMT ##[debug]Job pod is ready for traffic
 ```
 
-For this particular job, 15s of the total 17s of the "Initialize
+For this particular job, 32s of the total 33s of the "Initialize
 containers" step is spent waiting for the created Pod to start running.
 Looking at the source code we can locate the debug messages to see
 what's going on in between the log messages.
@@ -145,16 +145,16 @@ Let's take a look at the source to see what it does.
           }
 
           if (!backOffPhases.has(phase)) {
-             throw new Error(
+            throw new Error(
                `Pod ${podName} is unhealthy with phase status ${phase}`
              )
-           }
-           await backOffManager.backOff()
-         }
-       } catch (error) {
-         throw new Error(`Pod ${podName} is unhealthy with phase status ${phase}`)
-       }
-     }
+          }
+          await backOffManager.backOff()
+        }
+      } catch (error) {
+        throw new Error(`Pod ${podName} is unhealthy with phase status ${phase}`)
+      }
+    }
     ```
 
     ```typescript linenums="581" hl_lines="2 19 22"
@@ -197,7 +197,7 @@ backoff may be making the problem appear worse than it is.  For some reason
 Kubernetes is delaying our pod startup with ARC but not with our
 devContainer.
 
-We need to go look at the Kubernetes logs for our next clues.
+We'll need to go look at the Kubernetes logs for our next clues.
 
 ## Kubernetes Pod startup troubleshooting
 
@@ -210,7 +210,7 @@ The first step we'll take is to start one of each of our workflow and
 devContainer pods, watching the timing on our devContainer to verify
 that our startup delay doesn't occur.
 
-We'll use the following manifest to test our devContainer pod startup.
+We'll use the below manifest to test our devContainer pod startup.
 We've changed it a bit since our devContainer demo to use the same
 volume syntax as our GitHub ARC hook extension.
 
@@ -402,47 +402,48 @@ Checking the same logs for our GitHub ARC workflow pod we can clearly see
 a difference, but it's not quite clear why yet.
 
 ```bash linenums="0" title="GitHub ARC Workflow Pod Events"
-❯ kubectl describe pod linux-x86-64-st6ng-runner-pvzp6-workflow -n devcontainer
+❯ kubectl describe pod linux-x86-64-5fgk8-runner-v84xb-workflow -n devcontainer
 [...]
 Events:
   Type     Reason       Age   From     Message
   ----     ------       ----  ----     -------
-  Warning  FailedMount  106s  kubelet  Unable to attach or mount volumes: unmounted volumes=[conan-home], unattached volumes=[], failed to process volumes=[conan-home]: error processing PVC devcontainer/linux-x86-64-st6ng-runner-pvzp6-workflow-conan-home: PVC is not bound
+  Warning  FailedMount  107s  kubelet  Unable to attach or mount volumes: unmounted volumes=[conan-home], unattached volumes=[], failed to process volumes=[conan-home]: error processing PVC devcontainer/linux-x86-64-5fgk8-runner-v84xb-workflow-conan-home: PVC is not bound
   Normal   Pulled       91s   kubelet  Container image "nexus.homelab/conan-build-almalinux:x86_64-latest" already present on machine
   Normal   Created      91s   kubelet  Created container: job
   Normal   Started      91s   kubelet  Started container job
 ```
 
 ```bash linenums="0" title="GitHub ARC Workflow Pod Status Changes"
-❯ kubectl get pod linux-x86-64-st6ng-runner-pvzp6-workflow -n devcontainer -o yaml
+❯ kubectl get pod linux-x86-64-5fgk8-runner-v84xb-workflow -n devcontainer -o yaml
 [...]
 status:
   conditions:
   - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T18:02:42Z"
+    lastTransitionTime: "2026-01-30T00:17:15Z"
     status: "True"
     type: PodScheduled
   - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T18:02:42Z"
+    lastTransitionTime: "2026-01-30T00:17:15Z"
     status: "True"
     type: Initialized
   - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T18:02:57Z"
+    lastTransitionTime: "2026-01-30T00:17:32Z"
     status: "True"
     type: PodReadyToStartContainers
   - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T18:02:57Z"
+    lastTransitionTime: "2026-01-30T00:17:32Z"
     status: "True"
     type: ContainersReady
   - lastProbeTime: null
-    lastTransitionTime: "2026-01-19T18:02:57Z"
+    lastTransitionTime: "2026-01-30T00:17:32Z"
     status: "True"
     type: Ready
 ```
 
 A few observations here:
 
-- There is a noticeable jump from -91s to -106s after that `FailedMount` event.
+- There is a noticeable jump from -91s to -107s after that `FailedMount`
+    event.
 - The devContainer pod shows a series of `FailedScheduling` warnings from
     `default-scheduler`.  We see no events from `default-scheduler` for the
     GitHub ARC pod at all.
@@ -452,9 +453,30 @@ A few observations here:
 We have confirmed the issue is within the Kubernetes realm, and it appears
 to be happening after `Initialized` but before `PodReadyToStartContainers`.
 
+!!! example annotate "Duct tape and bailing wire"
+
+    Did you notice that the pod only took 16s to get to `Ready` status?
+    Why was GitHub Actions waiting 30s+?
+
+    It looks like we're not very lucky in the `waitForPodPhases()` cycle.
+    Since it uses a binary exponential backoff cycle from 1s, the series
+    of `backOff()` sleeps looks like:
+
+    1s + 2s + 4s + 8s + 16s = **31s**
+
+    If we're not able to resolve the root cause of our performance issue,
+    it looks like we can tune `backOff()` to punish us less.  It would not
+    be a comprehensive fix, and it would likely work with varying levels
+    of success in other environments.
+    
+    We could probably reclaim the majority of the last 16s sleep, cutting
+    the delay in half.  It would still be significantly slower than the
+    1-3s timing we're looking for howeveri, only slightly faster than
+    downloading from artifact management.
+
 ### Digging Deeper
 
-With the `FailedMount` warning there are a couple experiments to try.
+With the `FailedMount` warning there are a couple experiments for us to try.
 
 1. Modify GitHub ARC hook extension to remove the `conan-home` PVC only,
     isolate our OpenEBS ZFS volume from GitHub ARC.
@@ -502,7 +524,7 @@ Once the ConfigMap change is applied, the GitHub ARC Runners will pick up
 the change *automatically* once the cluster nodes have a chance to resync
 their state.  We can verify that our runners have picked up the change
 before running our test job by connecting to the runner container and
-checking the file we install our hook extension as.
+checking the file where we chose install our hook extension.
 
 ```bash linenums="0"
 runner@linux-x86-64-st6ng-runner-5dskd:~$ cat pod-template/content
@@ -545,9 +567,10 @@ the Pod mainfests further should expose the issue.
 
 ## Experiment 2: DevContainer and ARC Pod Manifest differences
 
-In order to understand why this difference is occuring, we need to look at the
-YAML specs for the pods.  In addition to our hook extension, the `k8s` hook
-adds other environment settings and volume mounts to the workflow pod.
+In order to understand why this difference is occurring, we need to look
+at the YAML specs for the pods.  In addition to our hook extension, the
+`k8s` hook adds other environment settings and volume mounts to the
+workflow pod.
 
 In order to examine the Pod mainfest applied by GitHub ARC, we'll add some
 additional debugging to the GitHub ARC Kubernetes Hook.  We'll start with
@@ -772,9 +795,9 @@ We don't have anything conclusive yet, but we do have a solid lead to chase.
 ## Best Guess
 
 My best guess at this point is that mixing use of `allowedTopologies` and
-`nodeName` in scheduling constraints is probably the source of the issue.
-Even when the node specified is the same one used by both OpenEBS and
-GitHub ARC.  Even when there's only one node in the cluster.
+`nodeName` in Kubernetes scheduling constraints is probably the source of
+the issue.  Even when the node specified is the same one used by both
+OpenEBS and GitHub ARC.  Even when there's only one node in the cluster.
 
 Some searching turns up OpenEBS - Issue 3667.
 
@@ -854,7 +877,7 @@ change ARC's scheduling behavior and not set `nodeName` seems like a great
 option to test.
 
 Using `appPod.spec.affinity` instead of `appPod.spec.nodeName` sounds more
-comaptible with our use of `allowedTopologies` in OpenEBS, but we'll have
+compatible with our use of `allowedTopologies` in OpenEBS, but we'll have
 to see what `getPodAffinity(nodeName)` returns.
 
 We can test it in parallel though if we can enable `useKubeScheduler()`.
@@ -871,7 +894,6 @@ Well, here it is...
 
     ```typescript linenums="16"
     export const ENV_USE_KUBE_SCHEDULER = 'ACTIONS_RUNNER_USE_KUBE_SCHEDULER'
-    }
     ```
 
 Like so many other features of GitHub ARC, it turns out triggering this
@@ -997,7 +1019,8 @@ version at this point.
 
 Let try "just one more" experiment to try the `k8s-novolume` hook and see
 how well it works with our `conan-home` OpenEBS PVC.  It may be feasible
-to switch directly to v0.8.0 if it handles our data volumes better.
+to switch directly to v0.8.0 if it handles our data volumes better than
+v0.7.0 does.
 
 ## Experiment 4: GitHub ARC `containerMode: k8s-novolume`
 
@@ -1048,7 +1071,7 @@ While we are well-equipped to continue tackling performance issues like
 this, we need to move on.  The default version we're using (v0.7.0) is
 working very well and is apparently stable given that it's no longer
 maintained.  v0.7.0 also seems like a closer fit to our use case since it
-requires the same sort of node affinity for data volumes.  We don't
+requires the same sort of node affinity for data volumes.  We won't
 escape without any tech debt at all.. :smile:
 
 ## What's Next
