@@ -8,6 +8,10 @@
         <link rel="canonical" href="https://daversomethingsomethingorg.github.io/ConanToolchain/v1.0/ConanK8sARCPerformance/">
       
       
+        <link rel="prev" href="../ConanK8sARCTroubleshooting/">
+      
+      
+        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -15,7 +19,7 @@
     
     
       
-        <title>Demo - Securing and Performing with our GitHub ARC deployment - Toolchain Build System using Conan</title>
+        <title>Securing our GitHub ARC deployment and Making it Perform - Toolchain Build System using Conan</title>
       
     
     
@@ -69,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demo-securing-and-performing-with-our-github-arc-deployment" class="md-skip">
+        <a href="#securing-our-github-arc-deployment-and-making-it-perform" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demo - Securing and Performing with our GitHub ARC deployment
+              Securing our GitHub ARC deployment and Making it Perform
             
           </span>
         </div>
@@ -396,6 +400,119 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Securing our GitHub ARC deployment and Making it Perform
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Securing our GitHub ARC deployment and Making it Perform
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-do-we-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where Do We Start?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     <li class="md-nav__item">
@@ -482,165 +599,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#general-performance" class="md-nav__link">
+  <a href="#where-do-we-start" class="md-nav__link">
     <span class="md-ellipsis">
-      General Performance
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="General Performance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#profiling-end-to-end-workflowjob-runtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      Profiling End-to-End workflow/job runtime
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#instrumenting-the-github-arc-kubernetes-hook" class="md-nav__link">
-    <span class="md-ellipsis">
-      Instrumenting the GitHub ARC kubernetes hook
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#runner-caching-for-startup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Runner caching for startup
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-job-container-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Workflow job container optimization
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kubectl-in-workflow-pod-initcontainer" class="md-nav__link">
-    <span class="md-ellipsis">
-      kubectl in workflow pod initContainer?
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#specifying-resource-requests-vs-limits" class="md-nav__link">
-    <span class="md-ellipsis">
-      Specifying resource requests vs. limits
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance-and-security-combined" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance and Security combined
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting-broken-builds" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting Broken Builds
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations-and-open-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations and Open Issues
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      What's Next
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What's Next">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-solution-for-bazel-build-cache" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy solution for Bazel build cache
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#supply-chain-dependency-track" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supply Chain - Dependency Track
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#switch-to-netapp-instead-of-openzfs-and-openebs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Switch to NetApp instead of OpenZFS and OpenEBS?
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
+      Where Do We Start?
     </span>
   </a>
   
@@ -665,7 +626,7 @@
   
 
 
-<h1 id="demo-securing-and-performing-with-our-github-arc-deployment">Demo - Securing and Performing with our GitHub ARC deployment<a class="headerlink" href="#demo-securing-and-performing-with-our-github-arc-deployment" title="Permanent link">#</a></h1>
+<h1 id="securing-our-github-arc-deployment-and-making-it-perform">Securing our GitHub ARC deployment and Making it Perform<a class="headerlink" href="#securing-our-github-arc-deployment-and-making-it-perform" title="Permanent link">#</a></h1>
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
 
@@ -702,6 +663,25 @@ any hardware optimization.</p>
 <li>Docker - <a href="https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md">ConanToolchain Docker Container Image</a></li>
 <li><a href="https://www.sonatype.com/products/nexus-community-edition-download">Sonatype Nexus Community Edition</a></li>
 </ul>
+<h2 id="where-do-we-start">Where Do We Start?<a class="headerlink" href="#where-do-we-start" title="Permanent link">#</a></h2>
+<p>GitHub Actions security is a well-known and explored topic already, but
+we're somewhat new here.  While we could apply general security and
+performance principles to improve our solution, thankfully we have help
+available!  We can get a huge head-start by standing on the shoulders of
+experts rather than reinventing this wheel from scratch.</p>
+<p><a href="https://github.com/some-natalie">Natalie Somersall</a> has written an
+excellent blog post on securing GitHub ARC already.  We won't try to
+reiterate her entire post here, but we will try to honor her advice
+by addressing each of her points and how it applies to our solution here.</p>
+<div class="admonition tip annotate">
+<p class="admonition-title">Further Reading</p>
+<p>Somersall, Natalie (2023). 
+<a href="https://some-natalie.dev/blog/securing-ghactions-with-arc/">Securing Self-Hosted GitHub Actions with Kubernetes and Actions-Runner-Controller</a></p>
+<p>Also check out the rest of Natalie's quite-prolific blog site as well.
+She has published many insightful articles on DevOps topics far beyond
+just GitHub/ARC security.</p>
+</div>
+<h1 id="todo">TODO<a class="headerlink" href="#todo" title="Permanent link">#</a></h1>
 <h2 id="general-performance">General Performance<a class="headerlink" href="#general-performance" title="Permanent link">#</a></h2>
 <p>We want to look into other areas where we can improve performance of
 our solution.  Performance is the primary goal of this project after all.</p>
@@ -794,6 +774,45 @@ observability setup</p>
 common recommendations to make sure our solution still conforms, and
 to take advantage of any features we've missed or mis0configured along
 the way.</p>
+<h3 id="shrink-wrapped-software-vs-saas">Shrink-wrapped software vs. SaaS<a class="headerlink" href="#shrink-wrapped-software-vs-saas" title="Permanent link">#</a></h3>
+<h4 id="self-hosted-infrastructure-vs-cloud">Self-Hosted Infrastructure vs. Cloud<a class="headerlink" href="#self-hosted-infrastructure-vs-cloud" title="Permanent link">#</a></h4>
+<ul>
+<li>our Intellectual Property (source code) never has to leave our premises and direct control if we also self-host GitHub (with GHES - GitHub Enterprice Server) </li>
+<li>runner container images are similarly protected<ul>
+<li>older software or operating systems may have vulnerabilities that cannot be patched without affecting behavior negatively.</li>
+<li>some industries (such as EDA) and deployments (such as embedded devices) may require use of older, more vulnerable operating systems for many years after OS support and maintenance have ended.  This is illustrated well by Microsoft's extended support for the Windows IoT releases but not the standard desktop/server releases.</li>
+</ul>
+</li>
+</ul>
+<p>For unmodified Open Source software, Cloud-hosted may be the more secure option.  Since it's not our software, we don't have to worry about IP theft.  In this case the vulnerability of the runner operating system is probably the more important consideration.</p>
+<h3 id="container-image-optimization">Container Image Optimization<a class="headerlink" href="#container-image-optimization" title="Permanent link">#</a></h3>
+<h4 id="minimal-images-with-common-base">Minimal images with common base<a class="headerlink" href="#minimal-images-with-common-base" title="Permanent link">#</a></h4>
+<p>Rather than creating a container image that can do everything, we can structure our image
+content in a way that allows all of our containers to be completely compatible with each
+other, but still limited in content.</p>
+<p>With a common base image and carefully curated artifact/package repositories, we can ensure that all container image package versions work together when installed, regardless of the image in use.
+Then any language or workflow/job-specific images can be very minimal, while keeping the ability to interoperate with images for other jobs/workflows/languages.</p>
+<h4 id="no-sudo-container-modification-at-runtime">No sudo / container modification at runtime<a class="headerlink" href="#no-sudo-container-modification-at-runtime" title="Permanent link">#</a></h4>
+<p>This is both a security and a performance issue, but at the cost of maintenace.</p>
+<p>Pre-installed (cached) software means no waiting for software install at runtime.  This gets jobs started much faster, ensures the complete container image can be completely pulled from the cache (local container registry) for each job.
+This enhances security by allowing tighter permissions, removing the need for administratve access (at runtime).</p>
+<p>The cost is maintenance.  Container images need to be up-to-date and available before the job starts.  If an
+image update is missed, or not distributed in a timely fashion, it can lead to job failures or unpredictable results.</p>
+<h4 id="image-distribution-and-caching">Image Distribution and Caching<a class="headerlink" href="#image-distribution-and-caching" title="Permanent link">#</a></h4>
+<h4 id="developer-friction">Developer Friction<a class="headerlink" href="#developer-friction" title="Permanent link">#</a></h4>
+<p>Now this is a controversial topic...</p>
+<p>Locked down container images can slow down development.</p>
+<p>When a developer is able to modify the workflow job container image at runtime, they can take responsibility for their own productivity and product needs.</p>
+<p>When a workflow job can modify the image used,
+it enables developers to try new tools, or different tool versions to suit their productivity or product performance/quality goals.</p>
+<p>IMO the best approach is to provide the ability to modify the image, but only in an sandbox where the software available to install is limited.  Security vetted, cached on-premises, and tracked in your SCA (Software Composition Analysis) tooling.</p>
+<p>This reduces the problem to ensuring any tools are required without the burden of ensuring all workflow job container images are updated and redistributed/seeded to the local caches.</p>
+<h4 id="container-image-versioning">Container Image Versioning<a class="headerlink" href="#container-image-versioning" title="Permanent link">#</a></h4>
+<ul>
+<li>hardcoding semver for the image version vs. using a moving version tag such as "latest"</li>
+</ul>
+<p>uncontrolled content</p>
+<h1 id="todo_1">TODO<a class="headerlink" href="#todo_1" title="Permanent link">#</a></h1>
 <ul>
 <li>Controller and RunnerScaleSet in different namespaces</li>
 <li>Running as non-privileged user</li>
@@ -876,6 +895,44 @@ this point we have been focusing on leveraging "free"/open technologies.</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../ConanK8sARCTroubleshooting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Troubleshooting Conan ZFS GitHub ARC Container Initialization slowness
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Apache License v2.0
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
