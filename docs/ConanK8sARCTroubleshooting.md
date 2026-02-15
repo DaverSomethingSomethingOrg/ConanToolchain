@@ -45,8 +45,9 @@ just part of the fun.
 #### Hardware
 
 We'll be using the same hardware as our previous demos.  All performance
-optimizations in this demo are done in the configuration, we're not doing
-any hardware optimization.
+optimizations in this demo are done in the software configuration, we're
+not doing any hardware optimization.  This solution should perform
+regardless of the hardware involved.
 
 - Server - AMD 8945HS/64GB/SSD
 - Workstation - AMD 9900X/32GB/SSD
@@ -186,9 +187,10 @@ Let's take a look at the source to see what it does.
     ```
 
 `waitForPodPhases()` uses a typical binary exponential backoff to poll
-kubernetes for our workflow container to **`Running`** or **`Pending`**
-state.  This is not ideal but it does have a max delay interval and a
-maxmium wait time set, so we're not going to worry about it.
+Kubernetes for our workflow container until it gets from **`Pending`**
+to **`Running`** state. This is not ideal here but it does have a max
+delay interval and a maximum wait time set, so we're not going to worry
+about it.
 
 ### Conclusion
 
@@ -471,7 +473,7 @@ to be happening after `Initialized` but before `PodReadyToStartContainers`.
     
     We could probably reclaim the majority of the last 16s sleep, cutting
     the delay in half.  It would still be significantly slower than the
-    1-3s timing we're looking for howeveri, only slightly faster than
+    1-3s timing we're looking for however, only slightly faster than
     downloading from artifact management.
 
 ### Digging Deeper
@@ -561,9 +563,9 @@ Wed, 21 Jan 2026 17:08:58 GMT ##[debug]Job pod created, waiting for it to come o
 Wed, 21 Jan 2026 17:08:59 GMT ##[debug]Job pod is ready for traffic
 ```
 
-The delay appears to be a conflict or compatibility issue betweeen our
+The delay appears to be a conflict or compatibility issue between our
 GitHub ARC configuration and our OpenEBS ZFS configuration.  Examining
-the Pod mainfests further should expose the issue.
+the Pod manifests further should expose the issue.
 
 ## Experiment 2: DevContainer and ARC Pod Manifest differences
 
@@ -572,7 +574,7 @@ at the YAML specs for the pods.  In addition to our hook extension, the
 `k8s` hook adds other environment settings and volume mounts to the
 workflow pod.
 
-In order to examine the Pod mainfest applied by GitHub ARC, we'll add some
+In order to examine the Pod manifest applied by GitHub ARC, we'll add some
 additional debugging to the GitHub ARC Kubernetes Hook.  We'll start with
 dumping the workflow pod spec template to the debug log.
 
@@ -580,7 +582,7 @@ dumping the workflow pod spec template to the debug log.
 
     The default GitHub ARC k8s hook in the default GitHub Actions Runner
     container we're using is an older version, **v0.7.0**.  We need to be
-    careful to make sure the changes we make are to the correct version!
+    careful to ensure the changes we make are to the correct version!
 
     Snippets from the Runner container image [Dockerfile](https://github.com/actions/runner/blob/main/images/Dockerfile#L7)
 
@@ -765,7 +767,7 @@ After ignoring the initContainer differences we are reduced to the following dif
          },
     ```
 
-Ignoring the standard GitHub ARC volumes/mounts that are not showing
+Further ignoring the standard GitHub ARC volumes/mounts that are not showing
 any issues when used without `conan-home`, the only remaining part
 of the diff that's significant is this:
 
@@ -855,8 +857,8 @@ It worked!  Performance was restored to ~3s on workflow pod startup.
 ## Eureka!
 
 It worked... but.  While we were so busy patching that code in the ARC k8s
-Hook, we time to think more about the code than our particular problem, and
-found something else! ...hiding directly in plain sight.
+Hook, we had time to think more about the code than our particular problem,
+and found something else! ...hiding directly in plain sight.
 
 That code we patched...
 
@@ -912,7 +914,7 @@ educational in general.
 
 We'll add this environment variable to our RunnerScaleSet's `values.yaml`.
 
-```yaml linenums="0" hl_lines="5-6"
+```yaml linenums="0" hl_lines="6-7"
 template:
   spec:
     containers:
@@ -976,7 +978,7 @@ Sat, 24 Jan 2026 19:32:24 GMT ##[debug]Job pod is ready for traffic
 
 Looks good!  Same ~3s performance on workflow pod startup.
 
-Reading the mainfest on the newly running workflow pod we can see what
+Reading the manifest on the newly running workflow pod we can see what
 `getPodAffinity(nodeName)` contributed to the spec:
 
 ```yaml linenums="0"
@@ -1001,8 +1003,8 @@ allowedTopologies:
       - hephaestus.homelab
 ```
 
-Both are using `kubernetes.io/hostname: hephaestus.homelab` and with the
-same scheduler.
+Both are now using `kubernetes.io/hostname: hephaestus.homelab` and with
+the same scheduler.
 
 ## Are We There Yet?
 
@@ -1010,7 +1012,7 @@ Running on the default runner image with a clean working values.yaml
 for our RunnerScaleSet, and a clean hook extension connecting our
 `conan-home` ZFS clone.  Awesome.
 
-One more thing...
+### One more thing...
 
 While troubleshooting this issue we found that the default `k8s` hook is
 old (v0.7.0).  It's not clear why the newer hook release (v0.8.0) has a

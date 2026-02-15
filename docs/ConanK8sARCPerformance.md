@@ -1,4 +1,4 @@
-# Demo - Securing and Performing with our GitHub ARC deployment
+# Securing our GitHub ARC deployment and Making it Perform
 
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD034 -->
@@ -43,6 +43,31 @@ any hardware optimization.
 - [Conan C/C++ Package Manager](https://conan.io/)
 - Docker - [ConanToolchain Docker Container Image](https://github.com/DaverSomethingSomethingOrg/conan-toolchain-demo/tree/main/demos/gcc-toolchain/conan-build-container/README.md)
 - [Sonatype Nexus Community Edition](https://www.sonatype.com/products/nexus-community-edition-download)
+
+## Where Do We Start?
+
+GitHub Actions security is a well-known and explored topic already, but
+we're somewhat new here.  While we could apply general security and
+performance principles to improve our solution, thankfully we have help
+available!  We can get a huge head-start by standing on the shoulders of
+experts rather than reinventing this wheel from scratch.
+
+[Natalie Somersall](https://github.com/some-natalie) has written an
+excellent blog post on securing GitHub ARC already.  We won't try to
+reiterate her entire post here, but we will address each of her points
+and discuss how it applies to our solution here.
+
+!!! tip annotate "Further Reading"
+
+    Somersall, Natalie (2023). 
+    [Securing Self-Hosted GitHub Actions with Kubernetes and Actions-Runner-Controller](https://some-natalie.dev/blog/securing-ghactions-with-arc/)
+
+    Also check out the rest of Natalie's quite-prolific blog site as well.
+    She has published many insightful articles on DevOps topics far beyond
+    just GitHub/ARC security.
+
+# TODO
+
 
 ## General Performance
 
@@ -120,6 +145,64 @@ Security is pretty well configured out of the box, but we'll review
 common recommendations to make sure our solution still conforms, and
 to take advantage of any features we've missed or mis0configured along
 the way.
+
+### Shrink-wrapped software vs. SaaS
+
+#### Self-Hosted Infrastructure vs. Cloud
+
+- our Intellectual Property (source code) never has to leave our premises and direct control if we also self-host GitHub (with GHES - GitHub Enterprice Server) 
+- runner container images are similarly protected
+    - older software or operating systems may have vulnerabilities that cannot be patched without affecting behavior negatively.
+    - some industries (such as EDA) and deployments (such as embedded devices) may require use of older, more vulnerable operating systems for many years after OS support and maintenance have ended.  This is illustrated well by Microsoft's extended support for the Windows IoT releases but not the standard desktop/server releases.
+
+For unmodified Open Source software, Cloud-hosted may be the more secure option.  Since it's not our software, we don't have to worry about IP theft.  In this case the vulnerability of the runner operating system is probably the more important consideration.
+
+### Container Image Optimization
+
+#### Minimal images with common base
+
+Rather than creating a container image that can do everything, we can structure our image
+content in a way that allows all of our containers to be completely compatible with each
+other, but still limited in content.
+
+With a common base image and carefully curated artifact/package repositories, we can ensure that all container image package versions work together when installed, regardless of the image in use.
+Then any language or workflow/job-specific images can be very minimal, while keeping the ability to interoperate with images for other jobs/workflows/languages.
+
+#### No sudo / container modification at runtime
+
+This is both a security and a performance issue, but at the cost of maintenace.
+
+Pre-installed (cached) software means no waiting for software install at runtime.  This gets jobs started much faster, ensures the complete container image can be completely pulled from the cache (local container registry) for each job.
+This enhances security by allowing tighter permissions, removing the need for administratve access (at runtime).
+
+The cost is maintenance.  Container images need to be up-to-date and available before the job starts.  If an
+image update is missed, or not distributed in a timely fashion, it can lead to job failures or unpredictable results.
+
+#### Image Distribution and Caching
+
+#### Developer Friction
+
+Now this is a controversial topic...
+
+Locked down container images can slow down development.
+
+When a developer is able to modify the workflow job container image at runtime, they can take responsibility for their own productivity and product needs.
+
+When a workflow job can modify the image used,
+it enables developers to try new tools, or different tool versions to suit their productivity or product performance/quality goals.
+
+IMO the best approach is to provide the ability to modify the image, but only in an sandbox where the software available to install is limited.  Security vetted, cached on-premises, and tracked in your SCA (Software Composition Analysis) tooling.
+
+This reduces the problem to ensuring any tools are required without the burden of ensuring all workflow job container images are updated and redistributed/seeded to the local caches.
+
+#### Container Image Versioning
+
+- hardcoding semver for the image version vs. using a moving version tag such as "latest"
+
+uncontrolled content
+
+
+# TODO
 
 - Controller and RunnerScaleSet in different namespaces
 - Running as non-privileged user
