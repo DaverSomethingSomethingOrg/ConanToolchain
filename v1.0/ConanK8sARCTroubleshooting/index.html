@@ -604,6 +604,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Are We There Yet?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-more-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      One more thing...
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -862,6 +877,21 @@
       Are We There Yet?
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Are We There Yet?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-more-thing" class="md-nav__link">
+    <span class="md-ellipsis">
+      One more thing...
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1726,7 +1756,7 @@ against our devContainer spec using <code>yq</code>/<code>jq</code>.</p>
 </span><span id="__span-20-60"><a id="__codelineno-20-60" name="__codelineno-20-60"></a><span class="w"> </span>    },
 </span></code></pre></div></td></tr></tbody></table></div>
 </details>
-<p>Ignoring the standard GitHub ARC volumes/mounts that are not showing
+<p>Further ignoring the standard GitHub ARC volumes/mounts that are not showing
 any issues when used without <code>conan-home</code>, the only remaining part
 of the diff that's significant is this:</p>
 <div class="language-diff highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-46">46</a></span>
@@ -1852,10 +1882,10 @@ educational in general.</p>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">spec</span><span class="p">:</span>
 </span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
 </span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span>
-</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="hll"><span class="w">      </span><span class="nt">env</span><span class="p">:</span>
-</span></span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="hll"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_USE_KUBE_SCHEDULER</span>
-</span></span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
-</span></code></pre></div>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">      </span><span class="nt">env</span><span class="p">:</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="hll"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACTIONS_RUNNER_USE_KUBE_SCHEDULER</span>
+</span></span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="hll"><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+</span></span></code></pre></div>
 <details class="example annotate">
 <summary>Expand for full RunnerScaleSet template spec</summary>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nt">template</span><span class="p">:</span>
@@ -1930,7 +1960,7 @@ the same scheduler.</p>
 <p>Running on the default runner image with a clean working values.yaml
 for our RunnerScaleSet, and a clean hook extension connecting our
 <code>conan-home</code> ZFS clone.  Awesome.</p>
-<p>One more thing...</p>
+<h3 id="one-more-thing">One more thing...<a class="headerlink" href="#one-more-thing" title="Permanent link">#</a></h3>
 <p>While troubleshooting this issue we found that the default <code>k8s</code> hook is
 old (v0.7.0).  It's not clear why the newer hook release (v0.8.0) has a
 new name (<code>k8s-novolume</code>) and does not(?) appear to be the default
