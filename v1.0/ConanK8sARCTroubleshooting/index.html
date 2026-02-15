@@ -1496,7 +1496,7 @@ dumping the workflow pod spec template to the debug log.</p>
 <p class="admonition-title">Deprecated?</p>
 <p>The default GitHub ARC k8s hook in the default GitHub Actions Runner
 container we're using is an older version, <strong>v0.7.0</strong>.  We need to be
-careful to be sure the changes we make are to the correct version!</p>
+careful to ensure the changes we make are to the correct version!</p>
 <p>Snippets from the Runner container image <a href="https://github.com/actions/runner/blob/main/images/Dockerfile#L7">Dockerfile</a></p>
 <div class="language-docker highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="k">ARG</span><span class="w"> </span><span class="nv">RUNNER_CONTAINER_HOOKS_VERSION</span><span class="o">=</span><span class="m">0</span>.7.0
 </span></code></pre></div></td></tr></tbody></table></div>
