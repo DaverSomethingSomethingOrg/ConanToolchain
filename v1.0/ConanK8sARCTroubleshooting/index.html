@@ -11,7 +11,7 @@
         <link rel="prev" href="../ConanK8sARCDemo/">
       
       
-        <link rel="next" href="../ConanK8sARCPerformance/">
+        <link rel="next" href="../LICENSE.txt">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -648,27 +648,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../ConanK8sARCPerformance/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Securing our GitHub ARC deployment and Making it Perform
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../LICENSE.txt" class="md-nav__link">
         
   
@@ -968,8 +947,9 @@ just part of the fun.</p>
 <h3 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">#</a></h3>
 <h4 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">#</a></h4>
 <p>We'll be using the same hardware as our previous demos.  All performance
-optimizations in this demo are done in the configuration, we're not doing
-any hardware optimization.</p>
+optimizations in this demo are done in the software configuration, we're
+not doing any hardware optimization.  This solution should perform
+regardless of the hardware involved.</p>
 <ul>
 <li>Server - AMD 8945HS/64GB/SSD</li>
 <li>Workstation - AMD 9900X/32GB/SSD</li>
@@ -1819,8 +1799,8 @@ hook.</p>
 <p>It worked!  Performance was restored to ~3s on workflow pod startup.</p>
 <h2 id="eureka">Eureka!<a class="headerlink" href="#eureka" title="Permanent link">#</a></h2>
 <p>It worked... but.  While we were so busy patching that code in the ARC k8s
-Hook, we time to think more about the code than our particular problem, and
-found something else! ...hiding directly in plain sight.</p>
+Hook, we had time to think more about the code than our particular problem,
+and found something else! ...hiding directly in plain sight.</p>
 <p>That code we patched...</p>
 <div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-25-98"> 98</a></span>
 <span class="normal"><a href="#__codelineno-25-99"> 99</a></span>
@@ -1925,7 +1905,7 @@ educational in general.</p>
 </span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Sat, 24 Jan 2026 19:32:24 GMT ##[debug]Job pod is ready for traffic
 </span></code></pre></div>
 <p>Looks good!  Same ~3s performance on workflow pod startup.</p>
-<p>Reading the mainfest on the newly running workflow pod we can see what
+<p>Reading the manifest on the newly running workflow pod we can see what
 <code>getPodAffinity(nodeName)</code> contributed to the spec:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nt">affinity</span><span class="p">:</span>
 </span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">nodeAffinity</span><span class="p">:</span>
@@ -1944,8 +1924,8 @@ educational in general.</p>
 </span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span>
 </span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hephaestus.homelab</span>
 </span></code></pre></div>
-<p>Both are using <code>kubernetes.io/hostname: hephaestus.homelab</code> and with the
-same scheduler.</p>
+<p>Both are now using <code>kubernetes.io/hostname: hephaestus.homelab</code> and with
+the same scheduler.</p>
 <h2 id="are-we-there-yet">Are We There Yet?<a class="headerlink" href="#are-we-there-yet" title="Permanent link">#</a></h2>
 <p>Running on the default runner image with a clean working values.yaml
 for our RunnerScaleSet, and a clean hook extension connecting our
@@ -2061,13 +2041,13 @@ and promoting our updated cache on successful build.</p>
         
         
           
-          <a href="../ConanK8sARCPerformance/" class="md-footer__link md-footer__link--next" aria-label="Next: Securing our GitHub ARC deployment and Making it Perform">
+          <a href="../LICENSE.txt" class="md-footer__link md-footer__link--next" aria-label="Next: Apache License v2.0">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Securing our GitHub ARC deployment and Making it Perform
+                Apache License v2.0
               </div>
             </div>
             <div class="md-footer__button md-icon">
