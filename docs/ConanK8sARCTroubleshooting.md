@@ -96,7 +96,7 @@ Fri, 30 Jan 2026 00:10:25 GMT ##[debug]Job pod is ready for traffic
 For this particular job, 32s of the total 33s of the "Initialize
 containers" step is spent waiting for the created Pod to start running.
 Looking at the source code we can locate the debug messages to see
-what's going on in between the log messages.
+what's going on in between.
 
 !!! github-reference annotate "[actions/runner-container-hooks/packages/k8s/src/hooks/prepare-job.ts](https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/hooks/prepare-job.ts#L90)"
 
@@ -526,7 +526,7 @@ Once the ConfigMap change is applied, the GitHub ARC Runners will pick up
 the change *automatically* once the cluster nodes have a chance to resync
 their state.  We can verify that our runners have picked up the change
 before running our test job by connecting to the runner container and
-checking the file where we chose install our hook extension.
+checking the file where we chose to install our hook extension.
 
 ```bash linenums="0"
 runner@linux-x86-64-st6ng-runner-5dskd:~$ cat pod-template/content
