@@ -1034,7 +1034,7 @@ logging this gives us something to work with at least.</p>
 <p>For this particular job, 32s of the total 33s of the "Initialize
 containers" step is spent waiting for the created Pod to start running.
 Looking at the source code we can locate the debug messages to see
-what's going on in between the log messages.</p>
+what's going on in between.</p>
 <div class="admonition github-reference annotate">
 <p class="admonition-title"><a href="https://github.com/actions/runner-container-hooks/blob/v0.7.0/packages/k8s/src/hooks/prepare-job.ts#L90">actions/runner-container-hooks/packages/k8s/src/hooks/prepare-job.ts</a></p>
 <div class="language-typescript highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-90"> 90</a></span>
@@ -1484,7 +1484,7 @@ the ZFS cloned Conan cache at all.</p>
 the change <em>automatically</em> once the cluster nodes have a chance to resync
 their state.  We can verify that our runners have picked up the change
 before running our test job by connecting to the runner container and
-checking the file where we chose install our hook extension.</p>
+checking the file where we chose to install our hook extension.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>runner@linux-x86-64-st6ng-runner-5dskd:~$<span class="w"> </span>cat<span class="w"> </span>pod-template/content
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>metadata:
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>annotations:
